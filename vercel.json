@@ -1,17 +1,5 @@
 {
   "framework": null,
-  "functions": {
-    "api/chat.js":    { "memory": 512, "maxDuration": 60 },
-    "api/webhook.js": { "memory": 256, "maxDuration": 30 },
-    "api/auth.js":    { "memory": 256, "maxDuration": 15 },
-    "api/export.js":  { "memory": 256, "maxDuration": 30 },
-    "api/admin.js":   { "memory": 512, "maxDuration": 30 },
-    "api/contact.js": { "memory": 128, "maxDuration": 10 },
-    "api/email.js":   { "memory": 128, "maxDuration": 10 },
-    "api/notes.js":   { "memory": 128, "maxDuration": 10 },
-    "api/progress.js":{ "memory": 128, "maxDuration": 10 },
-    "api/stripe.js":  { "memory": 128, "maxDuration": 10 }
-  },
   "headers": [
     {
       "source": "/(.*)",
