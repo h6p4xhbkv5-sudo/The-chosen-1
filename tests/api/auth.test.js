@@ -1,38 +1,61 @@
 /**
- * Tests for the Auth API handler (api/chat.js auth section)
+ * Tests for api/auth.js — imports and exercises the real handler.
  *
- * The handler supports four actions:
- *   signup  – create user + profile row + send invite email
- *   login   – sign in with password, return token + profile
- *   reset   – send password-reset email
- *   verify  – validate a bearer token, return profile
- *
- * NOTE: api/chat.js currently concatenates every handler into a single file
- * with multiple `export default` declarations, which is invalid JS. The logic
- * is reproduced here via an injectable helper so tests can run against real
- * business logic until the file is split into separate serverless functions.
+ * @supabase/supabase-js is mocked via vi.hoisted() so the module-level
+ * `const supabase = createClient(...)` in auth.js receives our mock object.
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
-// ─── Minimal req/res stubs ───────────────────────────────────────────────────
+// ─── Shared mock objects (hoisted above vi.mock) ──────────────────────────────
+const mocks = vi.hoisted(() => {
+  const supabase = {
+    auth: {
+      admin: {
+        createUser: vi.fn(),
+        inviteUserByEmail: vi.fn(),
+      },
+      signInWithPassword: vi.fn(),
+      resetPasswordForEmail: vi.fn(),
+      getUser: vi.fn(),
+    },
+    from: vi.fn(),
+  };
+  return { supabase };
+});
+
+vi.mock('@supabase/supabase-js', () => ({
+  createClient: () => mocks.supabase,
+}));
+
+import handler from '../../api/auth.js';
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+/**
+ * Thenable chain builder — every chained method returns itself so the whole
+ * chain can be awaited. Configure the resolved value via `resolution`.
+ */
+function makeBuilder(resolution = { data: null, error: null }) {
+  const b = {
+    _resolvedWith: resolution,
+    then(res, rej) { return Promise.resolve(b._resolvedWith).then(res, rej); },
+  };
+  ['select', 'insert', 'update', 'delete', 'upsert',
+    'eq', 'gte', 'in', 'order', 'limit', 'single'].forEach(m => {
+    b[m] = vi.fn().mockReturnValue(b);
+  });
+  return b;
+}
 
 function makeReq(overrides = {}) {
-  return {
-    method: 'POST',
-    headers: {},
-    body: {},
-    query: {},
-    ...overrides,
-  };
+  return { method: 'POST', headers: {}, body: {}, ...overrides };
 }
 
 function makeRes() {
   const res = {
-    statusCode: 200,
-    body: null,
-    _headers: {},
-    setHeader(k, v) { this._headers[k] = v; return this; },
+    statusCode: 200, body: null,
+    setHeader() { return this; },
     status(code) { this.statusCode = code; return this; },
     json(data) { this.body = data; return this; },
     end() { return this; },
@@ -40,378 +63,227 @@ function makeRes() {
   return res;
 }
 
-// ─── Handler extracted for testability ──────────────────────────────────────
-// Mirrors the auth section of api/chat.js with supabase injected.
-
-async function authHandler(req, res, supabase, env = {}) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.status(200).end();
-
-  const { action, email, password, name, plan } = req.body;
-
-  try {
-    if (action === 'signup') {
-      const { data, error } = await supabase.auth.admin.createUser({
-        email,
-        password,
-        email_confirm: false,
-        user_metadata: { name, plan: plan || 'student' },
-      });
-      if (error) return res.status(400).json({ error: error.message });
-
-      await supabase.from('profiles').insert({
-        id: data.user.id,
-        name, email, plan: plan || 'student',
-        xp: 0, level: 1, streak: 0,
-        questions_answered: 0, accuracy: 0,
-        created_at: new Date().toISOString(),
-      });
-
-      await supabase.auth.admin.inviteUserByEmail(email);
-
-      return res.status(200).json({ success: true, user: data.user });
-    }
-
-    if (action === 'login') {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) return res.status(401).json({ error: 'Invalid email or password' });
-
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', data.user.id)
-        .single();
-
-      return res.status(200).json({
-        success: true,
-        token: data.session.access_token,
-        user: { ...data.user, ...profile },
-      });
-    }
-
-    if (action === 'reset') {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${env.SITE_URL}/reset-password`,
-      });
-      if (error) return res.status(400).json({ error: error.message });
-      return res.status(200).json({ success: true });
-    }
-
-    if (action === 'verify') {
-      const token = req.headers.authorization?.replace('Bearer ', '');
-      if (!token) return res.status(401).json({ error: 'No token' });
-
-      const { data, error } = await supabase.auth.getUser(token);
-      if (error) return res.status(401).json({ error: 'Invalid token' });
-
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', data.user.id)
-        .single();
-
-      return res.status(200).json({ success: true, user: { ...data.user, ...profile } });
-    }
-
-    return res.status(400).json({ error: 'Unknown action' });
-  } catch (e) {
-    return res.status(500).json({ error: e.message });
-  }
-}
-
-// ─── Supabase mock factory ───────────────────────────────────────────────────
-
-function makeSupabaseMock() {
-  const rowBuilder = () => {
-    const b = {
-      select: vi.fn().mockReturnThis(),
-      insert: vi.fn().mockResolvedValue({ data: {}, error: null }),
-      update: vi.fn().mockReturnThis(),
-      delete: vi.fn().mockReturnThis(),
-      upsert: vi.fn().mockResolvedValue({ data: {}, error: null }),
-      eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({ data: null, error: null }),
-      order: vi.fn().mockReturnThis(),
-      limit: vi.fn().mockReturnThis(),
-      in: vi.fn().mockReturnThis(),
-      gte: vi.fn().mockReturnThis(),
-    };
-    return b;
-  };
-
-  return {
-    auth: {
-      admin: {
-        createUser: vi.fn(),
-        inviteUserByEmail: vi.fn().mockResolvedValue({}),
-      },
-      signInWithPassword: vi.fn(),
-      resetPasswordForEmail: vi.fn(),
-      getUser: vi.fn(),
-    },
-    from: vi.fn(() => rowBuilder()),
-    rpc: vi.fn().mockResolvedValue({ data: null, error: null }),
-  };
-}
-
 // ─── Tests ───────────────────────────────────────────────────────────────────
 
-describe('Auth handler', () => {
-  let supabase;
-
+describe('Auth handler (api/auth.js)', () => {
   beforeEach(() => {
-    supabase = makeSupabaseMock();
+    vi.clearAllMocks();
+    process.env.SITE_URL = 'https://lumina.example.com';
+    mocks.supabase.auth.admin.inviteUserByEmail.mockResolvedValue({});
+    mocks.supabase.from.mockReturnValue(makeBuilder());
   });
 
-  // ── CORS preflight ──────────────────────────────────────────────────────
+  afterEach(() => {
+    delete process.env.SITE_URL;
+  });
 
-  describe('OPTIONS preflight', () => {
-    it('responds 200 and ends without a body', async () => {
-      const req = makeReq({ method: 'OPTIONS' });
+  // ── OPTIONS preflight ─────────────────────────────────────────────────────
+
+  it('responds 200 to OPTIONS without hitting Supabase', async () => {
+    const res = makeRes();
+    await handler(makeReq({ method: 'OPTIONS' }), res);
+    expect(res.statusCode).toBe(200);
+    expect(mocks.supabase.auth.admin.createUser).not.toHaveBeenCalled();
+  });
+
+  // ── Input validation ──────────────────────────────────────────────────────
+
+  describe('input validation', () => {
+    it('returns 400 for a malformed email on signup', async () => {
       const res = makeRes();
+      await handler(makeReq({ body: { action: 'signup', email: 'not-an-email', password: 'password123', name: 'Alice' } }), res);
+      expect(res.statusCode).toBe(400);
+      expect(res.body.error).toMatch(/email/i);
+    });
 
-      await authHandler(req, res, supabase);
+    it('returns 400 when password is shorter than 8 characters', async () => {
+      const res = makeRes();
+      await handler(makeReq({ body: { action: 'signup', email: 'a@b.com', password: 'short', name: 'Alice' } }), res);
+      expect(res.statusCode).toBe(400);
+      expect(res.body.error).toMatch(/password/i);
+    });
 
-      expect(res.statusCode).toBe(200);
-      expect(res.body).toBeNull();
+    it('returns 400 when name is empty', async () => {
+      const res = makeRes();
+      await handler(makeReq({ body: { action: 'signup', email: 'a@b.com', password: 'password123', name: '' } }), res);
+      expect(res.statusCode).toBe(400);
+      expect(res.body.error).toMatch(/name/i);
+    });
+
+    it('returns 400 for an unrecognised plan value', async () => {
+      const res = makeRes();
+      await handler(makeReq({ body: { action: 'signup', email: 'a@b.com', password: 'password123', name: 'Alice', plan: 'enterprise' } }), res);
+      expect(res.statusCode).toBe(400);
+      expect(res.body.error).toMatch(/plan/i);
+    });
+
+    it('returns 400 for a malformed email on login', async () => {
+      const res = makeRes();
+      await handler(makeReq({ body: { action: 'login', email: 'bad', password: 'password123' } }), res);
+      expect(res.statusCode).toBe(400);
+    });
+
+    it('returns 400 for a malformed email on reset', async () => {
+      const res = makeRes();
+      await handler(makeReq({ body: { action: 'reset', email: 'bad' } }), res);
+      expect(res.statusCode).toBe(400);
     });
   });
 
-  // ── signup ──────────────────────────────────────────────────────────────
+  // ── signup ────────────────────────────────────────────────────────────────
 
   describe('signup', () => {
-    it('creates a user, inserts a profile row, and sends an invite email', async () => {
-      const fakeUser = { id: 'user-123' };
-      supabase.auth.admin.createUser.mockResolvedValue({ data: { user: fakeUser }, error: null });
+    const VALID = { action: 'signup', email: 'alice@example.com', password: 'password123', name: 'Alice' };
 
-      const req = makeReq({
-        body: { action: 'signup', email: 'alice@example.com', password: 'secret', name: 'Alice' },
-      });
+    it('creates a user and returns success', async () => {
+      mocks.supabase.auth.admin.createUser.mockResolvedValue({ data: { user: { id: 'u-1' } }, error: null });
       const res = makeRes();
-
-      await authHandler(req, res, supabase);
-
+      await handler(makeReq({ body: VALID }), res);
       expect(res.statusCode).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.user).toEqual(fakeUser);
+      expect(res.body.user.id).toBe('u-1');
+    });
 
-      expect(supabase.auth.admin.createUser).toHaveBeenCalledWith({
+    it('calls createUser with correct email_confirm and metadata', async () => {
+      mocks.supabase.auth.admin.createUser.mockResolvedValue({ data: { user: { id: 'u-2' } }, error: null });
+      await handler(makeReq({ body: VALID }), makeRes());
+      expect(mocks.supabase.auth.admin.createUser).toHaveBeenCalledWith({
         email: 'alice@example.com',
-        password: 'secret',
+        password: 'password123',
         email_confirm: false,
         user_metadata: { name: 'Alice', plan: 'student' },
       });
-
-      expect(supabase.auth.admin.inviteUserByEmail).toHaveBeenCalledWith('alice@example.com');
     });
 
-    it('defaults plan to "student" when no plan is supplied', async () => {
-      const fakeUser = { id: 'user-456' };
-      supabase.auth.admin.createUser.mockResolvedValue({ data: { user: fakeUser }, error: null });
-
-      const req = makeReq({
-        body: { action: 'signup', email: 'bob@example.com', password: 'pass', name: 'Bob' },
-      });
-      const res = makeRes();
-
-      await authHandler(req, res, supabase);
-
-      expect(supabase.auth.admin.createUser).toHaveBeenCalledWith(
-        expect.objectContaining({ user_metadata: { name: 'Bob', plan: 'student' } }),
+    it('defaults plan to "student" when not provided', async () => {
+      mocks.supabase.auth.admin.createUser.mockResolvedValue({ data: { user: { id: 'u-3' } }, error: null });
+      await handler(makeReq({ body: VALID }), makeRes());
+      expect(mocks.supabase.auth.admin.createUser).toHaveBeenCalledWith(
+        expect.objectContaining({ user_metadata: expect.objectContaining({ plan: 'student' }) }),
       );
     });
 
-    it('stores the specified plan when one is provided', async () => {
-      const fakeUser = { id: 'user-789' };
-      supabase.auth.admin.createUser.mockResolvedValue({ data: { user: fakeUser }, error: null });
-
-      const req = makeReq({
-        body: { action: 'signup', email: 'carol@example.com', password: 'pass', name: 'Carol', plan: 'homeschool' },
-      });
-      const res = makeRes();
-
-      await authHandler(req, res, supabase);
-
-      expect(supabase.auth.admin.createUser).toHaveBeenCalledWith(
-        expect.objectContaining({ user_metadata: { name: 'Carol', plan: 'homeschool' } }),
+    it('uses the homeschool plan when explicitly specified', async () => {
+      mocks.supabase.auth.admin.createUser.mockResolvedValue({ data: { user: { id: 'u-4' } }, error: null });
+      await handler(makeReq({ body: { ...VALID, plan: 'homeschool' } }), makeRes());
+      expect(mocks.supabase.auth.admin.createUser).toHaveBeenCalledWith(
+        expect.objectContaining({ user_metadata: expect.objectContaining({ plan: 'homeschool' }) }),
       );
     });
 
-    it('returns 400 when Supabase reports an auth error', async () => {
-      supabase.auth.admin.createUser.mockResolvedValue({
-        data: null,
-        error: { message: 'Email already registered' },
-      });
+    it('writes a profile row to Supabase', async () => {
+      mocks.supabase.auth.admin.createUser.mockResolvedValue({ data: { user: { id: 'u-5' } }, error: null });
+      await handler(makeReq({ body: VALID }), makeRes());
+      expect(mocks.supabase.from).toHaveBeenCalledWith('profiles');
+    });
 
-      const req = makeReq({
-        body: { action: 'signup', email: 'dup@example.com', password: 'pass', name: 'Dup' },
-      });
+    it('sends an invite email', async () => {
+      mocks.supabase.auth.admin.createUser.mockResolvedValue({ data: { user: { id: 'u-6' } }, error: null });
+      await handler(makeReq({ body: VALID }), makeRes());
+      expect(mocks.supabase.auth.admin.inviteUserByEmail).toHaveBeenCalledWith('alice@example.com');
+    });
+
+    it('returns 400 on a duplicate email error from Supabase', async () => {
+      mocks.supabase.auth.admin.createUser.mockResolvedValue({ data: null, error: { message: 'Email already registered' } });
       const res = makeRes();
-
-      await authHandler(req, res, supabase);
-
+      await handler(makeReq({ body: VALID }), res);
       expect(res.statusCode).toBe(400);
       expect(res.body.error).toBe('Email already registered');
     });
 
-    it('returns 500 when createUser throws an unexpected error', async () => {
-      supabase.auth.admin.createUser.mockRejectedValue(new Error('Network failure'));
-
-      const req = makeReq({
-        body: { action: 'signup', email: 'err@example.com', password: 'pass', name: 'Err' },
-      });
+    it('returns 500 when createUser throws unexpectedly', async () => {
+      mocks.supabase.auth.admin.createUser.mockRejectedValue(new Error('DB is down'));
       const res = makeRes();
-
-      await authHandler(req, res, supabase);
-
+      await handler(makeReq({ body: VALID }), res);
       expect(res.statusCode).toBe(500);
-      expect(res.body.error).toBe('Network failure');
     });
   });
 
-  // ── login ───────────────────────────────────────────────────────────────
+  // ── login ─────────────────────────────────────────────────────────────────
 
   describe('login', () => {
     it('returns a token and merged user+profile on success', async () => {
-      const fakeUser = { id: 'user-abc', email: 'alice@example.com' };
-      const fakeSession = { access_token: 'tok_xyz' };
-      const fakeProfile = { xp: 500, level: 2, streak: 7 };
-
-      supabase.auth.signInWithPassword.mockResolvedValue({
-        data: { user: fakeUser, session: fakeSession },
-        error: null,
+      mocks.supabase.auth.signInWithPassword.mockResolvedValue({
+        data: { user: { id: 'u-log', email: 'a@a.com' }, session: { access_token: 'tok_abc' } }, error: null,
       });
-      // Make the chained from().select().eq().single() resolve with a profile
-      const single = vi.fn().mockResolvedValue({ data: fakeProfile, error: null });
-      const eq = vi.fn().mockReturnValue({ single });
-      const select = vi.fn().mockReturnValue({ eq });
-      supabase.from = vi.fn().mockReturnValue({ select });
+      mocks.supabase.from.mockReturnValue(makeBuilder({ data: { xp: 400, level: 3 }, error: null }));
 
-      const req = makeReq({ body: { action: 'login', email: 'alice@example.com', password: 'secret' } });
       const res = makeRes();
-
-      await authHandler(req, res, supabase);
+      await handler(makeReq({ body: { action: 'login', email: 'a@a.com', password: 'password123' } }), res);
 
       expect(res.statusCode).toBe(200);
-      expect(res.body.success).toBe(true);
-      expect(res.body.token).toBe('tok_xyz');
-      expect(res.body.user).toMatchObject({ id: 'user-abc', xp: 500, level: 2 });
+      expect(res.body.token).toBe('tok_abc');
+      expect(res.body.user).toMatchObject({ id: 'u-log', xp: 400 });
     });
 
-    it('returns 401 when credentials are wrong', async () => {
-      supabase.auth.signInWithPassword.mockResolvedValue({
-        data: null,
-        error: { message: 'Invalid login credentials' },
-      });
-
-      const req = makeReq({ body: { action: 'login', email: 'x@x.com', password: 'wrong' } });
+    it('returns 401 for invalid credentials', async () => {
+      mocks.supabase.auth.signInWithPassword.mockResolvedValue({ data: null, error: { message: 'Invalid login' } });
       const res = makeRes();
-
-      await authHandler(req, res, supabase);
-
+      await handler(makeReq({ body: { action: 'login', email: 'x@x.com', password: 'wrongpass1' } }), res);
       expect(res.statusCode).toBe(401);
       expect(res.body.error).toBe('Invalid email or password');
     });
   });
 
-  // ── reset ───────────────────────────────────────────────────────────────
+  // ── reset ─────────────────────────────────────────────────────────────────
 
   describe('reset', () => {
-    it('sends a password-reset email and returns success', async () => {
-      supabase.auth.resetPasswordForEmail.mockResolvedValue({ error: null });
-
-      const req = makeReq({ body: { action: 'reset', email: 'alice@example.com' } });
+    it('sends a reset email and returns success', async () => {
+      mocks.supabase.auth.resetPasswordForEmail.mockResolvedValue({ error: null });
       const res = makeRes();
-
-      await authHandler(req, res, supabase, { SITE_URL: 'https://lumina.example.com' });
-
+      await handler(makeReq({ body: { action: 'reset', email: 'alice@example.com' } }), res);
       expect(res.statusCode).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(supabase.auth.resetPasswordForEmail).toHaveBeenCalledWith(
+      expect(mocks.supabase.auth.resetPasswordForEmail).toHaveBeenCalledWith(
         'alice@example.com',
         { redirectTo: 'https://lumina.example.com/reset-password' },
       );
     });
 
-    it('returns 400 when Supabase reports an error', async () => {
-      supabase.auth.resetPasswordForEmail.mockResolvedValue({
-        error: { message: 'User not found' },
-      });
-
-      const req = makeReq({ body: { action: 'reset', email: 'nobody@example.com' } });
+    it('returns 400 when Supabase returns an error', async () => {
+      mocks.supabase.auth.resetPasswordForEmail.mockResolvedValue({ error: { message: 'User not found' } });
       const res = makeRes();
-
-      await authHandler(req, res, supabase);
-
+      await handler(makeReq({ body: { action: 'reset', email: 'nobody@example.com' } }), res);
       expect(res.statusCode).toBe(400);
-      expect(res.body.error).toBe('User not found');
     });
   });
 
-  // ── verify ──────────────────────────────────────────────────────────────
+  // ── verify ────────────────────────────────────────────────────────────────
 
   describe('verify', () => {
-    it('returns the user and profile for a valid bearer token', async () => {
-      const fakeUser = { id: 'user-verify' };
-      const fakeProfile = { xp: 100 };
+    it('resolves a valid token to the merged user+profile', async () => {
+      mocks.supabase.auth.getUser.mockResolvedValue({ data: { user: { id: 'u-ver' } }, error: null });
+      mocks.supabase.from.mockReturnValue(makeBuilder({ data: { xp: 50 }, error: null }));
 
-      supabase.auth.getUser.mockResolvedValue({ data: { user: fakeUser }, error: null });
-
-      const single = vi.fn().mockResolvedValue({ data: fakeProfile, error: null });
-      const eq = vi.fn().mockReturnValue({ single });
-      const select = vi.fn().mockReturnValue({ eq });
-      supabase.from = vi.fn().mockReturnValue({ select });
-
-      const req = makeReq({ headers: { authorization: 'Bearer valid-token' }, body: { action: 'verify' } });
       const res = makeRes();
-
-      await authHandler(req, res, supabase);
+      await handler(makeReq({ headers: { authorization: 'Bearer valid-tok' }, body: { action: 'verify' } }), res);
 
       expect(res.statusCode).toBe(200);
-      expect(res.body.success).toBe(true);
-      expect(res.body.user).toMatchObject({ id: 'user-verify', xp: 100 });
-      expect(supabase.auth.getUser).toHaveBeenCalledWith('valid-token');
+      expect(res.body.user).toMatchObject({ id: 'u-ver', xp: 50 });
+      expect(mocks.supabase.auth.getUser).toHaveBeenCalledWith('valid-tok');
     });
 
-    it('returns 401 when no Authorization header is provided', async () => {
-      const req = makeReq({ body: { action: 'verify' } });
+    it('returns 401 when no Authorization header is present', async () => {
       const res = makeRes();
-
-      await authHandler(req, res, supabase);
-
+      await handler(makeReq({ body: { action: 'verify' } }), res);
       expect(res.statusCode).toBe(401);
       expect(res.body.error).toBe('No token');
     });
 
-    it('returns 401 when the token is invalid', async () => {
-      supabase.auth.getUser.mockResolvedValue({ data: null, error: { message: 'Invalid JWT' } });
-
-      const req = makeReq({
-        headers: { authorization: 'Bearer bad-token' },
-        body: { action: 'verify' },
-      });
+    it('returns 401 for an invalid token', async () => {
+      mocks.supabase.auth.getUser.mockResolvedValue({ data: null, error: { message: 'bad JWT' } });
       const res = makeRes();
-
-      await authHandler(req, res, supabase);
-
+      await handler(makeReq({ headers: { authorization: 'Bearer bad' }, body: { action: 'verify' } }), res);
       expect(res.statusCode).toBe(401);
-      expect(res.body.error).toBe('Invalid token');
     });
   });
 
-  // ── unknown action ──────────────────────────────────────────────────────
+  // ── unknown action ────────────────────────────────────────────────────────
 
-  describe('unknown action', () => {
-    it('returns 400 for an unrecognised action', async () => {
-      const req = makeReq({ body: { action: 'delete_everything' } });
-      const res = makeRes();
-
-      await authHandler(req, res, supabase);
-
-      expect(res.statusCode).toBe(400);
-      expect(res.body.error).toBe('Unknown action');
-    });
+  it('returns 400 for an unknown action', async () => {
+    const res = makeRes();
+    await handler(makeReq({ body: { action: 'hack' } }), res);
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBe('Unknown action');
   });
 });

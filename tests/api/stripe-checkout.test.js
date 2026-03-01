@@ -1,28 +1,30 @@
 /**
- * Tests for the Stripe checkout handler (api/stripe.js).
- *
- * Covered scenarios:
- *
- *   checkout action:
- *     – Valid plan + email → creates Stripe checkout session, returns URL
- *     – Invalid plan → 400
- *     – Missing / malformed email → 400
- *     – Missing price ID env var → 500
- *     – Correct metadata (plan) passed to session
- *     – success_url and cancel_url include query params
- *
- *   portal action:
- *     – Valid email with existing Stripe customer → returns billing portal URL
- *     – Email not found in Stripe → 404
- *     – Invalid email → 400
- *
- *   Unknown action → 400
- *   OPTIONS preflight → 200
+ * Tests for api/stripe.js — imports and exercises the real handler.
+ * The stripe package is mocked at module level via vi.hoisted().
  */
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
-// ─── req/res stubs ────────────────────────────────────────────────────────────
+const mocks = vi.hoisted(() => {
+  const stripe = {
+    checkout: {
+      sessions: { create: vi.fn() },
+    },
+    customers: { list: vi.fn() },
+    billingPortal: {
+      sessions: { create: vi.fn() },
+    },
+  };
+  return { stripe };
+});
+
+vi.mock('stripe', () => ({
+  default: vi.fn().mockImplementation(() => mocks.stripe),
+}));
+
+import handler from '../../api/stripe.js';
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function makeReq(body = {}) {
   return { method: 'POST', headers: {}, body };
@@ -30,8 +32,7 @@ function makeReq(body = {}) {
 
 function makeRes() {
   const res = {
-    statusCode: 200,
-    body: null,
+    statusCode: 200, body: null,
     setHeader() { return this; },
     status(code) { this.statusCode = code; return this; },
     json(data) { this.body = data; return this; },
@@ -40,209 +41,102 @@ function makeRes() {
   return res;
 }
 
-// ─── Handler extracted for testability ───────────────────────────────────────
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const VALID_PLANS = ['student', 'homeschool'];
-
-async function stripeHandler(req, res, { stripe, env = {} }) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  if (req.method === 'OPTIONS') return res.status(200).end();
-
-  const { action, plan, email, successUrl, cancelUrl } = req.body;
-
-  const prices = {
-    student: env.STRIPE_PRICE_STUDENT,
-    homeschool: env.STRIPE_PRICE_HOMESCHOOL,
-  };
-
-  if (action === 'checkout') {
-    if (!plan || !VALID_PLANS.includes(plan)) return res.status(400).json({ error: 'Invalid plan. Must be student or homeschool' });
-    if (!email || !EMAIL_RE.test(email)) return res.status(400).json({ error: 'Valid email is required' });
-    if (!prices[plan]) return res.status(500).json({ error: `Missing price ID for plan: ${plan}` });
-
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      mode: 'subscription',
-      customer_email: email,
-      line_items: [{ price: prices[plan], quantity: 1 }],
-      success_url: (successUrl || env.SITE_URL) + '?payment=success',
-      cancel_url: (cancelUrl || env.SITE_URL) + '?payment=cancelled',
-      metadata: { plan },
-    });
-    return res.status(200).json({ url: session.url });
-  }
-
-  if (action === 'portal') {
-    if (!email || !EMAIL_RE.test(email)) return res.status(400).json({ error: 'Valid email is required' });
-    const customers = await stripe.customers.list({ email });
-    if (!customers.data.length) return res.status(404).json({ error: 'No subscription found' });
-    const session = await stripe.billingPortal.sessions.create({
-      customer: customers.data[0].id,
-      return_url: env.SITE_URL,
-    });
-    return res.status(200).json({ url: session.url });
-  }
-
-  return res.status(400).json({ error: 'Unknown action' });
-}
-
-// ─── Stripe mock factory ──────────────────────────────────────────────────────
-
-function makeStripeMock({ sessionUrl = 'https://checkout.stripe.com/pay/cs_test', portalUrl = 'https://billing.stripe.com/p/session/test' } = {}) {
-  return {
-    checkout: {
-      sessions: {
-        create: vi.fn().mockResolvedValue({ url: sessionUrl }),
-      },
-    },
-    customers: {
-      list: vi.fn().mockResolvedValue({ data: [{ id: 'cus_test123' }] }),
-    },
-    billingPortal: {
-      sessions: {
-        create: vi.fn().mockResolvedValue({ url: portalUrl }),
-      },
-    },
-  };
-}
-
-const ENV = {
-  STRIPE_PRICE_STUDENT: 'price_student_001',
-  STRIPE_PRICE_HOMESCHOOL: 'price_homeschool_001',
-  SITE_URL: 'https://lumina.example.com',
-};
-
 // ─── Tests ───────────────────────────────────────────────────────────────────
 
-describe('Stripe checkout handler', () => {
-  let stripe;
-
+describe('Stripe checkout handler (api/stripe.js)', () => {
   beforeEach(() => {
-    stripe = makeStripeMock();
+    vi.clearAllMocks();
+    process.env.STRIPE_PRICE_STUDENT    = 'price_student_001';
+    process.env.STRIPE_PRICE_HOMESCHOOL = 'price_homeschool_001';
+    process.env.SITE_URL                = 'https://lumina.example.com';
+
+    mocks.stripe.checkout.sessions.create.mockResolvedValue({ url: 'https://checkout.stripe.com/pay/cs_test' });
+    mocks.stripe.customers.list.mockResolvedValue({ data: [{ id: 'cus_test' }] });
+    mocks.stripe.billingPortal.sessions.create.mockResolvedValue({ url: 'https://billing.stripe.com/session/test' });
   });
 
-  // ── OPTIONS preflight ─────────────────────────────────────────────────────
+  afterEach(() => {
+    delete process.env.STRIPE_PRICE_STUDENT;
+    delete process.env.STRIPE_PRICE_HOMESCHOOL;
+    delete process.env.SITE_URL;
+  });
+
+  // ── OPTIONS ───────────────────────────────────────────────────────────────
 
   it('responds 200 to OPTIONS without calling Stripe', async () => {
     const res = makeRes();
-    await stripeHandler({ method: 'OPTIONS', headers: {}, body: {} }, res, { stripe, env: ENV });
+    await handler({ method: 'OPTIONS', headers: {}, body: {} }, res);
     expect(res.statusCode).toBe(200);
-    expect(stripe.checkout.sessions.create).not.toHaveBeenCalled();
+    expect(mocks.stripe.checkout.sessions.create).not.toHaveBeenCalled();
   });
 
   // ── checkout action ───────────────────────────────────────────────────────
 
   describe('checkout', () => {
-    it('creates a session and returns the URL for a valid student plan', async () => {
+    it('returns the Stripe checkout URL for a valid student plan', async () => {
       const res = makeRes();
-      await stripeHandler(
-        makeReq({ action: 'checkout', plan: 'student', email: 'alice@example.com' }),
-        res,
-        { stripe, env: ENV },
-      );
-
+      await handler(makeReq({ action: 'checkout', plan: 'student', email: 'alice@example.com' }), res);
       expect(res.statusCode).toBe(200);
       expect(res.body.url).toBe('https://checkout.stripe.com/pay/cs_test');
     });
 
-    it('creates a session for the homeschool plan', async () => {
-      const res = makeRes();
-      await stripeHandler(
-        makeReq({ action: 'checkout', plan: 'homeschool', email: 'bob@example.com' }),
-        res,
-        { stripe, env: ENV },
-      );
-
-      expect(res.statusCode).toBe(200);
-      expect(stripe.checkout.sessions.create).toHaveBeenCalledWith(
+    it('uses the homeschool price ID for the homeschool plan', async () => {
+      await handler(makeReq({ action: 'checkout', plan: 'homeschool', email: 'b@b.com' }), makeRes());
+      expect(mocks.stripe.checkout.sessions.create).toHaveBeenCalledWith(
         expect.objectContaining({ line_items: [{ price: 'price_homeschool_001', quantity: 1 }] }),
       );
     });
 
     it('passes the plan in session metadata', async () => {
-      const res = makeRes();
-      await stripeHandler(
-        makeReq({ action: 'checkout', plan: 'student', email: 'carol@example.com' }),
-        res,
-        { stripe, env: ENV },
-      );
-
-      expect(stripe.checkout.sessions.create).toHaveBeenCalledWith(
+      await handler(makeReq({ action: 'checkout', plan: 'student', email: 'c@c.com' }), makeRes());
+      expect(mocks.stripe.checkout.sessions.create).toHaveBeenCalledWith(
         expect.objectContaining({ metadata: { plan: 'student' } }),
       );
     });
 
     it('appends ?payment=success to success_url', async () => {
-      const res = makeRes();
-      await stripeHandler(
-        makeReq({ action: 'checkout', plan: 'student', email: 'dave@example.com' }),
-        res,
-        { stripe, env: ENV },
-      );
-
-      const call = stripe.checkout.sessions.create.mock.calls[0][0];
+      await handler(makeReq({ action: 'checkout', plan: 'student', email: 'd@d.com' }), makeRes());
+      const call = mocks.stripe.checkout.sessions.create.mock.calls[0][0];
       expect(call.success_url).toContain('?payment=success');
     });
 
-    it('uses a custom successUrl when provided', async () => {
-      const res = makeRes();
-      await stripeHandler(
-        makeReq({ action: 'checkout', plan: 'student', email: 'eve@example.com', successUrl: 'https://custom.example.com' }),
-        res,
-        { stripe, env: ENV },
-      );
-
-      const call = stripe.checkout.sessions.create.mock.calls[0][0];
+    it('uses a provided successUrl instead of SITE_URL', async () => {
+      await handler(makeReq({ action: 'checkout', plan: 'student', email: 'e@e.com', successUrl: 'https://custom.example.com' }), makeRes());
+      const call = mocks.stripe.checkout.sessions.create.mock.calls[0][0];
       expect(call.success_url).toStartWith('https://custom.example.com');
     });
 
     it('returns 400 for an invalid plan', async () => {
       const res = makeRes();
-      await stripeHandler(
-        makeReq({ action: 'checkout', plan: 'enterprise', email: 'f@f.com' }),
-        res,
-        { stripe, env: ENV },
-      );
-
+      await handler(makeReq({ action: 'checkout', plan: 'enterprise', email: 'f@f.com' }), res);
       expect(res.statusCode).toBe(400);
       expect(res.body.error).toMatch(/invalid plan/i);
-      expect(stripe.checkout.sessions.create).not.toHaveBeenCalled();
+      expect(mocks.stripe.checkout.sessions.create).not.toHaveBeenCalled();
     });
 
     it('returns 400 when no plan is provided', async () => {
       const res = makeRes();
-      await stripeHandler(makeReq({ action: 'checkout', email: 'g@g.com' }), res, { stripe, env: ENV });
+      await handler(makeReq({ action: 'checkout', email: 'g@g.com' }), res);
       expect(res.statusCode).toBe(400);
     });
 
-    it('returns 400 for a missing email', async () => {
+    it('returns 400 when email is missing', async () => {
       const res = makeRes();
-      await stripeHandler(makeReq({ action: 'checkout', plan: 'student' }), res, { stripe, env: ENV });
+      await handler(makeReq({ action: 'checkout', plan: 'student' }), res);
       expect(res.statusCode).toBe(400);
       expect(res.body.error).toMatch(/email/i);
     });
 
     it('returns 400 for a malformed email', async () => {
       const res = makeRes();
-      await stripeHandler(
-        makeReq({ action: 'checkout', plan: 'student', email: 'not-an-email' }),
-        res,
-        { stripe, env: ENV },
-      );
+      await handler(makeReq({ action: 'checkout', plan: 'student', email: 'not-an-email' }), res);
       expect(res.statusCode).toBe(400);
     });
 
-    it('returns 500 when the price ID env var is not configured', async () => {
+    it('returns 500 when the price ID env var is missing', async () => {
+      delete process.env.STRIPE_PRICE_STUDENT;
       const res = makeRes();
-      await stripeHandler(
-        makeReq({ action: 'checkout', plan: 'student', email: 'h@h.com' }),
-        res,
-        { stripe, env: { ...ENV, STRIPE_PRICE_STUDENT: undefined } },
-      );
-
+      await handler(makeReq({ action: 'checkout', plan: 'student', email: 'h@h.com' }), res);
       expect(res.statusCode).toBe(500);
       expect(res.body.error).toMatch(/missing price id/i);
     });
@@ -251,60 +145,38 @@ describe('Stripe checkout handler', () => {
   // ── portal action ─────────────────────────────────────────────────────────
 
   describe('portal', () => {
-    it('returns the billing portal URL for an existing Stripe customer', async () => {
+    it('returns the billing portal URL for an existing customer', async () => {
       const res = makeRes();
-      await stripeHandler(
-        makeReq({ action: 'portal', email: 'existing@example.com' }),
-        res,
-        { stripe, env: ENV },
-      );
-
+      await handler(makeReq({ action: 'portal', email: 'existing@example.com' }), res);
       expect(res.statusCode).toBe(200);
-      expect(res.body.url).toBe('https://billing.stripe.com/p/session/test');
+      expect(res.body.url).toBe('https://billing.stripe.com/session/test');
     });
 
-    it('passes the correct customer id to the billing portal', async () => {
-      stripe.customers.list.mockResolvedValue({ data: [{ id: 'cus_abc123' }] });
-
-      const res = makeRes();
-      await stripeHandler(
-        makeReq({ action: 'portal', email: 'existing@example.com' }),
-        res,
-        { stripe, env: ENV },
-      );
-
-      expect(stripe.billingPortal.sessions.create).toHaveBeenCalledWith(
+    it('passes the correct customer id to billingPortal.sessions.create', async () => {
+      mocks.stripe.customers.list.mockResolvedValue({ data: [{ id: 'cus_abc123' }] });
+      await handler(makeReq({ action: 'portal', email: 'e@e.com' }), makeRes());
+      expect(mocks.stripe.billingPortal.sessions.create).toHaveBeenCalledWith(
         expect.objectContaining({ customer: 'cus_abc123' }),
       );
     });
 
-    it('returns 404 when the email is not associated with any Stripe customer', async () => {
-      stripe.customers.list.mockResolvedValue({ data: [] });
-
+    it('returns 404 when no Stripe customer is found for the email', async () => {
+      mocks.stripe.customers.list.mockResolvedValue({ data: [] });
       const res = makeRes();
-      await stripeHandler(
-        makeReq({ action: 'portal', email: 'nobody@example.com' }),
-        res,
-        { stripe, env: ENV },
-      );
-
+      await handler(makeReq({ action: 'portal', email: 'nobody@example.com' }), res);
       expect(res.statusCode).toBe(404);
       expect(res.body.error).toBe('No subscription found');
     });
 
-    it('returns 400 for a missing email', async () => {
+    it('returns 400 when email is missing', async () => {
       const res = makeRes();
-      await stripeHandler(makeReq({ action: 'portal' }), res, { stripe, env: ENV });
+      await handler(makeReq({ action: 'portal' }), res);
       expect(res.statusCode).toBe(400);
     });
 
     it('returns 400 for a malformed email', async () => {
       const res = makeRes();
-      await stripeHandler(
-        makeReq({ action: 'portal', email: 'bad-email' }),
-        res,
-        { stripe, env: ENV },
-      );
+      await handler(makeReq({ action: 'portal', email: 'bad-email' }), res);
       expect(res.statusCode).toBe(400);
     });
   });
@@ -313,7 +185,7 @@ describe('Stripe checkout handler', () => {
 
   it('returns 400 for an unknown action', async () => {
     const res = makeRes();
-    await stripeHandler(makeReq({ action: 'refund' }), res, { stripe, env: ENV });
+    await handler(makeReq({ action: 'refund' }), res);
     expect(res.statusCode).toBe(400);
     expect(res.body.error).toBe('Unknown action');
   });
