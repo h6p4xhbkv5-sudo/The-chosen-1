@@ -30,7 +30,7 @@ function makeBuilder(resolution = { data: null, error: null }) {
     _resolvedWith: resolution,
     then(res, rej) { return Promise.resolve(b._resolvedWith).then(res, rej); },
   };
-  ['select', 'update', 'delete', 'eq', 'single'].forEach(m => {
+  ['select', 'insert', 'update', 'delete', 'eq', 'single'].forEach(m => {
     b[m] = vi.fn().mockReturnValue(b);
   });
   return b;
@@ -74,15 +74,18 @@ describe('Stripe webhook handler (api/webhook.js)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     process.env.STRIPE_WEBHOOK_SECRET = 'whsec_test';
+    process.env.SITE_URL = 'https://lumina.example.com';
     delete process.env.RESEND_API_KEY;
     fetchMock = vi.fn().mockResolvedValue({ ok: true });
     vi.stubGlobal('fetch', fetchMock);
+    // Default: all from() calls get a builder that supports every method
     mocks.supabase.from.mockReturnValue(makeBuilder());
   });
 
   afterEach(() => {
     vi.unstubAllGlobals();
     delete process.env.STRIPE_WEBHOOK_SECRET;
+    delete process.env.SITE_URL;
     delete process.env.RESEND_API_KEY;
   });
 
@@ -157,7 +160,11 @@ describe('Stripe webhook handler (api/webhook.js)', () => {
       }));
       mocks.supabase.from.mockReturnValue(makeBuilder());
       await handler(makeReq(), makeRes());
-      expect(fetchMock).toHaveBeenCalledWith('https://api.resend.com/emails', expect.objectContaining({ method: 'POST' }));
+      // sendEmail now routes through the internal /api/email endpoint
+      expect(fetchMock).toHaveBeenCalledWith(
+        'https://lumina.example.com/api/email',
+        expect.objectContaining({ method: 'POST' }),
+      );
     });
   });
 
@@ -181,9 +188,13 @@ describe('Stripe webhook handler (api/webhook.js)', () => {
   describe('invoice.payment_failed', () => {
     it('marks the profile as past_due', async () => {
       mocks.stripe.webhooks.constructEvent.mockReturnValue(fakeEvent('invoice.payment_failed', { customer: 'cus_fail' }));
-      const selectBuilder = makeBuilder({ data: { email: 'f@f.com', name: 'F' }, error: null });
-      const updateBuilder = makeBuilder();
-      mocks.supabase.from.mockReturnValueOnce(selectBuilder).mockReturnValueOnce(updateBuilder);
+      const idempotencyBuilder = makeBuilder({ error: null }); // processed_webhooks.insert
+      const selectBuilder      = makeBuilder({ data: { email: 'f@f.com', name: 'F' }, error: null });
+      const updateBuilder      = makeBuilder();
+      mocks.supabase.from
+        .mockReturnValueOnce(idempotencyBuilder)
+        .mockReturnValueOnce(selectBuilder)
+        .mockReturnValueOnce(updateBuilder);
       const res = makeRes();
       await handler(makeReq(), res);
       expect(res.statusCode).toBe(200);
@@ -193,19 +204,31 @@ describe('Stripe webhook handler (api/webhook.js)', () => {
     it('sends a failure email when the profile has an email', async () => {
       process.env.RESEND_API_KEY = 'key';
       mocks.stripe.webhooks.constructEvent.mockReturnValue(fakeEvent('invoice.payment_failed', { customer: 'cus_f2' }));
-      const selectBuilder = makeBuilder({ data: { email: 'late@x.com', name: 'Late' }, error: null });
-      const updateBuilder = makeBuilder();
-      mocks.supabase.from.mockReturnValueOnce(selectBuilder).mockReturnValueOnce(updateBuilder);
+      const idempotencyBuilder = makeBuilder({ error: null });
+      const selectBuilder      = makeBuilder({ data: { email: 'late@x.com', name: 'Late' }, error: null });
+      const updateBuilder      = makeBuilder();
+      mocks.supabase.from
+        .mockReturnValueOnce(idempotencyBuilder)
+        .mockReturnValueOnce(selectBuilder)
+        .mockReturnValueOnce(updateBuilder);
       await handler(makeReq(), makeRes());
-      expect(fetchMock).toHaveBeenCalledWith('https://api.resend.com/emails', expect.any(Object));
+      // sendEmail routes through the internal /api/email endpoint
+      expect(fetchMock).toHaveBeenCalledWith(
+        'https://lumina.example.com/api/email',
+        expect.any(Object),
+      );
     });
 
     it('skips the email when no profile is found', async () => {
       process.env.RESEND_API_KEY = 'key';
       mocks.stripe.webhooks.constructEvent.mockReturnValue(fakeEvent('invoice.payment_failed', { customer: 'cus_ghost' }));
-      const selectBuilder = makeBuilder({ data: null, error: null });
-      const updateBuilder = makeBuilder();
-      mocks.supabase.from.mockReturnValueOnce(selectBuilder).mockReturnValueOnce(updateBuilder);
+      const idempotencyBuilder = makeBuilder({ error: null });
+      const selectBuilder      = makeBuilder({ data: null, error: null });
+      const updateBuilder      = makeBuilder();
+      mocks.supabase.from
+        .mockReturnValueOnce(idempotencyBuilder)
+        .mockReturnValueOnce(selectBuilder)
+        .mockReturnValueOnce(updateBuilder);
       await handler(makeReq(), makeRes());
       expect(fetchMock).not.toHaveBeenCalled();
     });

@@ -1,0 +1,49 @@
+{
+  "framework": null,
+  "buildCommand": "npm test",
+  "functions": {
+    "api/**/*.js": {
+      "memory": 512,
+      "maxDuration": 30
+    },
+    "api/chat.js": {
+      "memory": 512,
+      "maxDuration": 60
+    },
+    "api/webhook.js": {
+      "memory": 256,
+      "maxDuration": 30
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options",     "value": "nosniff" },
+        { "key": "X-Frame-Options",            "value": "DENY" },
+        { "key": "X-XSS-Protection",           "value": "1; mode=block" },
+        { "key": "Referrer-Policy",            "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy",         "value": "camera=(), microphone=(), geolocation=()" },
+        { "key": "Strict-Transport-Security",  "value": "max-age=63072000; includeSubDomains; preload" }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate" }
+      ]
+    }
+  ],
+  "rewrites": [
+    { "source": "/api/auth",    "destination": "/api/auth.js" },
+    { "source": "/api/chat",    "destination": "/api/chat.js" },
+    { "source": "/api/email",   "destination": "/api/email.js" },
+    { "source": "/api/notes",   "destination": "/api/notes.js" },
+    { "source": "/api/progress","destination": "/api/progress.js" },
+    { "source": "/api/stripe",  "destination": "/api/stripe.js" },
+    { "source": "/api/webhook", "destination": "/api/webhook.js" },
+    { "source": "/api/admin",   "destination": "/api/admin.js" },
+    { "source": "/api/contact", "destination": "/api/contact.js" },
+    { "source": "/api/export",  "destination": "/api/export.js" }
+  ]
+}

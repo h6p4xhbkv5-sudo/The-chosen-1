@@ -132,7 +132,7 @@ describe('Email handler (api/email.js)', () => {
   describe('with RESEND_API_KEY set', () => {
     beforeEach(() => {
       process.env.RESEND_API_KEY = 'resend_key_123';
-      fetchMock.mockResolvedValue({ json: vi.fn().mockResolvedValue({ id: 'email-001' }) });
+      fetchMock.mockResolvedValue({ ok: true, json: vi.fn().mockResolvedValue({ id: 'email-001' }) });
     });
 
     it('calls Resend and returns the email id', async () => {

@@ -100,10 +100,12 @@ describe('Stripe checkout handler (api/stripe.js)', () => {
       expect(call.success_url).toContain('?payment=success');
     });
 
-    it('uses a provided successUrl instead of SITE_URL', async () => {
-      await handler(makeReq({ action: 'checkout', plan: 'student', email: 'e@e.com', successUrl: 'https://custom.example.com' }), makeRes());
+    it('always uses SITE_URL for success_url (ignores client-supplied successUrl)', async () => {
+      // Client-supplied redirect URLs are not trusted — always use server-side SITE_URL
+      await handler(makeReq({ action: 'checkout', plan: 'student', email: 'e@e.com', successUrl: 'https://evil.example.com' }), makeRes());
       const call = mocks.stripe.checkout.sessions.create.mock.calls[0][0];
-      expect(call.success_url).toStartWith('https://custom.example.com');
+      expect(call.success_url).not.toContain('evil.example.com');
+      expect(call.success_url).toContain('lumina.example.com');
     });
 
     it('returns 400 for an invalid plan', async () => {

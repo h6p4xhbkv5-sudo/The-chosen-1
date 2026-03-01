@@ -6,7 +6,7 @@
 <title>Contact & Support — Lumina AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-  :root{--gold:#C9A84C;--gold-light:#E8C96A;--bg:#08090E;--bg2:#0D0F18;--bg3:#121520;--bg4:#181C2A;--white:#F0EEF8;--muted:#6B7394;--border:rgba(255,255,255,0.07);--green:#4ADE80;}
+  :root{--gold:#C9A84C;--bg:#08090E;--bg2:#0D0F18;--bg3:#121520;--white:#F0EEF8;--muted:#6B7394;--border:rgba(255,255,255,0.07);--green:#4ADE80;}
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;line-height:1.7;min-height:100vh;}
   header{padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);}
@@ -28,9 +28,13 @@
   label{display:block;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.4rem;}
   input,select,textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.75rem 1rem;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.9rem;margin-bottom:1rem;transition:border-color .2s;resize:vertical;}
   input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
+  select option{background:var(--bg3);}
   .btn{width:100%;padding:.875rem;background:linear-gradient(135deg,var(--gold),#A07830);color:#0D0F18;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:all .25s;}
-  .btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(201,168,76,.3);}
-  .success{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);border-radius:10px;padding:1rem;color:var(--green);display:none;margin-bottom:1rem;}
+  .btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 24px rgba(201,168,76,.3);}
+  .btn:disabled{opacity:.6;cursor:not-allowed;}
+  .alert{border-radius:10px;padding:1rem;margin-bottom:1rem;display:none;}
+  .alert-success{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);color:var(--green);}
+  .alert-error{background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.3);color:#FB7185;}
   .faq{max-width:700px;margin:0 auto;padding:0 1.5rem 4rem;}
   .faq h2{font-family:'Syne',sans-serif;font-weight:700;font-size:1.4rem;margin-bottom:1.5rem;}
   details{background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:.75rem;overflow:hidden;}
@@ -45,118 +49,81 @@
 <body>
 <header>
   <a href="/" class="logo">Lumina AI</a>
-  <nav>
-    <a href="/">Home</a>
-    <a href="/privacy-policy.html">Privacy</a>
-    <a href="/terms.html">Terms</a>
-  </nav>
+  <nav><a href="/">Home</a><a href="/privacy-policy.html">Privacy</a><a href="/terms.html">Terms</a></nav>
 </header>
-
 <div class="hero">
   <h1>How can we help?</h1>
   <p>We typically respond within 24 hours on weekdays. For urgent issues, email us directly.</p>
 </div>
-
 <div class="cards">
-  <div class="card">
-    <div class="card-icon">📧</div>
-    <h3>General Support</h3>
-    <p>Questions about your account, features, or how things work</p>
-    <a href="mailto:support@luminaai.co.uk">support@luminaai.co.uk</a>
-  </div>
-  <div class="card">
-    <div class="card-icon">💳</div>
-    <h3>Billing & Payments</h3>
-    <p>Subscription issues, invoices, refund requests</p>
-    <a href="mailto:billing@luminaai.co.uk">billing@luminaai.co.uk</a>
-  </div>
-  <div class="card">
-    <div class="card-icon">🏫</div>
-    <h3>Schools & Licensing</h3>
-    <p>Bulk licensing for schools, colleges and homeschool groups</p>
-    <a href="mailto:schools@luminaai.co.uk">schools@luminaai.co.uk</a>
-  </div>
-  <div class="card">
-    <div class="card-icon">🔒</div>
-    <h3>Privacy & Data</h3>
-    <p>Data requests, GDPR queries, parental consent</p>
-    <a href="mailto:privacy@luminaai.co.uk">privacy@luminaai.co.uk</a>
-  </div>
+  <div class="card"><div class="card-icon">📧</div><h3>General Support</h3><p>Questions about your account, features, or how things work</p><a href="mailto:support@luminaai.co.uk">support@luminaai.co.uk</a></div>
+  <div class="card"><div class="card-icon">💳</div><h3>Billing & Payments</h3><p>Subscription issues, invoices, refund requests</p><a href="mailto:billing@luminaai.co.uk">billing@luminaai.co.uk</a></div>
+  <div class="card"><div class="card-icon">🏫</div><h3>Schools & Licensing</h3><p>Bulk licensing for schools, colleges and homeschool groups</p><a href="mailto:schools@luminaai.co.uk">schools@luminaai.co.uk</a></div>
+  <div class="card"><div class="card-icon">🔒</div><h3>Privacy & Data</h3><p>Data requests, GDPR queries, parental consent</p><a href="mailto:privacy@luminaai.co.uk">privacy@luminaai.co.uk</a></div>
 </div>
-
 <div class="faq">
   <h2>Frequently Asked Questions</h2>
-  <details>
-    <summary>How do I cancel my subscription?</summary>
-    <p>Go to your Dashboard → Settings → Subscription → Manage Plan. You can cancel at any time. Your access continues until the end of your current billing period.</p>
-  </details>
-  <details>
-    <summary>Can I get a refund?</summary>
-    <p>We offer refunds within 14 days of your first payment if you're not satisfied. For subsequent months, refunds are not available except where required by UK consumer law. Email billing@luminaai.co.uk to request a refund.</p>
-  </details>
-  <details>
-    <summary>My child is under 13 — is that okay?</summary>
-    <p>Users under 13 require verifiable parental consent. Please email privacy@luminaai.co.uk with your consent and we'll set up the account appropriately with extra privacy protections.</p>
-  </details>
-  <details>
-    <summary>Is the AI always accurate?</summary>
-    <p>Lumina AI uses state-of-the-art AI tuition, but AI can occasionally make mistakes. Always cross-reference with your textbook or teacher for exam-critical information. We're continuously improving accuracy.</p>
-  </details>
-  <details>
-    <summary>Can I use Lumina AI for my whole school?</summary>
-    <p>Yes! We offer school and college licensing with discounted bulk rates, teacher dashboards, and class management tools. Email schools@luminaai.co.uk for a quote.</p>
-  </details>
-  <details>
-    <summary>What subjects does Lumina AI cover?</summary>
-    <p>We cover all major GCSE and A-Level subjects including Mathematics, English Literature, Physics, Chemistry, Biology, History, Geography, Computer Science, and Economics. More subjects are added regularly.</p>
-  </details>
-  <details>
-    <summary>Does the AI do my homework for me?</summary>
-    <p>Lumina AI is designed to help you learn, not to do your work for you. It explains concepts, gives worked examples, and tests your understanding. Using AI to submit work as your own may violate your school's academic integrity policy.</p>
-  </details>
+  <details><summary>How do I cancel my subscription?</summary><p>Go to your Dashboard → Settings → Subscription → Manage Plan. You can cancel at any time. Your access continues until the end of your current billing period.</p></details>
+  <details><summary>Can I get a refund?</summary><p>We offer refunds within 14 days of your first payment if you're not satisfied. For subsequent months, refunds are not available except where required by UK consumer law. Email billing@luminaai.co.uk to request a refund.</p></details>
+  <details><summary>My child is under 13 — is that okay?</summary><p>Users under 13 require verifiable parental consent. Please email privacy@luminaai.co.uk with your consent and we'll set up the account appropriately with extra privacy protections.</p></details>
+  <details><summary>Is the AI always accurate?</summary><p>Lumina AI uses state-of-the-art AI tuition, but AI can occasionally make mistakes. Always cross-reference with your textbook or teacher for exam-critical information.</p></details>
+  <details><summary>Can I use Lumina AI for my whole school?</summary><p>Yes! We offer school and college licensing with discounted bulk rates, teacher dashboards, and class management tools. Email schools@luminaai.co.uk for a quote.</p></details>
+  <details><summary>What subjects does Lumina AI cover?</summary><p>We cover all major GCSE and A-Level subjects including Mathematics, English Literature, Physics, Chemistry, Biology, History, Geography, Computer Science, and Economics.</p></details>
+  <details><summary>Does the AI do my homework for me?</summary><p>Lumina AI is designed to help you learn, not to do your work for you. It explains concepts, gives worked examples, and tests your understanding.</p></details>
 </div>
-
 <div class="form-wrap">
   <h2>Send us a message</h2>
-  <div class="success" id="form-success">✅ Message sent! We'll reply within 24 hours.</div>
-  <label>Your name</label>
-  <input type="text" id="contact-name" placeholder="Full name">
-  <label>Email address</label>
-  <input type="email" id="contact-email" placeholder="your@email.com">
+  <div class="alert alert-success" id="form-success">✅ Message sent! We'll reply within 24 hours.</div>
+  <div class="alert alert-error"   id="form-error"></div>
+  <label>Your name *</label>
+  <input type="text"  id="contact-name"  placeholder="Full name"       autocomplete="name">
+  <label>Email address *</label>
+  <input type="email" id="contact-email" placeholder="your@email.com"  autocomplete="email">
   <label>Category</label>
   <select id="contact-category">
-    <option>General support</option>
-    <option>Billing issue</option>
-    <option>School / bulk licensing</option>
-    <option>Privacy / data request</option>
-    <option>Bug report</option>
-    <option>Feature request</option>
-    <option>Other</option>
+    <option>General support</option><option>Billing issue</option>
+    <option>School / bulk licensing</option><option>Privacy / data request</option>
+    <option>Bug report</option><option>Feature request</option><option>Other</option>
   </select>
-  <label>Message</label>
+  <label>Message *</label>
   <textarea id="contact-message" rows="5" placeholder="Tell us what's going on..."></textarea>
-  <button class="btn" onclick="submitContact()">Send Message</button>
+  <button class="btn" id="submit-btn" onclick="submitContact()">Send Message</button>
 </div>
-
 <footer>
   <div>© 2026 Lumina AI Ltd · All rights reserved</div>
-  <div style="margin-top:.5rem">
-    <a href="/privacy-policy.html">Privacy Policy</a>
-    <a href="/terms.html">Terms & Conditions</a>
-    <a href="/cookies.html">Cookies</a>
-  </div>
+  <div style="margin-top:.5rem"><a href="/privacy-policy.html">Privacy Policy</a><a href="/terms.html">Terms & Conditions</a><a href="/cookies.html">Cookies</a></div>
 </footer>
 <script>
-function submitContact() {
-  const name = document.getElementById('contact-name').value.trim();
-  const email = document.getElementById('contact-email').value.trim();
-  const msg = document.getElementById('contact-message').value.trim();
-  if (!name || !email || !msg) { alert('Please fill in all fields'); return; }
-  // In production, POST to /api/contact
-  document.getElementById('form-success').style.display = 'block';
-  document.getElementById('contact-name').value = '';
-  document.getElementById('contact-email').value = '';
-  document.getElementById('contact-message').value = '';
+async function submitContact() {
+  const name     = document.getElementById('contact-name').value.trim();
+  const email    = document.getElementById('contact-email').value.trim();
+  const category = document.getElementById('contact-category').value;
+  const message  = document.getElementById('contact-message').value.trim();
+  const btn      = document.getElementById('submit-btn');
+  const errEl    = document.getElementById('form-error');
+  const okEl     = document.getElementById('form-success');
+  errEl.style.display = 'none';
+  okEl.style.display  = 'none';
+  if (!name || !email || !message) {
+    errEl.textContent = 'Please fill in all required fields (name, email, message).';
+    errEl.style.display = 'block'; return;
+  }
+  btn.textContent = 'Sending…'; btn.disabled = true;
+  try {
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, category, message }),
+    });
+    const data = await res.json();
+    if (!res.ok) { errEl.textContent = data.error || 'Something went wrong.'; errEl.style.display = 'block'; return; }
+    okEl.style.display = 'block';
+    document.getElementById('contact-name').value = '';
+    document.getElementById('contact-email').value = '';
+    document.getElementById('contact-message').value = '';
+  } catch (e) {
+    errEl.textContent = 'Network error — please try again.'; errEl.style.display = 'block';
+  } finally { btn.textContent = 'Send Message'; btn.disabled = false; }
 }
 </script>
 </body>

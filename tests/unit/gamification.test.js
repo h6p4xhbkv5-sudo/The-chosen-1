@@ -141,7 +141,7 @@ describe('addActivityEntry', () => {
     expect(original['2024-06-01']).toBe(10);
   });
 
-  it('uses today's date when no override is provided', () => {
+  it("uses today's date when no override is provided", () => {
     const today = new Date().toISOString().split('T')[0];
     const result = addActivityEntry({}, 15);
     expect(result[today]).toBe(15);

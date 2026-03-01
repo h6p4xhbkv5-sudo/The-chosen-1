@@ -22,7 +22,7 @@ function makeBuilder(resolution = { data: null, error: null, count: null }) {
     _resolvedWith: resolution,
     then(res, rej) { return Promise.resolve(b._resolvedWith).then(res, rej); },
   };
-  ['select', 'order', 'limit', 'eq', 'gte', 'in'].forEach(m => {
+  ['select', 'insert', 'order', 'limit', 'range', 'eq', 'gte', 'in'].forEach(m => {
     b[m] = vi.fn().mockReturnValue(b);
   });
   return b;
@@ -144,19 +144,21 @@ describe('Admin handler (api/admin.js)', () => {
   // ── users ─────────────────────────────────────────────────────────────────
 
   describe('users action', () => {
-    it('returns the user list', async () => {
+    it('returns the user list with pagination envelope', async () => {
       const fakeUsers = [{ id: 'u1', name: 'Alice' }, { id: 'u2', name: 'Bob' }];
-      mocks.supabase.from.mockReturnValue(makeBuilder({ data: fakeUsers }));
+      mocks.supabase.from.mockReturnValue(makeBuilder({ data: fakeUsers, count: 2 }));
 
       const res = makeRes();
       await handler(makeReq({ query: { action: 'users' } }), res);
 
       expect(res.statusCode).toBe(200);
       expect(res.body.users).toEqual(fakeUsers);
+      expect(res.body.total).toBe(2);
+      expect(res.body.page).toBe(1);
     });
 
     it('returns an empty array when there are no users', async () => {
-      mocks.supabase.from.mockReturnValue(makeBuilder({ data: null }));
+      mocks.supabase.from.mockReturnValue(makeBuilder({ data: null, count: 0 }));
 
       const res = makeRes();
       await handler(makeReq({ query: { action: 'users' } }), res);
@@ -164,14 +166,14 @@ describe('Admin handler (api/admin.js)', () => {
       expect(res.body.users).toEqual([]);
     });
 
-    it('requests up to 100 users ordered by created_at descending', async () => {
-      const builder = makeBuilder({ data: [] });
+    it('requests users ordered by created_at descending using range', async () => {
+      const builder = makeBuilder({ data: [], count: 0 });
       mocks.supabase.from.mockReturnValue(builder);
 
       await handler(makeReq({ query: { action: 'users' } }), makeRes());
 
       expect(builder.order).toHaveBeenCalledWith('created_at', { ascending: false });
-      expect(builder.limit).toHaveBeenCalledWith(100);
+      expect(builder.range).toHaveBeenCalledWith(0, 49); // page 1, limit 50 → range(0, 49)
     });
   });
 
@@ -215,7 +217,7 @@ describe('Admin handler (api/admin.js)', () => {
       expect(fetchMock).not.toHaveBeenCalled();
     });
 
-    it('continues and counts all users even when one email request fails', async () => {
+    it('continues and reports failures separately when one email request throws', async () => {
       mocks.supabase.from.mockReturnValue(makeBuilder({ data: users }));
       fetchMock
         .mockRejectedValueOnce(new Error('timeout'))
@@ -224,7 +226,8 @@ describe('Admin handler (api/admin.js)', () => {
       const res = makeRes();
       await handler(makeReq({ query: { action: 'send_weekly_emails' } }), res);
 
-      expect(res.body.sent).toBe(2);
+      expect(res.body.sent).toBe(1);
+      expect(res.body.failed).toBe(1);
     });
   });
 

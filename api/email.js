@@ -1,12 +1,18 @@
+import { applyHeaders, isRateLimited, getIp } from './_lib.js';
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  applyHeaders(res, 'POST, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { type, email, name, stats } = req.body;
+  // Rate limit: 10 per IP per hour (admin batch sends are routed here too)
+  if (isRateLimited(`${getIp(req)}:email`, 10, 60 * 60_000)) {
+    return res.status(429).json({ error: 'Too many requests' });
+  }
+
+  const { type, email, name, stats } = req.body || {};
 
   if (!email || !EMAIL_RE.test(email)) return res.status(400).json({ error: 'Valid email is required' });
   if (!name || !name.trim()) return res.status(400).json({ error: 'Name is required' });
@@ -33,7 +39,8 @@ export default async function handler(req, res) {
         </div>
         <div style="padding:1rem 2rem;border-top:1px solid rgba(255,255,255,0.1);font-size:.8rem;color:#6B7394;text-align:center">
           Lumina AI · <a href="mailto:support@luminaai.co.uk" style="color:#6B7394">support@luminaai.co.uk</a> ·
-          <a href="${siteUrl}/privacy-policy.html" style="color:#6B7394">Privacy</a>
+          <a href="${siteUrl}/privacy-policy.html" style="color:#6B7394">Privacy</a> ·
+          <a href="${siteUrl}?unsubscribe=1" style="color:#6B7394">Unsubscribe</a>
         </div></div>`,
     },
     weekly: {
@@ -51,14 +58,40 @@ export default async function handler(req, res) {
             <div style="background:#181C2A;border-radius:10px;padding:1rem;text-align:center"><div style="font-size:2rem;font-weight:800;color:#FB923C">${stats?.streak || 0}🔥</div><div>Day streak</div></div>
           </div>
           <a href="${siteUrl}" style="display:inline-block;background:#C9A84C;color:#0D0F18;padding:.875rem 2rem;border-radius:8px;font-weight:700;text-decoration:none">Keep Going →</a>
+        </div>
+        <div style="padding:1rem 2rem;border-top:1px solid rgba(255,255,255,0.1);font-size:.8rem;color:#6B7394;text-align:center">
+          <a href="${siteUrl}?unsubscribe=1" style="color:#6B7394">Unsubscribe from weekly reports</a>
         </div></div>`,
     },
     exam_reminder: {
       subject: `⏰ ${stats?.subject} exam in ${stats?.days} days — time to revise!`,
-      html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#0D0F18;color:#F0EEF8;padding:2rem">
+      html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#0D0F18;color:#F0EEF8;padding:2rem;border-radius:16px">
         <h2 style="color:#C9A84C">⏰ Exam reminder, ${name}</h2>
         <p>Your <strong>${stats?.subject}</strong> exam is in <strong>${stats?.days} days</strong>.</p>
         <a href="${siteUrl}" style="display:inline-block;background:#C9A84C;color:#0D0F18;padding:.875rem 2rem;border-radius:8px;font-weight:700;text-decoration:none;margin-top:1rem">Revise Now →</a>
+        <p style="margin-top:2rem;font-size:.8rem;color:#6B7394"><a href="${siteUrl}?unsubscribe=1" style="color:#6B7394">Unsubscribe</a></p>
+      </div>`,
+    },
+    payment_confirmed: {
+      subject: '🎉 Welcome to Lumina AI — Your subscription is active!',
+      html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#0D0F18;color:#F0EEF8;border-radius:16px;overflow:hidden">
+        <div style="background:linear-gradient(135deg,#C9A84C,#8B6914);padding:2rem;text-align:center">
+          <h1 style="margin:0;font-size:1.8rem">🎉 You're in!</h1>
+        </div>
+        <div style="padding:2rem">
+          <p>Your <strong>${stats?.plan === 'homeschool' ? 'Homeschool' : 'Student'} Plan</strong> is now active.</p>
+          <p>You now have full access to all Lumina AI features including unlimited AI tutoring, practice questions, essay marking, and more.</p>
+          <a href="${siteUrl}" style="display:inline-block;background:#C9A84C;color:#0D0F18;padding:.875rem 2rem;border-radius:8px;font-weight:700;text-decoration:none;margin-top:1rem">Start Learning →</a>
+        </div></div>`,
+    },
+    payment_failed: {
+      subject: '⚠️ Lumina AI — Payment failed',
+      html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#0D0F18;color:#F0EEF8;padding:2rem;border-radius:16px">
+        <h2 style="color:#FB7185">⚠️ Payment failed</h2>
+        <p>Hi ${name || 'there'},</p>
+        <p>We couldn't process your payment. Please update your payment method to continue accessing Lumina AI.</p>
+        <a href="${siteUrl}" style="display:inline-block;background:#C9A84C;color:#0D0F18;padding:.875rem 1.5rem;border-radius:8px;font-weight:700;text-decoration:none;margin-top:1rem">Update Payment →</a>
+        <p style="margin-top:1.5rem;font-size:.85rem;color:#6B7394">If you have questions, email <a href="mailto:billing@luminaai.co.uk" style="color:#C9A84C">billing@luminaai.co.uk</a></p>
       </div>`,
     },
   };
@@ -72,14 +105,24 @@ export default async function handler(req, res) {
       const r = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ from: 'Lumina AI <hello@luminaai.co.uk>', to: email, subject: template.subject, html: template.html }),
+        body: JSON.stringify({
+          from: 'Lumina AI <hello@luminaai.co.uk>',
+          to: email,
+          subject: template.subject,
+          html: template.html,
+        }),
       });
       const result = await r.json();
+      if (!r.ok) return res.status(500).json({ error: result?.message || 'Email send failed' });
       return res.status(200).json({ success: true, id: result.id });
     } catch (e) {
       return res.status(500).json({ error: 'Email send failed: ' + e.message });
     }
   }
 
-  return res.status(200).json({ success: true, note: 'Add RESEND_API_KEY to Vercel to send real emails', preview: template.html });
+  return res.status(200).json({
+    success: true,
+    note: 'Add RESEND_API_KEY to Vercel to send real emails',
+    preview: template.html,
+  });
 }

@@ -3881,8 +3881,8 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       </div>
       <div class="settings-section">
         <h3>🔐 Privacy & Data</h3>
-        <div class="setting-row"><div class="setting-info"><h4>Download My Data</h4><p>Export all your learning data (GDPR)</p></div><button class="btn btn-outline" style="font-size:.8rem;padding:.5rem 1rem">Download</button></div>
-        <div class="setting-row"><div class="setting-info"><h4>Delete Account</h4><p>Permanently delete your account and all data</p></div><button class="btn" style="background:rgba(251,113,133,0.1);color:var(--red);border:1px solid rgba(251,113,133,0.3);font-size:.8rem;padding:.5rem 1rem;border-radius:8px;cursor:pointer">Delete</button></div>
+        <div class="setting-row"><div class="setting-info"><h4>Download My Data</h4><p>Export all your learning data (GDPR)</p></div><button class="btn btn-outline" style="font-size:.8rem;padding:.5rem 1rem" onclick="downloadMyData()" id="download-data-btn">Download</button></div>
+        <div class="setting-row"><div class="setting-info"><h4>Delete Account</h4><p>Permanently delete your account and all data</p></div><button class="btn" style="background:rgba(251,113,133,0.1);color:var(--red);border:1px solid rgba(251,113,133,0.3);font-size:.8rem;padding:.5rem 1rem;border-radius:8px;cursor:pointer" onclick="deleteMyAccount()" id="delete-account-btn">Delete Account</button></div>
       </div>
     </div>
 
@@ -4579,7 +4579,77 @@ async function createAssignment() {
   }
 }
 
-function saveAssignment() { showToast('✅ Assignment saved and sent to students!'); }
+
+// ─── GDPR: Download My Data ───────────────────────────
+async function downloadMyData() {
+  const btn = document.getElementById('download-data-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Preparing…'; }
+  try {
+    const token = state.token;
+    if (!token) { showToast('⚠️ Please log in first'); return; }
+    const res = await fetch('/api/export', { headers: { Authorization: 'Bearer ' + token } });
+    if (!res.ok) { const d = await res.json(); showToast('⚠️ ' + (d.error || 'Export failed')); return; }
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = 'lumina-data-export.json'; a.click();
+    URL.revokeObjectURL(url);
+    showToast('✅ Data exported!');
+  } catch(e) {
+    showToast('⚠️ Export error: ' + e.message.slice(0, 60));
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Download'; }
+  }
+}
+
+// ─── GDPR: Delete Account ──────────────────────────────
+async function deleteMyAccount() {
+  const confirmed = confirm(
+    'Are you absolutely sure?\n\nThis will permanently delete your account and ALL your data — notes, progress, chat history, flashcards, and everything else.\n\nThis cannot be undone.'
+  );
+  if (!confirmed) return;
+  const doubleCheck = prompt('Type DELETE to confirm account deletion:');
+  if (doubleCheck !== 'DELETE') { showToast('Account deletion cancelled'); return; }
+  const btn = document.getElementById('delete-account-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Deleting…'; }
+  try {
+    const token = state.token;
+    if (!token) { showToast('⚠️ Please log in first'); return; }
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+      body: JSON.stringify({ action: 'delete' }),
+    });
+    const data = await res.json();
+    if (!res.ok) { showToast('⚠️ ' + (data.error || 'Deletion failed')); return; }
+    // Clear local state and redirect to home
+    try { localStorage.clear(); } catch(e) {}
+    showToast('Account deleted. Goodbye!');
+    setTimeout(() => { window.location.href = '/'; }, 2000);
+  } catch(e) {
+    showToast('⚠️ Error: ' + e.message.slice(0, 60));
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Delete Account'; }
+  }
+}
+
+function saveAssignment() {
+  const titleEl   = document.getElementById('assignment-title');
+  const subjectEl = document.getElementById('assignment-subject');
+  const deadlineEl= document.getElementById('assignment-deadline');
+  const descEl    = document.getElementById('assignment-desc');
+  const title   = titleEl?.value?.trim()   || '';
+  const subject = subjectEl?.value?.trim() || '';
+  const deadline= deadlineEl?.value        || '';
+  const desc    = descEl?.value?.trim()    || '';
+  if (!title) { showToast('⚠️ Please enter an assignment title'); return; }
+  try {
+    const saved = JSON.parse(localStorage.getItem('lumina_assignments') || '[]');
+    saved.unshift({ id: Date.now(), title, subject, deadline, desc, created: new Date().toISOString() });
+    localStorage.setItem('lumina_assignments', JSON.stringify(saved.slice(0, 100)));
+  } catch(e) {}
+  showToast('✅ Assignment saved!');
+}
 function openAssignment(id) { showToast('Opening assignment...'); showDash('tutor'); }
 
 // ═══════════════════════════════════════
@@ -7243,12 +7313,7 @@ function generateReferralLink() {
   return link;
 }
 
-// Check for referral on load
-const refCode = urlParams.get('ref');
-if (refCode) {
-  try { localStorage.setItem('lumina_referral', refCode); } catch(e) {}
-  showToast('🎁 You were referred! Sign up to get started');
-}
+
 
 // ═══════════════════════════════════════
 // NOTIFICATIONS / REMINDERS
@@ -7387,21 +7452,7 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// ─── PWA SERVICE WORKER ───────────────────────────────
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    // Register inline service worker for offline capability
-    const swCode = `
-const CACHE = 'lumina-v9';
-const ASSETS = ['/'];
-self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS))));
-self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).catch(() => caches.match('/')))));
-    `;
-    const blob = new Blob([swCode], { type: 'application/javascript' });
-    const swUrl = URL.createObjectURL(blob);
-    navigator.serviceWorker.register(swUrl).catch(() => {});
-  });
-}
+// Service worker registered below (see OFFLINE MODE block)
 
 // ─── PATCH enterDashboard ─────────────────────────────
 const _v9PrevEnter = window.enterDashboard;

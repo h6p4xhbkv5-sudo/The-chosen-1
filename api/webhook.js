@@ -15,7 +15,17 @@ async function getRawBody(req) {
   });
 }
 
+/** Mark event as processed (idempotency). Returns false if already processed. */
+async function markProcessed(eventId) {
+  const { error } = await supabase
+    .from('processed_webhooks')
+    .insert({ id: eventId, processed_at: new Date().toISOString() });
+  // Unique constraint violation = already processed
+  return !error;
+}
+
 export default async function handler(req, res) {
+  // Webhook endpoint has no CORS — only Stripe calls it
   if (req.method !== 'POST') return res.status(405).end();
 
   const rawBody = await getRawBody(req);
@@ -29,74 +39,82 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid signature' });
   }
 
+  // Idempotency: skip if we've already processed this event
+  const isNew = await markProcessed(event.id);
+  if (!isNew) {
+    console.log(`Duplicate webhook skipped: ${event.id}`);
+    return res.status(200).json({ received: true, duplicate: true });
+  }
+
   const data = event.data.object;
 
-  switch (event.type) {
-    case 'checkout.session.completed': {
-      const email = data.customer_email;
-      const plan = data.metadata?.plan || 'student';
-      await supabase.from('profiles').update({
-        plan,
-        subscription_status: 'active',
-        stripe_customer_id: data.customer,
-        subscription_id: data.subscription,
-      }).eq('email', email);
-      await sendEmail(email, 'payment_confirmed', { plan });
-      console.log(`✓ Subscription activated: ${email} → ${plan}`);
-      break;
+  try {
+    switch (event.type) {
+      case 'checkout.session.completed': {
+        const email = data.customer_email;
+        const plan = data.metadata?.plan || 'student';
+        await supabase.from('profiles').update({
+          plan,
+          subscription_status: 'active',
+          stripe_customer_id: data.customer,
+          subscription_id: data.subscription,
+        }).eq('email', email);
+        await sendEmail(email, 'payment_confirmed', { plan });
+        console.log(`✓ Subscription activated: ${email} → ${plan}`);
+        break;
+      }
+
+      case 'invoice.payment_succeeded': {
+        await supabase.from('profiles')
+          .update({ subscription_status: 'active' })
+          .eq('stripe_customer_id', data.customer);
+        console.log(`✓ Payment renewed: ${data.customer}`);
+        break;
+      }
+
+      case 'invoice.payment_failed': {
+        const customerId = data.customer;
+        const { data: profile } = await supabase
+          .from('profiles').select('email,name').eq('stripe_customer_id', customerId).single();
+        await supabase.from('profiles')
+          .update({ subscription_status: 'past_due' })
+          .eq('stripe_customer_id', customerId);
+        if (profile?.email) {
+          await sendEmail(profile.email, 'payment_failed', { name: profile.name });
+        }
+        console.log(`⚠ Payment failed: ${customerId}`);
+        break;
+      }
+
+      case 'customer.subscription.deleted': {
+        await supabase.from('profiles')
+          .update({ subscription_status: 'cancelled', plan: 'free' })
+          .eq('stripe_customer_id', data.customer);
+        console.log(`✓ Subscription cancelled: ${data.customer}`);
+        break;
+      }
+
+      default:
+        console.log(`Unhandled event type: ${event.type}`);
     }
-    case 'invoice.payment_succeeded': {
-      await supabase.from('profiles')
-        .update({ subscription_status: 'active' })
-        .eq('stripe_customer_id', data.customer);
-      break;
-    }
-    case 'invoice.payment_failed': {
-      const customerId = data.customer;
-      const { data: profile } = await supabase
-        .from('profiles').select('email,name').eq('stripe_customer_id', customerId).single();
-      await supabase.from('profiles')
-        .update({ subscription_status: 'past_due' })
-        .eq('stripe_customer_id', customerId);
-      if (profile?.email) await sendEmail(profile.email, 'payment_failed', { name: profile.name });
-      break;
-    }
-    case 'customer.subscription.deleted': {
-      await supabase.from('profiles')
-        .update({ subscription_status: 'cancelled', plan: 'free' })
-        .eq('stripe_customer_id', data.customer);
-      break;
-    }
+  } catch (err) {
+    console.error(`Error processing webhook ${event.id}:`, err.message);
+    // Return 200 so Stripe doesn't retry — the event was received; log the error instead
+    return res.status(200).json({ received: true, error: 'Processing error logged' });
   }
 
   return res.status(200).json({ received: true });
 }
 
 async function sendEmail(to, type, data) {
-  if (!process.env.RESEND_API_KEY) return;
-  const templates = {
-    payment_confirmed: {
-      subject: '🎉 Welcome to Lumina AI — Your subscription is active!',
-      html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#0D0F18;color:#F0EEF8;border-radius:16px;overflow:hidden">
-        <div style="background:linear-gradient(135deg,#C9A84C,#8B6914);padding:2rem;text-align:center">
-          <h1 style="margin:0;font-size:1.8rem">🎉 You're in!</h1>
-        </div>
-        <div style="padding:2rem">
-          <p>Your <strong>${data.plan === 'homeschool' ? 'Homeschool' : 'Student'} Plan</strong> is now active.</p>
-          <p>You now have full access to all Lumina AI features.</p>
-          <a href="${process.env.SITE_URL}" style="display:inline-block;background:#C9A84C;color:#0D0F18;padding:.875rem 2rem;border-radius:8px;font-weight:700;text-decoration:none;margin-top:1rem">Start Learning →</a>
-        </div></div>`,
-    },
-    payment_failed: {
-      subject: '⚠️ Lumina AI — Payment failed',
-      html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto"><p>Hi ${data.name},</p><p>We couldn't process your payment. Please update your payment method to continue accessing Lumina AI.</p><a href="${process.env.SITE_URL}" style="background:#C9A84C;color:#0D0F18;padding:.75rem 1.5rem;border-radius:8px;font-weight:700;text-decoration:none">Update Payment →</a></div>`,
-    },
-  };
-  const template = templates[type];
-  if (!template) return;
-  await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: 'Lumina AI <hello@luminaai.co.uk>', to, subject: template.subject, html: template.html }),
-  });
+  if (!process.env.RESEND_API_KEY || !to) return;
+  try {
+    await fetch(`${process.env.SITE_URL}/api/email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type, email: to, name: data.name || 'there', stats: data }),
+    });
+  } catch (e) {
+    console.error('sendEmail failed:', e.message);
+  }
 }
