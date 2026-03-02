@@ -1594,6 +1594,22 @@ body.mode-adhd .adhd-break { display: block; }
   .hero h1 { font-size: 2rem; }
   .auth-box { padding: 1.5rem; margin: 1rem; }
   .difficulty-grid { grid-template-columns: 1fr 1fr; }
+  /* New sections — mobile */
+  .audience-grid { grid-template-columns: 1fr !important; }
+  .testimonials-grid { grid-template-columns: 1fr !important; }
+  .features-grid { grid-template-columns: 1fr !important; }
+  .subjects-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .stat-item { border-right: none; border-bottom: 1px solid var(--border); }
+  .stat-item:nth-child(odd) { border-right: 1px solid var(--border); }
+  .stat-item:last-child { border-bottom: none; }
+  .trust-bar { gap: .75rem; }
+  .trust-item { font-size: .78rem; }
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .btn-hero-primary, .btn-hero-secondary { width: 100%; text-align: center; }
+  .msg-row { max-width: 95%; }
+  .msg { max-width: 100%; }
+  .msg-avatar { display: none; }
 }
 
 /* ═══════════════════════════════════════
@@ -2410,6 +2426,8 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
   <div class="nav-links" id="public-nav">
     <a onclick="nav('home')">Home</a>
     <a onclick="scrollTo('#features')">Features</a>
+    <a onclick="scrollTo('#for-who')">Who It's For</a>
+    <a onclick="scrollTo('#testimonials')">Reviews</a>
     <a onclick="scrollTo('#pricing')">Pricing</a>
   </div>
   <div class="nav-links" id="app-nav" style="display:none">
@@ -2455,7 +2473,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     <p>Your personal AI tutor, exam question generator, and progress tracker — all in one. Built for GCSE & A-Level students who are serious about getting the grades they deserve.</p>
     <div class="hero-actions">
       <button class="btn-hero-primary" onclick="nav('auth')">Start Free Today — No Card Needed →</button>
-      <button class="btn-hero-secondary" onclick="document.querySelector('.video-section').scrollIntoView({behavior:'smooth'})"><i class="fas fa-play-circle"></i> See How It Works</button>
+      <button class="btn-hero-secondary" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})"><i class="fas fa-play-circle"></i> See Live Demo</button>
     </div>
     <div class="trust-bar">
       <div class="trust-item"><i class="fas fa-lock"></i> GDPR Compliant</div>
@@ -2466,37 +2484,42 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     </div>
   </section>
 
-  <!-- Video Section -->
-  <section class="video-section">
-    <div class="section-label">See it in action</div>
-    <h2>Watch How Lumina AI Works</h2>
-    <p>A 90-second walkthrough showing how students use the AI tutor, generate exam questions, and track their progress.</p>
-    <div class="video-player">
-      <div class="video-main" id="video-main" onclick="startVideo()">
-        <div class="video-preview-content">
-          <div class="video-play-btn"><i class="fas fa-play"></i></div>
-          <h3>How Lumina AI Works</h3>
-          <p>AI Tutor · Exam Questions · Progress Tracking · Accessibility</p>
+  <!-- Live Demo Section -->
+  <section class="video-section" id="demo">
+    <div class="section-label">Live Preview</div>
+    <h2>See Lumina AI in action</h2>
+    <p>A real conversation with your AI tutor — not a recording. Click a question to see how Lumina explains it.</p>
+    <div class="video-player" style="max-width:860px">
+      <!-- Mock UI chrome -->
+      <div style="background:var(--bg3);padding:.75rem 1.25rem;display:flex;align-items:center;gap:.75rem;border-bottom:1px solid var(--border)">
+        <div style="display:flex;gap:.4rem"><div style="width:12px;height:12px;border-radius:50%;background:#FF5F57"></div><div style="width:12px;height:12px;border-radius:50%;background:#FEBC2E"></div><div style="width:12px;height:12px;border-radius:50%;background:#28C840"></div></div>
+        <div style="flex:1;background:var(--bg4);border-radius:6px;padding:.3rem .75rem;font-size:.75rem;color:var(--muted);border:1px solid var(--border)">lumina-ai — AI Tutor · Mathematics</div>
+        <div style="display:flex;gap:.5rem">
+          <div style="width:28px;height:28px;border-radius:8px;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--gold)"><i class="fas fa-robot"></i></div>
         </div>
       </div>
-      <div class="video-chapters">
-        <button class="chapter-btn active" onclick="playChapter(0)">
-          <span class="chapter-icon">👋</span>Welcome<br><span class="chapter-time">0:00</span>
-        </button>
-        <button class="chapter-btn" onclick="playChapter(1)">
-          <span class="chapter-icon">🤖</span>AI Tutor<br><span class="chapter-time">0:22</span>
-        </button>
-        <button class="chapter-btn" onclick="playChapter(2)">
-          <span class="chapter-icon">📝</span>Questions<br><span class="chapter-time">0:45</span>
-        </button>
-        <button class="chapter-btn" onclick="playChapter(3)">
-          <span class="chapter-icon">📊</span>Progress<br><span class="chapter-time">1:05</span>
-        </button>
-        <button class="chapter-btn" onclick="playChapter(4)">
-          <span class="chapter-icon">♿</span>Accessibility<br><span class="chapter-time">1:22</span>
-        </button>
+      <!-- Demo chat messages -->
+      <div id="demo-chat" style="height:320px;overflow-y:auto;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;background:var(--bg2)">
+        <div class="msg-row bot-row">
+          <div class="msg-avatar ai-avatar">✦</div>
+          <div class="msg bot">Hello! I'm Lumina, your personal AI tutor. I can explain any GCSE or A-Level topic — step by step, in plain English. <strong>Try one of the questions below, or type your own.</strong></div>
+        </div>
+      </div>
+      <!-- Quick-try buttons -->
+      <div style="padding:1rem 1.25rem;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg3);display:flex;gap:.6rem;flex-wrap:wrap">
+        <span style="font-size:.75rem;color:var(--muted);align-self:center;white-space:nowrap"><i class="fas fa-bolt" style="color:var(--gold)"></i> Try asking:</span>
+        <button onclick="demoAsk('Explain photosynthesis simply')" style="padding:.4rem .85rem;border-radius:20px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);color:#4ADE80;font-size:.78rem;cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(74,222,128,0.2)'" onmouseout="this.style.background='rgba(74,222,128,0.1)'">Photosynthesis</button>
+        <button onclick="demoAsk('How do I solve simultaneous equations?')" style="padding:.4rem .85rem;border-radius:20px;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.25);color:#60A5FA;font-size:.78rem;cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(96,165,250,0.2)'" onmouseout="this.style.background='rgba(96,165,250,0.1)'">Simultaneous Equations</button>
+        <button onclick="demoAsk('What caused World War 1?')" style="padding:.4rem .85rem;border-radius:20px;background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.25);color:#FB923C;font-size:.78rem;cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(251,146,60,0.2)'" onmouseout="this.style.background='rgba(251,146,60,0.1)'">World War 1 Causes</button>
+        <button onclick="demoAsk('Explain supply and demand')" style="padding:.4rem .85rem;border-radius:20px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.25);color:var(--gold);font-size:.78rem;cursor:pointer;transition:all .2s" onmouseover="this.style.background='rgba(201,168,76,0.2)'" onmouseout="this.style.background='rgba(201,168,76,0.1)'">Supply & Demand</button>
+      </div>
+      <!-- Demo input row -->
+      <div style="padding:1rem 1.25rem;display:flex;gap:.75rem;background:var(--bg3)">
+        <input id="demo-input" type="text" placeholder="Ask Lumina anything… (try it — it's live!)" style="flex:1;padding:.75rem 1rem;background:var(--bg4);border:1px solid var(--border);border-radius:10px;color:var(--white);font-size:.9rem;font-family:inherit;outline:none;transition:border .2s" onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'" onkeydown="if(event.key==='Enter')demoAsk(this.value)">
+        <button onclick="demoAsk(document.getElementById('demo-input').value)" style="padding:.75rem 1.25rem;background:var(--gold);color:var(--black);border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:.9rem;transition:all .2s;white-space:nowrap" onmouseover="this.style.background='var(--gold-light)'" onmouseout="this.style.background='var(--gold)'"><i class="fas fa-paper-plane"></i> Ask</button>
       </div>
     </div>
+    <p style="margin-top:1.5rem;color:var(--muted);font-size:.8rem"><i class="fas fa-info-circle"></i> This is a live demo — your messages go to the real Lumina AI. <a onclick="nav('auth')" style="color:var(--gold);cursor:pointer;text-decoration:underline">Sign up free</a> for unlimited access.</p>
   </section>
 
   <!-- Features -->
@@ -2596,7 +2619,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
   </section>
 
   <!-- Who It's For -->
-  <section class="audience-section">
+  <section class="audience-section" id="for-who">
     <div class="section-label" style="display:block;text-align:center;margin-bottom:1rem">Built for Everyone</div>
     <h2>Designed for students.<br>Loved by parents and teachers.</h2>
     <p class="sub">Lumina AI works for the whole school community — not just the student.</p>
@@ -2707,7 +2730,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
   </section>
 
   <!-- Testimonials -->
-  <section class="testimonials-section">
+  <section class="testimonials-section" id="testimonials">
     <div class="section-label" style="display:block;text-align:center;margin-bottom:1rem">Real Results</div>
     <h2>Students are loving it.</h2>
     <p class="sub">Don't take our word for it — here's what real students, parents and teachers are saying.</p>
@@ -5269,6 +5292,87 @@ function playChapter(i) {
 }
 
 function startVideo() { playChapter(1); }
+
+// ═══════════════════════════════════════
+// HOMEPAGE LIVE DEMO CHAT
+// ═══════════════════════════════════════
+let _demoLocked = false;
+async function demoAsk(text) {
+  text = (text || '').trim();
+  if (!text || _demoLocked) return;
+  _demoLocked = true;
+  const input = document.getElementById('demo-input');
+  if (input) input.value = '';
+  const chat = document.getElementById('demo-chat');
+  if (!chat) { _demoLocked = false; return; }
+  // User message
+  const userRow = document.createElement('div');
+  userRow.className = 'msg-row user-row';
+  const userAv = document.createElement('div');
+  userAv.className = 'msg-avatar user-avatar';
+  userAv.textContent = 'Y';
+  const userMsg = document.createElement('div');
+  userMsg.className = 'msg user';
+  userMsg.textContent = text;
+  userRow.appendChild(userAv);
+  userRow.appendChild(userMsg);
+  chat.appendChild(userRow);
+  chat.scrollTop = 99999;
+  // Typing indicator
+  const typRow = document.createElement('div');
+  typRow.className = 'msg-row bot-row';
+  const typAv = document.createElement('div');
+  typAv.className = 'msg-avatar ai-avatar';
+  typAv.textContent = '✦';
+  const typMsg = document.createElement('div');
+  typMsg.className = 'msg bot typing';
+  typMsg.innerHTML = '<span></span><span></span><span></span>';
+  typRow.appendChild(typAv);
+  typRow.appendChild(typMsg);
+  chat.appendChild(typRow);
+  chat.scrollTop = 99999;
+  try {
+    const sys = 'You are Lumina AI, a friendly UK GCSE and A-Level tutor. Give a clear, helpful, well-structured answer in 3-5 sentences. Use simple language. This is a homepage demo — impress the user with how clear and helpful you are. Do not mention you are Claude.';
+    const data = await callClaude([{ role: 'user', content: text }], sys);
+    const reply = getReply(data);
+    typRow.remove();
+    const botRow = document.createElement('div');
+    botRow.className = 'msg-row bot-row';
+    const botAv = document.createElement('div');
+    botAv.className = 'msg-avatar ai-avatar';
+    botAv.textContent = '✦';
+    const botMsg = document.createElement('div');
+    botMsg.className = 'msg bot';
+    botMsg.innerHTML = formatChatText(reply, false);
+    botRow.appendChild(botAv);
+    botRow.appendChild(botMsg);
+    chat.appendChild(botRow);
+    chat.scrollTop = 99999;
+    // Prompt sign up after a real answer
+    setTimeout(() => {
+      const ctaRow = document.createElement('div');
+      ctaRow.style.cssText = 'text-align:center;padding:.5rem';
+      ctaRow.innerHTML = '<button onclick="nav(\'auth\')" style="padding:.6rem 1.5rem;background:var(--gold);color:var(--black);border:none;border-radius:20px;font-weight:700;cursor:pointer;font-size:.875rem">Get unlimited answers — Sign up free →</button>';
+      chat.appendChild(ctaRow);
+      chat.scrollTop = 99999;
+    }, 600);
+  } catch(e) {
+    typRow.remove();
+    const errRow = document.createElement('div');
+    errRow.className = 'msg-row bot-row';
+    const errAv = document.createElement('div');
+    errAv.className = 'msg-avatar ai-avatar';
+    errAv.textContent = '✦';
+    const errMsg = document.createElement('div');
+    errMsg.className = 'msg bot';
+    errMsg.textContent = 'Sign up for a free account to chat with Lumina AI!';
+    errRow.appendChild(errAv);
+    errRow.appendChild(errMsg);
+    chat.appendChild(errRow);
+    chat.scrollTop = 99999;
+  }
+  _demoLocked = false;
+}
 
 function showVideoQuestion(q) {
   const main = document.getElementById('video-main');
