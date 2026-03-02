@@ -2610,6 +2610,9 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <div class="sidebar-item active" id="si-home" onclick="showDash('home')"><i class="fas fa-house"></i>Dashboard</div>
       <div class="sidebar-item" id="si-tutor" onclick="showDash('tutor')"><i class="fas fa-robot"></i>AI Tutor</div>
       <div class="sidebar-item" id="si-questions" onclick="showDash('questions')"><i class="fas fa-file-lines"></i>Question Papers</div>
+      <div class="sidebar-item" id="si-repetition" onclick="showDash('repetition')"><i class="fas fa-brain"></i>Spaced Repetition</div>
+      <div class="sidebar-item" id="si-curriculum" onclick="showDash('curriculum')"><i class="fas fa-graduation-cap"></i>Curriculum</div>
+      <div class="sidebar-item" id="si-lessons" onclick="window.location.href='/lessons.html'"><i class="fas fa-chalkboard-teacher"></i>AI Lessons</div>
       <div class="sidebar-section-label">Progress</div>
       <div class="sidebar-item" id="si-progress" onclick="showDash('progress')"><i class="fas fa-chart-line"></i>Progress</div>
       <div class="sidebar-item" id="si-strengths" onclick="showDash('strengths')"><i class="fas fa-bullseye"></i>Strengths</div>
@@ -2655,10 +2658,10 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <div class="page-title" id="dash-greeting">Good morning! 👋</div>
       <p class="page-subtitle">Here's your learning overview</p>
       <div class="stats-row">
-        <div class="stat-card"><div class="stat-card-label">Questions Answered</div><div class="stat-card-value" id="stat-q">1,247</div><div class="stat-card-change">↑ 12 today</div></div>
-        <div class="stat-card"><div class="stat-card-label">Accuracy Rate</div><div class="stat-card-value" id="stat-acc">78%</div><div class="stat-card-change">↑ 3% this week</div></div>
-        <div class="stat-card"><div class="stat-card-label">Study Streak</div><div class="stat-card-value">14 🔥</div><div class="stat-card-change">days in a row</div></div>
-        <div class="stat-card"><div class="stat-card-label">Topics Mastered</div><div class="stat-card-value">0</div><div class="stat-card-change">of 60 total</div></div>
+        <div class="stat-card"><div class="stat-card-label">Questions Answered</div><div class="stat-card-value" id="stat-q">0</div><div class="stat-card-change" id="stat-q-change">Start learning!</div></div>
+        <div class="stat-card"><div class="stat-card-label">Accuracy Rate</div><div class="stat-card-value" id="stat-acc">—</div><div class="stat-card-change" id="stat-acc-change">No data yet</div></div>
+        <div class="stat-card"><div class="stat-card-label">Study Streak</div><div class="stat-card-value" id="stat-streak">0 🔥</div><div class="stat-card-change">days in a row</div></div>
+        <div class="stat-card"><div class="stat-card-label">Topics Mastered</div><div class="stat-card-value" id="stat-topics">0</div><div class="stat-card-change">of 60 total</div></div>
       </div>
       <div class="dash-grid">
         <div>
@@ -2678,11 +2681,11 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
           <div class="card">
             <div class="card-header"><span class="card-title">📊 Subject Progress</span></div>
             <div class="card-body">
-              <div class="progress-item"><div class="progress-header"><span>Mathematics</span><span>72%</span></div><div class="progress-bar"><div class="progress-fill" style="width:72%;background:var(--blue)"></div></div></div>
-              <div class="progress-item"><div class="progress-header"><span>Physics</span><span>65%</span></div><div class="progress-bar"><div class="progress-fill" style="width:65%;background:var(--green)"></div></div></div>
-              <div class="progress-item"><div class="progress-header"><span>Chemistry</span><span>58%</span></div><div class="progress-bar"><div class="progress-fill" style="width:58%;background:var(--purple)"></div></div></div>
-              <div class="progress-item"><div class="progress-header"><span>Biology</span><span>81%</span></div><div class="progress-bar"><div class="progress-fill" style="width:81%;background:var(--pink)"></div></div></div>
-              <div class="progress-item"><div class="progress-header"><span>English Lit</span><span>70%</span></div><div class="progress-bar"><div class="progress-fill" style="width:70%;background:var(--orange)"></div></div></div>
+              <div class="progress-item"><div class="progress-header"><span>Mathematics</span><span id="prog-maths">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progbar-maths" style="width:0%;background:var(--blue)"></div></div></div>
+              <div class="progress-item"><div class="progress-header"><span>Physics</span><span id="prog-physics">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progbar-physics" style="width:0%;background:var(--green)"></div></div></div>
+              <div class="progress-item"><div class="progress-header"><span>Chemistry</span><span id="prog-chemistry">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progbar-chemistry" style="width:0%;background:var(--purple)"></div></div></div>
+              <div class="progress-item"><div class="progress-header"><span>Biology</span><span id="prog-biology">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progbar-biology" style="width:0%;background:var(--pink)"></div></div></div>
+              <div class="progress-item"><div class="progress-header"><span>English Lit</span><span id="prog-english">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progbar-english" style="width:0%;background:var(--orange)"></div></div></div>
             </div>
           </div>
         </div>
@@ -2690,11 +2693,11 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
           <!-- Recent activity -->
           <div class="card">
             <div class="card-header"><span class="card-title">⚡ Recent Activity</span></div>
-            <div class="card-body" style="padding:1rem 1.5rem">
-              <div class="activity-item"><div class="activity-icon" style="background:rgba(96,165,250,0.15);color:var(--blue)">📝</div><div><div class="activity-text fw700">Completed 5 Maths questions</div><div style="font-size:.75rem;color:var(--muted)">Algebra — Quadratics</div></div><div class="activity-time">2m</div></div>
-              <div class="activity-item"><div class="activity-icon" style="background:rgba(201,168,76,0.15);color:var(--gold)">🤖</div><div><div class="activity-text fw700">AI Tutor session</div><div style="font-size:.75rem;color:var(--muted)">Physics — Forces</div></div><div class="activity-time">1h</div></div>
-              <div class="activity-item"><div class="activity-icon" style="background:rgba(74,222,128,0.15);color:var(--green)">✅</div><div><div class="activity-text fw700">Assignment submitted</div><div style="font-size:.75rem;color:var(--muted)">Chemistry homework</div></div><div class="activity-time">3h</div></div>
-              <div class="activity-item"><div class="activity-icon" style="background:rgba(167,139,250,0.15);color:var(--purple)">🏆</div><div><div class="activity-text fw700">Achievement unlocked!</div><div style="font-size:.75rem;color:var(--muted)">7-day streak 🔥</div></div><div class="activity-time">1d</div></div>
+            <div class="card-body" style="padding:1rem 1.5rem" id="activity-feed">
+              <div style="text-align:center;padding:1.5rem;color:var(--muted)">
+                <div style="font-size:2rem;margin-bottom:.5rem">📚</div>
+                <div style="font-size:.875rem">No activity yet — start learning to see your history here!</div>
+              </div>
             </div>
           </div>
           <!-- Quick actions -->
@@ -2733,6 +2736,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
               <p>Ask me anything — I'll explain step by step</p>
             </div>
             <div style="display:flex;gap:.5rem">
+              <button class="tts-btn" id="voice-mode-btn" onclick="toggleVoiceMode()" title="Voice mode — speak and AI talks back" style="font-size:.85rem;padding:.3rem .6rem">🎤🔊 Voice</button>
               <button class="tts-btn" id="tts-toggle" onclick="toggleTTS()" title="Read aloud (Dyslexia support)">🔊</button>
             <button class="tts-btn" onclick="saveLastMsgToNotes()" title="Save to Notes">📓</button>
             <button class="img-upload-btn" onclick="document.getElementById('tutor-img-upload').click()" title="Upload image of question">📷</button>
@@ -2795,7 +2799,10 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 
     <!-- QUESTIONS SUBPAGE -->
     <div class="subpage" id="sp-questions">
-      <div class="page-title">📝 Question Paper Generator</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:.25rem">
+        <div class="page-title" style="margin:0">📝 Question Paper Generator</div>
+        <a href="/questions.html" style="display:inline-flex;align-items:center;gap:.4rem;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:.45rem 1rem;border-radius:8px;font-size:.8rem;font-weight:600;text-decoration:none">Open Full Page ↗</a>
+      </div>
       <p class="page-subtitle">Generate exam-style questions tailored to your level and board</p>
       <div class="questions-layout">
         <div class="form-card">
@@ -2846,25 +2853,93 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       </div>
     </div>
 
+    <!-- SPACED REPETITION SUBPAGE -->
+    <div class="subpage" id="sp-repetition">
+      <div class="page-title">🧠 Spaced Repetition</div>
+      <p class="page-subtitle">Review flashcards using a science-backed spacing algorithm to lock knowledge into long-term memory</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:900px;margin-bottom:1.5rem" class="dash-grid">
+        <div class="card">
+          <div class="card-header"><span class="card-title">📅 Today's Review</span></div>
+          <div class="card-body" id="sr-today-stats">
+            <div class="stats-row" style="grid-template-columns:1fr 1fr;gap:1rem">
+              <div class="stat-card"><div class="stat-card-label">Due Today</div><div class="stat-card-value" id="sr-due-count">0</div></div>
+              <div class="stat-card"><div class="stat-card-label">Reviewed</div><div class="stat-card-value" id="sr-done-count">0</div></div>
+            </div>
+            <button class="btn btn-gold" style="width:100%;margin-top:1rem" onclick="openSR()">▶ Start Review Session</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><span class="card-title">➕ Add New Cards</span></div>
+          <div class="card-body">
+            <p style="font-size:.875rem;color:var(--muted);margin-bottom:1rem">Ask Lumina AI to generate flashcards for any topic, or add your own.</p>
+            <button class="btn btn-gold" style="width:100%;margin-bottom:.75rem" onclick="generateSRCard()">✦ AI Generate Card</button>
+            <button class="btn btn-outline" style="width:100%" onclick="openAddSRCard()">✏️ Add Manually</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><span class="card-title">📚 All Flashcards</span></div>
+        <div class="card-body" id="sr-all-cards">
+          <div style="text-align:center;padding:2rem;color:var(--muted)">
+            <div style="font-size:2rem;margin-bottom:.5rem">🧠</div>
+            <div style="font-size:.875rem">No flashcards yet — generate some with AI or add your own!</div>
+          </div>
+        </div>
+      </div>
+      <!-- Manual add card form -->
+      <div id="sr-add-form" style="display:none;margin-top:1.5rem">
+        <div class="card">
+          <div class="card-header"><span class="card-title">✏️ New Flashcard</span></div>
+          <div class="card-body">
+            <div class="form-group"><label>Question</label><textarea id="sr-manual-q" class="chat-input" rows="2" style="resize:vertical" placeholder="e.g. What is Newton's 2nd Law?"></textarea></div>
+            <div class="form-group" style="margin-top:.75rem"><label>Answer</label><textarea id="sr-manual-a" class="chat-input" rows="3" style="resize:vertical" placeholder="e.g. F = ma — Force equals mass times acceleration"></textarea></div>
+            <div class="form-group" style="margin-top:.75rem"><label>Subject</label>
+              <select id="sr-manual-subj" class="form-select" style="background:var(--bg3);border:1px solid var(--border);color:var(--white);padding:.6rem;border-radius:8px;width:100%">
+                <option>Mathematics</option><option>Physics</option><option>Chemistry</option><option>Biology</option>
+                <option>English Literature</option><option>History</option><option>Computer Science</option><option>Economics</option><option>French</option><option>Other</option>
+              </select>
+            </div>
+            <div style="display:flex;gap:.75rem;margin-top:1rem">
+              <button class="btn btn-gold" onclick="saveManualSRCard()">Save Card</button>
+              <button class="btn btn-outline" onclick="document.getElementById('sr-add-form').style.display='none'">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CURRICULUM SUBPAGE -->
+    <div class="subpage" id="sp-curriculum">
+      <div class="page-title">📖 UK Curriculum</div>
+      <p class="page-subtitle">Browse the full GCSE and A-Level specification by subject, exam board, and topic</p>
+      <div style="display:flex;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap">
+        <button class="style-pill active" id="curr-gcse-btn" onclick="showCurriculum(this,'gcse')">GCSE</button>
+        <button class="style-pill" id="curr-alevel-btn" onclick="showCurriculum(this,'alevel')">A-Level</button>
+      </div>
+      <div id="curriculum-content">
+        <div style="text-align:center;padding:3rem;color:var(--muted)">Loading curriculum...</div>
+      </div>
+    </div>
+
     <!-- PROGRESS SUBPAGE -->
     <div class="subpage" id="sp-progress">
       <div class="page-title">📊 Your Progress</div>
       <p class="page-subtitle">Track your improvement over time</p>
       <div class="stats-row">
-        <div class="stat-card"><div class="stat-card-label">Total Questions</div><div class="stat-card-value">1,247</div><div class="stat-card-change">↑ 12 today</div></div>
-        <div class="stat-card"><div class="stat-card-label">Accuracy</div><div class="stat-card-value">78%</div><div class="stat-card-change">↑ 3% this week</div></div>
-        <div class="stat-card"><div class="stat-card-label">Study Streak</div><div class="stat-card-value">14 🔥</div></div>
-        <div class="stat-card"><div class="stat-card-label">Topics Mastered</div><div class="stat-card-value">0</div></div>
+        <div class="stat-card"><div class="stat-card-label">Total Questions</div><div class="stat-card-value" id="prog-stat-q">0</div><div class="stat-card-change">Complete questions to track</div></div>
+        <div class="stat-card"><div class="stat-card-label">Accuracy</div><div class="stat-card-value" id="prog-stat-acc">—</div><div class="stat-card-change">No data yet</div></div>
+        <div class="stat-card"><div class="stat-card-label">Study Streak</div><div class="stat-card-value" id="prog-stat-streak">0 🔥</div></div>
+        <div class="stat-card"><div class="stat-card-label">Topics Mastered</div><div class="stat-card-value" id="prog-stat-topics">0</div></div>
       </div>
       <div class="dash-grid">
         <div>
           <div class="card">
             <div class="card-header"><span class="card-title">Subject Performance</span></div>
             <div class="card-body">
-              <div class="progress-item"><div class="progress-header"><span>Mathematics</span><span class="fw700" style="color:var(--blue)">72%</span></div><div class="progress-bar"><div class="progress-fill" style="width:72%;background:var(--blue)"></div></div></div>
-              <div class="progress-item"><div class="progress-header"><span>Biology</span><span class="fw700" style="color:var(--green)">81%</span></div><div class="progress-bar"><div class="progress-fill" style="width:81%;background:var(--green)"></div></div></div>
-              <div class="progress-item"><div class="progress-header"><span>Physics</span><span class="fw700" style="color:var(--purple)">65%</span></div><div class="progress-bar"><div class="progress-fill" style="width:65%;background:var(--purple)"></div></div></div>
-              <div class="progress-item"><div class="progress-header"><span>Chemistry</span><span class="fw700" style="color:var(--orange)">58%</span></div><div class="progress-bar"><div class="progress-fill" style="width:58%;background:var(--orange)"></div></div></div>
+              <div class="progress-item"><div class="progress-header"><span>Mathematics</span><span class="fw700" id="pp-maths" style="color:var(--blue)">0%</span></div><div class="progress-bar"><div class="progress-fill" id="ppbar-maths" style="width:0%;background:var(--blue)"></div></div></div>
+              <div class="progress-item"><div class="progress-header"><span>Biology</span><span class="fw700" id="pp-biology" style="color:var(--green)">0%</span></div><div class="progress-bar"><div class="progress-fill" id="ppbar-biology" style="width:0%;background:var(--green)"></div></div></div>
+              <div class="progress-item"><div class="progress-header"><span>Physics</span><span class="fw700" id="pp-physics" style="color:var(--purple)">0%</span></div><div class="progress-bar"><div class="progress-fill" id="ppbar-physics" style="width:0%;background:var(--purple)"></div></div></div>
+              <div class="progress-item"><div class="progress-header"><span>Chemistry</span><span class="fw700" id="pp-chemistry" style="color:var(--orange)">0%</span></div><div class="progress-bar"><div class="progress-fill" id="ppbar-chemistry" style="width:0%;background:var(--orange)"></div></div></div>
             </div>
           </div>
           <!-- Heatmap -->
@@ -2886,12 +2961,12 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
             <div class="card-header"><span class="card-title">🏆 Achievements</span></div>
             <div class="card-body">
               <div class="achievements-grid">
-                <div class="ach-card earned"><div class="ach-icon">🔥</div><div class="ach-name">7-Day Streak</div><div class="ach-desc">Study 7 days in a row</div></div>
-                <div class="ach-card earned"><div class="ach-icon">💯</div><div class="ach-name">Perfect Score</div><div class="ach-desc">100% on a paper</div></div>
-                <div class="ach-card earned"><div class="ach-icon">🚀</div><div class="ach-name">Fast Learner</div><div class="ach-desc">Complete 100 questions</div></div>
-                <div class="ach-card locked"><div class="ach-icon">⭐</div><div class="ach-name">Star Student</div><div class="ach-desc">30-day streak</div></div>
-                <div class="ach-card locked"><div class="ach-icon">🎓</div><div class="ach-name">Graduate</div><div class="ach-desc">Master all topics</div></div>
-                <div class="ach-card locked"><div class="ach-icon">🏆</div><div class="ach-name">Top of Class</div><div class="ach-desc">Score 95%+ average</div></div>
+                <div class="ach-card locked" id="ach-7day"><div class="ach-icon">🔥</div><div class="ach-name">7-Day Streak</div><div class="ach-desc">Study 7 days in a row</div></div>
+                <div class="ach-card locked" id="ach-perfect"><div class="ach-icon">💯</div><div class="ach-name">Perfect Score</div><div class="ach-desc">100% on a paper</div></div>
+                <div class="ach-card locked" id="ach-fast"><div class="ach-icon">🚀</div><div class="ach-name">Fast Learner</div><div class="ach-desc">Complete 100 questions</div></div>
+                <div class="ach-card locked" id="ach-star"><div class="ach-icon">⭐</div><div class="ach-name">Star Student</div><div class="ach-desc">30-day streak</div></div>
+                <div class="ach-card locked" id="ach-grad"><div class="ach-icon">🎓</div><div class="ach-name">Graduate</div><div class="ach-desc">Master all topics</div></div>
+                <div class="ach-card locked" id="ach-top"><div class="ach-icon">🏆</div><div class="ach-name">Top of Class</div><div class="ach-desc">Score 95%+ average</div></div>
               </div>
             </div>
           </div>
@@ -4144,6 +4219,8 @@ function logout() {
 }
 
 function enterDashboard() {
+  // Remove auth loading overlay if present
+  try { const ov = document.getElementById('auth-loading-overlay'); if (ov) ov.remove(); } catch(e) {}
   // Update sidebar
   const u = state.user;
   document.getElementById('sb-name').textContent = u.name;
@@ -4305,9 +4382,11 @@ async function callClaude(messages, system) {
   if (system) body.system = system;
   let r;
   try {
+    const authHeaders = { 'Content-Type': 'application/json' };
+    if (state.user?.token) authHeaders['Authorization'] = 'Bearer ' + state.user.token;
     r = await fetch('/api/chat', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: authHeaders,
       body: JSON.stringify(body)
     });
   } catch (netErr) {
@@ -4497,7 +4576,7 @@ ONLY return the JSON array, nothing else.${a11y ? '\n\nIMPORTANT accessibility n
       const clean = reply.replace(/```json|```/g, '').trim();
       questions = JSON.parse(clean);
     } catch (e) {
-      qContainer.innerHTML = '<div class="msg bot" style="max-width:100%">⚠️ Could not parse questions. Raw response:<br>' + reply + '</div>';
+      qContainer.innerHTML = '<div class="msg bot" style="max-width:100%">⚠️ Could not generate questions. Please try again — if the problem persists, try fewer questions or a different subject.</div>';
       return;
     }
     qContainer.innerHTML = '';
@@ -4715,23 +4794,62 @@ function toggleTTS() {
 function speak(text) {
   if (!window.speechSynthesis) return;
   window.speechSynthesis.cancel();
-  const utt = new SpeechSynthesisUtterance(text.slice(0, 500));
-  utt.rate = 0.9; utt.pitch = 1;
+  // Strip markdown formatting before speaking
+  const clean = text.replace(/[*_`#~>\[\]]/g, '').replace(/\n+/g, '. ').slice(0, 1000);
+  const utt = new SpeechSynthesisUtterance(clean);
+  utt.lang = 'en-GB';
+  utt.rate = 0.92; utt.pitch = 1.05;
+  // Prefer a natural-sounding UK voice if available
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = voices.find(v => v.lang === 'en-GB' && v.name.includes('Female'))
+    || voices.find(v => v.lang === 'en-GB')
+    || voices.find(v => v.lang.startsWith('en'));
+  if (preferred) utt.voice = preferred;
   window.speechSynthesis.speak(utt);
 }
 
+let _voiceMode = false;
+let _voiceRecog = null;
+
 function speakInput() {
   if (!window.webkitSpeechRecognition && !window.SpeechRecognition) {
-    showToast('Speech recognition not supported in this browser');
+    showToast('Speech recognition not supported in this browser. Try Chrome.');
     return;
   }
+  if (_voiceRecog) { _voiceRecog.stop(); _voiceRecog = null; return; }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const recog = new SR();
-  recog.onresult = (e) => {
-    document.getElementById('tutor-input').value = e.results[0][0].transcript;
+  _voiceRecog = new SR();
+  _voiceRecog.lang = 'en-GB';
+  _voiceRecog.interimResults = false;
+  const btn = document.getElementById('speak-btn');
+  if (btn) { btn.style.background = 'rgba(201,168,76,0.3)'; btn.textContent = '🔴'; }
+  showToast('🎤 Listening — speak your question...');
+  _voiceRecog.onresult = (e) => {
+    const transcript = e.results[0][0].transcript;
+    const input = document.getElementById('tutor-input');
+    if (input) input.value = transcript;
+    if (_voiceMode) tutorSend();
   };
-  recog.start();
-  showToast('🎤 Listening...');
+  _voiceRecog.onend = () => {
+    _voiceRecog = null;
+    if (btn) { btn.style.background = ''; btn.textContent = '🎤'; }
+  };
+  _voiceRecog.onerror = (e) => {
+    _voiceRecog = null;
+    if (btn) { btn.style.background = ''; btn.textContent = '🎤'; }
+    if (e.error !== 'no-speech') showToast('🎤 Mic error: ' + e.error);
+  };
+  _voiceRecog.start();
+}
+
+function toggleVoiceMode() {
+  _voiceMode = !_voiceMode;
+  state.ttsEnabled = _voiceMode;
+  const btn = document.getElementById('voice-mode-btn');
+  if (btn) btn.classList.toggle('active', _voiceMode);
+  const ttsBtn = document.getElementById('tts-toggle');
+  if (ttsBtn) ttsBtn.classList.toggle('active', _voiceMode);
+  showToast(_voiceMode ? '🎤🔊 Voice mode ON — speak and AI will talk back' : '🔇 Voice mode OFF');
 }
 
 // ═══════════════════════════════════════
@@ -8223,6 +8341,20 @@ window.enterDashboard = function() {
 
 // ─── INIT ─────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
+  // If there's a stored token, show a loading overlay to prevent flash of login screen
+  try {
+    const hasToken = localStorage.getItem('lumina_token');
+    if (hasToken) {
+      const overlay = document.createElement('div');
+      overlay.id = 'auth-loading-overlay';
+      overlay.style.cssText = 'position:fixed;inset:0;background:var(--black,#0A0C12);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem';
+      overlay.innerHTML = '<div style="font-size:2rem">✦</div><div style="color:#C9A84C;font-weight:700;letter-spacing:.1em">LUMINA AI</div><div style="color:#666;font-size:.875rem">Loading your dashboard...</div>';
+      document.body.appendChild(overlay);
+      // Remove overlay after dashboard loads or on timeout
+      setTimeout(() => { overlay.remove(); }, 4000);
+      window._authOverlay = overlay;
+    }
+  } catch(e) {}
   // Small delay to let Supabase CDN load
   setTimeout(initSupabase, 500);
 });
@@ -8312,50 +8444,162 @@ document.addEventListener('keydown', e => {
 
 // ─── PERIODIC TABLE ──────────────────────────────────
 const ELEMENTS = [
-  {n:1,sym:'H',name:'Hydrogen',mass:1.008,group:1,period:1,col:1,color:'#60A5FA',config:'1s¹',facts:'Most abundant element in universe. Lightest element. Makes up 75% of normal matter.'},
-  {n:2,sym:'He',name:'Helium',mass:4.003,group:18,period:1,col:18,color:'#A78BFA',config:'1s²',facts:'Noble gas. Second lightest. Used in balloons and MRI machines.'},
-  {n:3,sym:'Li',name:'Lithium',mass:6.941,group:1,period:2,col:1,color:'#FB923C',config:'[He] 2s¹',facts:'Lightest metal. Used in batteries and psychiatric medication.'},
-  {n:4,sym:'Be',name:'Beryllium',mass:9.012,group:2,period:2,col:2,color:'#FB923C',config:'[He] 2s²',facts:'Very lightweight and strong. Used in aerospace.'},
-  {n:5,sym:'B',name:'Boron',mass:10.81,group:13,period:2,col:13,color:'#4ADE80',config:'[He] 2s² 2p¹',facts:'Metalloid. Found in borax. Used in glass and ceramics.'},
-  {n:6,sym:'C',name:'Carbon',mass:12.011,group:14,period:2,col:14,color:'#4ADE80',config:'[He] 2s² 2p²',facts:'Basis of all life. Forms diamond (hardest natural mineral) and graphite.'},
-  {n:7,sym:'N',name:'Nitrogen',mass:14.007,group:15,period:2,col:15,color:'#4ADE80',config:'[He] 2s² 2p³',facts:'78% of atmosphere. Essential for proteins and DNA.'},
-  {n:8,sym:'O',name:'Oxygen',mass:15.999,group:16,period:2,col:16,color:'#4ADE80',config:'[He] 2s² 2p⁴',facts:'21% of atmosphere. Essential for respiration. Most abundant element in Earth\'s crust.'},
-  {n:9,sym:'F',name:'Fluorine',mass:18.998,group:17,period:2,col:17,color:'#F472B6',config:'[He] 2s² 2p⁵',facts:'Most electronegative element. Most reactive non-metal. Used in toothpaste.'},
-  {n:10,sym:'Ne',name:'Neon',mass:20.180,group:18,period:2,col:18,color:'#A78BFA',config:'[He] 2s² 2p⁶',facts:'Noble gas. Used in neon signs. Second lightest noble gas.'},
-  {n:11,sym:'Na',name:'Sodium',mass:22.990,group:1,period:3,col:1,color:'#FB923C',config:'[Ne] 3s¹',facts:'Soft alkali metal. Reacts vigorously with water. Found in table salt (NaCl).'},
-  {n:12,sym:'Mg',name:'Magnesium',mass:24.305,group:2,period:3,col:2,color:'#FB923C',config:'[Ne] 3s²',facts:'Light structural metal. Essential for chlorophyll in plants.'},
-  {n:13,sym:'Al',name:'Aluminium',mass:26.982,group:13,period:3,col:13,color:'#94A3B8',config:'[Ne] 3s² 3p¹',facts:'Most abundant metal in Earth\'s crust. Lightweight and corrosion-resistant.'},
-  {n:14,sym:'Si',name:'Silicon',mass:28.086,group:14,period:3,col:14,color:'#94A3B8',config:'[Ne] 3s² 3p²',facts:'Second most abundant element in crust. Basis of computer chips and glass.'},
-  {n:15,sym:'P',name:'Phosphorus',mass:30.974,group:15,period:3,col:15,color:'#4ADE80',config:'[Ne] 3s² 3p³',facts:'Essential for DNA and ATP. Found in bones and teeth.'},
-  {n:16,sym:'S',name:'Sulfur',mass:32.060,group:16,period:3,col:16,color:'#FBBF24',config:'[Ne] 3s² 3p⁴',facts:'Yellow non-metal. Used in gunpowder and sulfuric acid production.'},
-  {n:17,sym:'Cl',name:'Chlorine',mass:35.450,group:17,period:3,col:17,color:'#F472B6',config:'[Ne] 3s² 3p⁵',facts:'Yellow-green gas. Used in water purification. Very reactive halogen.'},
-  {n:18,sym:'Ar',name:'Argon',mass:39.948,group:18,period:3,col:18,color:'#A78BFA',config:'[Ne] 3s² 3p⁶',facts:'Most abundant noble gas in atmosphere (0.93%). Used in light bulbs.'},
-  {n:19,sym:'K',name:'Potassium',mass:39.098,group:1,period:4,col:1,color:'#FB923C',config:'[Ar] 4s¹',facts:'Essential electrolyte. Found in bananas. Reacts explosively with water.'},
-  {n:20,sym:'Ca',name:'Calcium',mass:40.078,group:2,period:4,col:2,color:'#FB923C',config:'[Ar] 4s²',facts:'Most abundant mineral in body. Essential for bones, teeth, and muscles.'},
-  {n:26,sym:'Fe',name:'Iron',mass:55.845,group:8,period:4,col:8,color:'#94A3B8',config:'[Ar] 3d⁶ 4s²',facts:'Most common element in Earth. Essential for haemoglobin. Ferromagnetic.'},
-  {n:29,sym:'Cu',name:'Copper',mass:63.546,group:11,period:4,col:11,color:'#C9A84C',config:'[Ar] 3d¹⁰ 4s¹',facts:'Excellent conductor. Turns green (verdigris). Essential trace element.'},
-  {n:30,sym:'Zn',name:'Zinc',mass:65.380,group:12,period:4,col:12,color:'#94A3B8',config:'[Ar] 3d¹⁰ 4s²',facts:'Essential trace mineral. Used in galvanising steel. Found in sunscreen.'},
-  {n:35,sym:'Br',name:'Bromine',mass:79.904,group:17,period:4,col:17,color:'#F472B6',config:'[Ar] 3d¹⁰ 4s² 4p⁵',facts:'Only liquid non-metal at room temperature. Red-brown colour.'},
-  {n:47,sym:'Ag',name:'Silver',mass:107.868,group:11,period:5,col:11,color:'#C9A84C',config:'[Kr] 4d¹⁰ 5s¹',facts:'Best electrical conductor. Used in jewellery, photography, and antibiotics.'},
-  {n:79,sym:'Au',name:'Gold',mass:196.967,group:11,period:6,col:11,color:'#C9A84C',config:'[Xe] 4f¹⁴ 5d¹⁰ 6s¹',facts:'Most malleable metal. Does not tarnish. Used as currency for millennia.'},
-  {n:82,sym:'Pb',name:'Lead',mass:207.200,group:14,period:6,col:14,color:'#94A3B8',config:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p²',facts:'Very dense and soft metal. Toxic. Once used in paint and petrol.'},
+  // Period 1
+  {n:1,sym:'H',name:'Hydrogen',mass:1.008,period:1,col:1,color:'#60A5FA',config:'1s¹',facts:'Most abundant element in universe (75% of normal matter). Used in hydrogen fuel cells. Forms water when burned.'},
+  {n:2,sym:'He',name:'Helium',mass:4.003,period:1,col:18,color:'#A78BFA',config:'1s²',facts:'Noble gas. Second lightest element. Used in balloons and MRI cooling. Does not react.'},
+  // Period 2
+  {n:3,sym:'Li',name:'Lithium',mass:6.941,period:2,col:1,color:'#FB923C',config:'[He] 2s¹',facts:'Lightest metal. Reacts with water. Used in Li-ion batteries and psychiatric drugs.'},
+  {n:4,sym:'Be',name:'Beryllium',mass:9.012,period:2,col:2,color:'#FDBA74',config:'[He] 2s²',facts:'Very lightweight and rigid. Toxic. Used in aerospace and X-ray windows.'},
+  {n:5,sym:'B',name:'Boron',mass:10.81,period:2,col:13,color:'#4ADE80',config:'[He] 2s² 2p¹',facts:'Metalloid. Found in borax. Used in borosilicate glass and semiconductors.'},
+  {n:6,sym:'C',name:'Carbon',mass:12.011,period:2,col:14,color:'#4ADE80',config:'[He] 2s² 2p²',facts:'Basis of all organic chemistry. Forms diamond (hardest natural substance), graphite, and graphene.'},
+  {n:7,sym:'N',name:'Nitrogen',mass:14.007,period:2,col:15,color:'#4ADE80',config:'[He] 2s² 2p³',facts:'78% of atmosphere. Triple bond makes N₂ very stable. Essential for proteins and DNA.'},
+  {n:8,sym:'O',name:'Oxygen',mass:15.999,period:2,col:16,color:'#4ADE80',config:'[He] 2s² 2p⁴',facts:'21% of atmosphere. Most abundant element in Earth\'s crust. Essential for respiration.'},
+  {n:9,sym:'F',name:'Fluorine',mass:18.998,period:2,col:17,color:'#F472B6',config:'[He] 2s² 2p⁵',facts:'Most electronegative and reactive element. Used in toothpaste (fluoride) and Teflon.'},
+  {n:10,sym:'Ne',name:'Neon',mass:20.180,period:2,col:18,color:'#A78BFA',config:'[He] 2s² 2p⁶',facts:'Noble gas. Used in neon signs (red-orange glow). Second lightest noble gas. Does not react.'},
+  // Period 3
+  {n:11,sym:'Na',name:'Sodium',mass:22.990,period:3,col:1,color:'#FB923C',config:'[Ne] 3s¹',facts:'Soft alkali metal. Reacts vigorously with water releasing hydrogen. Found in table salt (NaCl).'},
+  {n:12,sym:'Mg',name:'Magnesium',mass:24.305,period:3,col:2,color:'#FDBA74',config:'[Ne] 3s²',facts:'Light structural metal. Essential for chlorophyll. Burns with bright white flame. Used in alloys.'},
+  {n:13,sym:'Al',name:'Aluminium',mass:26.982,period:3,col:13,color:'#64748B',config:'[Ne] 3s² 3p¹',facts:'Most abundant metal in Earth\'s crust. Lightweight and corrosion-resistant. Used in aircraft.'},
+  {n:14,sym:'Si',name:'Silicon',mass:28.086,period:3,col:14,color:'#64748B',config:'[Ne] 3s² 3p²',facts:'Second most abundant element. Basis of computer chips. Metalloid. Used in glass and solar cells.'},
+  {n:15,sym:'P',name:'Phosphorus',mass:30.974,period:3,col:15,color:'#4ADE80',config:'[Ne] 3s² 3p³',facts:'Essential for DNA, RNA, and ATP. Found in bones and teeth. White phosphorus is very reactive.'},
+  {n:16,sym:'S',name:'Sulfur',mass:32.060,period:3,col:16,color:'#FBBF24',config:'[Ne] 3s² 3p⁴',facts:'Yellow non-metal. Used in sulfuric acid (most produced chemical). Found in proteins.'},
+  {n:17,sym:'Cl',name:'Chlorine',mass:35.450,period:3,col:17,color:'#F472B6',config:'[Ne] 3s² 3p⁵',facts:'Yellow-green gas. Used in water purification and PVC. Forms HCl with hydrogen.'},
+  {n:18,sym:'Ar',name:'Argon',mass:39.948,period:3,col:18,color:'#A78BFA',config:'[Ne] 3s² 3p⁶',facts:'Most abundant noble gas in atmosphere (0.93%). Used in light bulbs and welding. Does not react.'},
+  // Period 4
+  {n:19,sym:'K',name:'Potassium',mass:39.098,period:4,col:1,color:'#FB923C',config:'[Ar] 4s¹',facts:'Essential electrolyte for nerve impulses. Found in bananas. Reacts vigorously with water.'},
+  {n:20,sym:'Ca',name:'Calcium',mass:40.078,period:4,col:2,color:'#FDBA74',config:'[Ar] 4s²',facts:'Most abundant mineral in human body. Essential for bones and teeth. Found in limestone (CaCO₃).'},
+  {n:21,sym:'Sc',name:'Scandium',mass:44.956,period:4,col:3,color:'#94A3B8',config:'[Ar] 3d¹ 4s²',facts:'Transition metal. Used in aluminium alloys for aerospace. Rare earth element.'},
+  {n:22,sym:'Ti',name:'Titanium',mass:47.867,period:4,col:4,color:'#94A3B8',config:'[Ar] 3d² 4s²',facts:'Strong, lightweight metal. Biocompatible — used in implants and prosthetics. Corrosion-resistant.'},
+  {n:23,sym:'V',name:'Vanadium',mass:50.942,period:4,col:5,color:'#94A3B8',config:'[Ar] 3d³ 4s²',facts:'Used in steel alloys to increase strength. Acts as a catalyst (Contact process for sulfuric acid).'},
+  {n:24,sym:'Cr',name:'Chromium',mass:51.996,period:4,col:6,color:'#94A3B8',config:'[Ar] 3d⁵ 4s¹',facts:'Shiny, hard metal. Used in stainless steel (18% Cr). Exception to electron filling rule (3d⁵).'},
+  {n:25,sym:'Mn',name:'Manganese',mass:54.938,period:4,col:7,color:'#94A3B8',config:'[Ar] 3d⁵ 4s²',facts:'Used in steel production. MnO₂ used in batteries. Multiple oxidation states.'},
+  {n:26,sym:'Fe',name:'Iron',mass:55.845,period:4,col:8,color:'#94A3B8',config:'[Ar] 3d⁶ 4s²',facts:'Most common element in Earth. Essential for haemoglobin. Ferromagnetic. Rusts in moist air.'},
+  {n:27,sym:'Co',name:'Cobalt',mass:58.933,period:4,col:9,color:'#94A3B8',config:'[Ar] 3d⁷ 4s²',facts:'Used in superalloys and Li-ion batteries. Vitamin B12 contains cobalt. Blue glass pigment.'},
+  {n:28,sym:'Ni',name:'Nickel',mass:58.693,period:4,col:10,color:'#94A3B8',config:'[Ar] 3d⁸ 4s²',facts:'Corrosion-resistant. Used in stainless steel, coins, and rechargeable batteries.'},
+  {n:29,sym:'Cu',name:'Copper',mass:63.546,period:4,col:11,color:'#C9A84C',config:'[Ar] 3d¹⁰ 4s¹',facts:'Excellent electrical and thermal conductor. Exception to filling rule (3d¹⁰). Used in wiring.'},
+  {n:30,sym:'Zn',name:'Zinc',mass:65.380,period:4,col:12,color:'#94A3B8',config:'[Ar] 3d¹⁰ 4s²',facts:'Used in galvanising steel to prevent rust. Essential trace mineral. Used in sunscreen.'},
+  {n:31,sym:'Ga',name:'Gallium',mass:69.723,period:4,col:13,color:'#64748B',config:'[Ar] 3d¹⁰ 4s² 4p¹',facts:'Melts at 30°C (melts in your hand). Used in semiconductors (GaAs) and LEDs.'},
+  {n:32,sym:'Ge',name:'Germanium',mass:72.630,period:4,col:14,color:'#64748B',config:'[Ar] 3d¹⁰ 4s² 4p²',facts:'Metalloid predicted by Mendeleev. Used in semiconductors, fibre optics, and solar cells.'},
+  {n:33,sym:'As',name:'Arsenic',mass:74.922,period:4,col:15,color:'#4ADE80',config:'[Ar] 3d¹⁰ 4s² 4p³',facts:'Toxic metalloid. Used historically as poison. Now used in semiconductors (GaAs).'},
+  {n:34,sym:'Se',name:'Selenium',mass:78.971,period:4,col:16,color:'#4ADE80',config:'[Ar] 3d¹⁰ 4s² 4p⁴',facts:'Essential trace element at low doses. Used in solar cells and glass manufacture.'},
+  {n:35,sym:'Br',name:'Bromine',mass:79.904,period:4,col:17,color:'#F472B6',config:'[Ar] 3d¹⁰ 4s² 4p⁵',facts:'Only liquid non-metal at room temperature. Red-brown fuming liquid. Used in flame retardants.'},
+  {n:36,sym:'Kr',name:'Krypton',mass:83.798,period:4,col:18,color:'#A78BFA',config:'[Ar] 3d¹⁰ 4s² 4p⁶',facts:'Noble gas. Used in fluorescent lighting and lasers. Previously defined the metre.'},
+  // Period 5
+  {n:37,sym:'Rb',name:'Rubidium',mass:85.468,period:5,col:1,color:'#FB923C',config:'[Kr] 5s¹',facts:'Soft alkali metal. Reacts violently with water. Used in atomic clocks.'},
+  {n:38,sym:'Sr',name:'Strontium',mass:87.620,period:5,col:2,color:'#FDBA74',config:'[Kr] 5s²',facts:'Gives red colour in fireworks. Used in colour TV tubes. Radioactive Sr-90 is a fallout product.'},
+  {n:39,sym:'Y',name:'Yttrium',mass:88.906,period:5,col:3,color:'#94A3B8',config:'[Kr] 4d¹ 5s²',facts:'Used in LED phosphors, superconductors, and radar technology.'},
+  {n:40,sym:'Zr',name:'Zirconium',mass:91.224,period:5,col:4,color:'#94A3B8',config:'[Kr] 4d² 5s²',facts:'Corrosion-resistant. Used in nuclear reactor cladding and cubic zirconia (diamond substitute).'},
+  {n:41,sym:'Nb',name:'Niobium',mass:92.906,period:5,col:5,color:'#94A3B8',config:'[Kr] 4d⁴ 5s¹',facts:'Used in superconducting magnets (MRI) and high-strength steel alloys.'},
+  {n:42,sym:'Mo',name:'Molybdenum',mass:95.950,period:5,col:6,color:'#94A3B8',config:'[Kr] 4d⁵ 5s¹',facts:'High melting point. Used in steel alloys. Essential for nitrogen fixation in plants.'},
+  {n:43,sym:'Tc',name:'Technetium',mass:98,period:5,col:7,color:'#94A3B8',config:'[Kr] 4d⁵ 5s²',facts:'First artificially produced element. Radioactive. Tc-99m widely used in medical imaging.'},
+  {n:44,sym:'Ru',name:'Ruthenium',mass:101.07,period:5,col:8,color:'#94A3B8',config:'[Kr] 4d⁷ 5s¹',facts:'Rare platinum group metal. Used in catalysts, electronics, and solar cells.'},
+  {n:45,sym:'Rh',name:'Rhodium',mass:102.91,period:5,col:9,color:'#94A3B8',config:'[Kr] 4d⁸ 5s¹',facts:'Rarest and most expensive precious metal. Used in catalytic converters for cars.'},
+  {n:46,sym:'Pd',name:'Palladium',mass:106.42,period:5,col:10,color:'#94A3B8',config:'[Kr] 4d¹⁰',facts:'Used in catalytic converters and hydrogen storage. Absorbs up to 900 times its volume of hydrogen.'},
+  {n:47,sym:'Ag',name:'Silver',mass:107.87,period:5,col:11,color:'#C9A84C',config:'[Kr] 4d¹⁰ 5s¹',facts:'Best electrical and thermal conductor. Used in photography, jewellery, and antibiotics.'},
+  {n:48,sym:'Cd',name:'Cadmium',mass:112.41,period:5,col:12,color:'#94A3B8',config:'[Kr] 4d¹⁰ 5s²',facts:'Toxic heavy metal. Used in Ni-Cd batteries and yellow/orange pigments.'},
+  {n:49,sym:'In',name:'Indium',mass:114.82,period:5,col:13,color:'#64748B',config:'[Kr] 4d¹⁰ 5s² 5p¹',facts:'Soft metal. Used in touchscreens (ITO — indium tin oxide) and LED production.'},
+  {n:50,sym:'Sn',name:'Tin',mass:118.71,period:5,col:14,color:'#64748B',config:'[Kr] 4d¹⁰ 5s² 5p²',facts:'Used in soldering and tinplating steel. White tin converts to grey tin below 13°C (tin pest).'},
+  {n:51,sym:'Sb',name:'Antimony',mass:121.76,period:5,col:15,color:'#64748B',config:'[Kr] 4d¹⁰ 5s² 5p³',facts:'Metalloid. Used in flame retardants, semiconductors, and lead-acid batteries.'},
+  {n:52,sym:'Te',name:'Tellurium',mass:127.60,period:5,col:16,color:'#4ADE80',config:'[Kr] 4d¹⁰ 5s² 5p⁴',facts:'Rare metalloid. Used in solar panels (CdTe) and alloys. Gives garlic odour to breath.'},
+  {n:53,sym:'I',name:'Iodine',mass:126.90,period:5,col:17,color:'#F472B6',config:'[Kr] 4d¹⁰ 5s² 5p⁵',facts:'Essential trace element for thyroid hormones. Purple/black solid. Antiseptic. Sublimes to purple vapour.'},
+  {n:54,sym:'Xe',name:'Xenon',mass:131.29,period:5,col:18,color:'#A78BFA',config:'[Kr] 4d¹⁰ 5s² 5p⁶',facts:'Noble gas. Used in xenon headlights, anaesthesia, and ion propulsion for spacecraft.'},
+  // Period 6
+  {n:55,sym:'Cs',name:'Caesium',mass:132.91,period:6,col:1,color:'#FB923C',config:'[Xe] 6s¹',facts:'Softest metal. Used in atomic clocks (defines the second). Reacts explosively with water.'},
+  {n:56,sym:'Ba',name:'Barium',mass:137.33,period:6,col:2,color:'#FDBA74',config:'[Xe] 6s²',facts:'Gives green colour in fireworks. BaSO₄ used as barium meal in X-ray contrast.'},
+  {n:72,sym:'Hf',name:'Hafnium',mass:178.49,period:6,col:4,color:'#94A3B8',config:'[Xe] 4f¹⁴ 5d² 6s²',facts:'Used in nuclear reactor control rods. Absorbs neutrons. Difficult to separate from zirconium.'},
+  {n:73,sym:'Ta',name:'Tantalum',mass:180.95,period:6,col:5,color:'#94A3B8',config:'[Xe] 4f¹⁴ 5d³ 6s²',facts:'High melting point. Corrosion-resistant. Used in surgical implants and capacitors in phones.'},
+  {n:74,sym:'W',name:'Tungsten',mass:183.84,period:6,col:6,color:'#94A3B8',config:'[Xe] 4f¹⁴ 5d⁴ 6s²',facts:'Highest melting point of all metals (3422°C). Used in light bulb filaments and cutting tools.'},
+  {n:75,sym:'Re',name:'Rhenium',mass:186.21,period:6,col:7,color:'#94A3B8',config:'[Xe] 4f¹⁴ 5d⁵ 6s²',facts:'Second highest melting point. Used in jet engine turbine blades and catalysts.'},
+  {n:76,sym:'Os',name:'Osmium',mass:190.23,period:6,col:8,color:'#94A3B8',config:'[Xe] 4f¹⁴ 5d⁶ 6s²',facts:'Densest naturally occurring element (22.59 g/cm³). Used in fountain pen tips and electrical contacts.'},
+  {n:77,sym:'Ir',name:'Iridium',mass:192.22,period:6,col:9,color:'#94A3B8',config:'[Xe] 4f¹⁴ 5d⁷ 6s²',facts:'Second densest element. Extremely corrosion-resistant. K-Pg boundary iridium spike marks dinosaur extinction.'},
+  {n:78,sym:'Pt',name:'Platinum',mass:195.08,period:6,col:10,color:'#94A3B8',config:'[Xe] 4f¹⁴ 5d⁹ 6s¹',facts:'Precious metal. Used in catalytic converters, jewellery, and cancer drugs (cisplatin).'},
+  {n:79,sym:'Au',name:'Gold',mass:196.97,period:6,col:11,color:'#C9A84C',config:'[Xe] 4f¹⁴ 5d¹⁰ 6s¹',facts:'Most malleable metal. Does not tarnish. Used as currency for millennia. Conducts electricity well.'},
+  {n:80,sym:'Hg',name:'Mercury',mass:200.59,period:6,col:12,color:'#94A3B8',config:'[Xe] 4f¹⁴ 5d¹⁰ 6s²',facts:'Only liquid metal at room temperature. Toxic. Used in thermometers and fluorescent lights.'},
+  {n:81,sym:'Tl',name:'Thallium',mass:204.38,period:6,col:13,color:'#64748B',config:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p¹',facts:'Highly toxic. Used in semiconductors and infrared detectors. Causes hair loss when poisoned.'},
+  {n:82,sym:'Pb',name:'Lead',mass:207.20,period:6,col:14,color:'#64748B',config:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p²',facts:'Dense, soft metal. Toxic. Used in car batteries. Previously used in paint and petrol.'},
+  {n:83,sym:'Bi',name:'Bismuth',mass:208.98,period:6,col:15,color:'#64748B',config:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p³',facts:'Heaviest stable element. Creates colourful oxide crystals. Used in pharmaceuticals (Pepto-Bismol).'},
+  {n:84,sym:'Po',name:'Polonium',mass:209,period:6,col:16,color:'#4ADE80',config:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁴',facts:'Highly radioactive. Discovered by Marie Curie. Used in antistatic devices. Very toxic.'},
+  {n:85,sym:'At',name:'Astatine',mass:210,period:6,col:17,color:'#F472B6',config:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁵',facts:'Rarest naturally occurring element. Radioactive halogen. Being investigated for cancer treatment.'},
+  {n:86,sym:'Rn',name:'Radon',mass:222,period:6,col:18,color:'#A78BFA',config:'[Xe] 4f¹⁴ 5d¹⁰ 6s² 6p⁶',facts:'Radioactive noble gas. Produced by uranium decay. Can accumulate in buildings; lung cancer risk.'},
+  // Period 7
+  {n:87,sym:'Fr',name:'Francium',mass:223,period:7,col:1,color:'#FB923C',config:'[Rn] 7s¹',facts:'Rarest naturally occurring element. Radioactive alkali metal. Most unstable of the natural elements.'},
+  {n:88,sym:'Ra',name:'Radium',mass:226,period:7,col:2,color:'#FDBA74',config:'[Rn] 7s²',facts:'Radioactive. Discovered by Marie Curie. Previously used in luminous paint. Causes bone cancer.'},
+  {n:104,sym:'Rf',name:'Rutherfordium',mass:267,period:7,col:4,color:'#94A3B8',config:'[Rn] 5f¹⁴ 6d² 7s²',facts:'Synthetic element. Named after Ernest Rutherford. First transactinide element.'},
+  {n:105,sym:'Db',name:'Dubnium',mass:268,period:7,col:5,color:'#94A3B8',config:'[Rn] 5f¹⁴ 6d³ 7s²',facts:'Synthetic radioactive element. Named after Dubna, Russia. Very short half-life.'},
+  {n:106,sym:'Sg',name:'Seaborgium',mass:271,period:7,col:6,color:'#94A3B8',config:'[Rn] 5f¹⁴ 6d⁴ 7s²',facts:'Synthetic element. Named after Glenn Seaborg, the only person named after an element in their lifetime.'},
+  {n:107,sym:'Bh',name:'Bohrium',mass:272,period:7,col:7,color:'#94A3B8',config:'[Rn] 5f¹⁴ 6d⁵ 7s²',facts:'Synthetic element. Named after Niels Bohr. Extremely radioactive and short-lived.'},
+  {n:108,sym:'Hs',name:'Hassium',mass:277,period:7,col:8,color:'#94A3B8',config:'[Rn] 5f¹⁴ 6d⁶ 7s²',facts:'Synthetic element. Named after Hesse, Germany. Only a few atoms have ever been produced.'},
+  {n:109,sym:'Mt',name:'Meitnerium',mass:278,period:7,col:9,color:'#94A3B8',config:'[Rn] 5f¹⁴ 6d⁷ 7s²',facts:'Named after physicist Lise Meitner. Synthetic element with no practical applications yet.'},
+  {n:110,sym:'Ds',name:'Darmstadtium',mass:281,period:7,col:10,color:'#94A3B8',config:'[Rn] 5f¹⁴ 6d⁸ 7s²',facts:'Named after Darmstadt, Germany. Synthetic superheavy element. Island of stability candidate.'},
+  {n:111,sym:'Rg',name:'Roentgenium',mass:282,period:7,col:11,color:'#C9A84C',config:'[Rn] 5f¹⁴ 6d¹⁰ 7s¹',facts:'Named after Wilhelm Röntgen (discovered X-rays). Synthetic superheavy element.'},
+  {n:112,sym:'Cn',name:'Copernicium',mass:285,period:7,col:12,color:'#94A3B8',config:'[Rn] 5f¹⁴ 6d¹⁰ 7s²',facts:'Named after Copernicus. May be a gas at room temperature due to relativistic effects.'},
+  {n:113,sym:'Nh',name:'Nihonium',mass:286,period:7,col:13,color:'#64748B',config:'[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p¹',facts:'Named after Japan (Nihon). First element discovered in Asia. Synthesised in 2004.'},
+  {n:114,sym:'Fl',name:'Flerovium',mass:289,period:7,col:14,color:'#64748B',config:'[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p²',facts:'Named after Flerov Laboratory. Superheavy synthetic element. May behave as a noble gas.'},
+  {n:115,sym:'Mc',name:'Moscovium',mass:290,period:7,col:15,color:'#64748B',config:'[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p³',facts:'Named after Moscow Oblast. Synthetic element. Decays within milliseconds.'},
+  {n:116,sym:'Lv',name:'Livermorium',mass:293,period:7,col:16,color:'#64748B',config:'[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁴',facts:'Named after Lawrence Livermore National Laboratory. Superheavy synthetic element.'},
+  {n:117,sym:'Ts',name:'Tennessine',mass:294,period:7,col:17,color:'#F472B6',config:'[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁵',facts:'Named after Tennessee. Second heaviest halogen. Synthesised in 2010. Very short half-life.'},
+  {n:118,sym:'Og',name:'Oganesson',mass:294,period:7,col:18,color:'#A78BFA',config:'[Rn] 5f¹⁴ 6d¹⁰ 7s² 7p⁶',facts:'Named after Yuri Oganessian. Heaviest known element. Synthetic. May not be a noble gas due to relativistic effects.'},
+  // Lanthanides (period 8 = display row below main table)
+  {n:57,sym:'La',name:'Lanthanum',mass:138.91,period:8,col:3,color:'#60A5FA',config:'[Xe] 5d¹ 6s²',facts:'Soft lanthanide. Used in high-refractive-index lenses, hybrid car batteries, and carbon arc lights.'},
+  {n:58,sym:'Ce',name:'Cerium',mass:140.12,period:8,col:4,color:'#60A5FA',config:'[Xe] 4f¹ 5d¹ 6s²',facts:'Most abundant lanthanide. Used in catalytic converters, glass polishing, and self-cleaning ovens.'},
+  {n:59,sym:'Pr',name:'Praseodymium',mass:140.91,period:8,col:5,color:'#60A5FA',config:'[Xe] 4f³ 6s²',facts:'Used in magnets (strongest permanent magnets), aircraft engines, and yellow glass pigment.'},
+  {n:60,sym:'Nd',name:'Neodymium',mass:144.24,period:8,col:6,color:'#60A5FA',config:'[Xe] 4f⁴ 6s²',facts:'Nd-Fe-B magnets are the strongest permanent magnets known. Used in hard drives and headphones.'},
+  {n:61,sym:'Pm',name:'Promethium',mass:145,period:8,col:7,color:'#60A5FA',config:'[Xe] 4f⁵ 6s²',facts:'Radioactive. No stable isotopes. Used in nuclear batteries and luminous paint.'},
+  {n:62,sym:'Sm',name:'Samarium',mass:150.36,period:8,col:8,color:'#60A5FA',config:'[Xe] 4f⁶ 6s²',facts:'Sm-Co magnets work at high temperatures. Used in cancer treatment (Sm-153) and neutron absorption.'},
+  {n:63,sym:'Eu',name:'Europium',mass:151.96,period:8,col:9,color:'#60A5FA',config:'[Xe] 4f⁷ 6s²',facts:'Gives red/blue colour in TV screens and LED lights. Used as anti-counterfeiting measure in euro notes.'},
+  {n:64,sym:'Gd',name:'Gadolinium',mass:157.25,period:8,col:10,color:'#60A5FA',config:'[Xe] 4f⁷ 5d¹ 6s²',facts:'MRI contrast agent. Highest neutron absorption of any element. Ferromagnetic below 20°C.'},
+  {n:65,sym:'Tb',name:'Terbium',mass:158.93,period:8,col:11,color:'#60A5FA',config:'[Xe] 4f⁹ 6s²',facts:'Used in green phosphors in TVs and fluorescent lamps. Magnetostrictive material.'},
+  {n:66,sym:'Dy',name:'Dysprosium',mass:162.50,period:8,col:12,color:'#60A5FA',config:'[Xe] 4f¹⁰ 6s²',facts:'Highest magnetic moment of any element. Used in hard drives and electric vehicle motors.'},
+  {n:67,sym:'Ho',name:'Holmium',mass:164.93,period:8,col:13,color:'#60A5FA',config:'[Xe] 4f¹¹ 6s²',facts:'Exceptional magnetic properties. Used in medical lasers (Ho:YAG) and nuclear reactor control rods.'},
+  {n:68,sym:'Er',name:'Erbium',mass:167.26,period:8,col:14,color:'#60A5FA',config:'[Xe] 4f¹² 6s²',facts:'Used in fibre optic amplifiers (EDFA). Gives pink colour to glass. Used in medical lasers.'},
+  {n:69,sym:'Tm',name:'Thulium',mass:168.93,period:8,col:15,color:'#60A5FA',config:'[Xe] 4f¹³ 6s²',facts:'Rarest lanthanide. Used in portable X-ray devices, surgical lasers, and euro currency banknotes.'},
+  {n:70,sym:'Yb',name:'Ytterbium',mass:173.04,period:8,col:16,color:'#60A5FA',config:'[Xe] 4f¹⁴ 6s²',facts:'Used in atomic clocks (most precise), fibre optic amplifiers, and cancer treatment.'},
+  {n:71,sym:'Lu',name:'Lutetium',mass:174.97,period:8,col:17,color:'#60A5FA',config:'[Xe] 4f¹⁴ 5d¹ 6s²',facts:'Densest and hardest lanthanide. Used in PET scan detectors and cancer radiotherapy.'},
+  // Actinides (period 9 = display row below lanthanides)
+  {n:89,sym:'Ac',name:'Actinium',mass:227,period:9,col:3,color:'#F87171',config:'[Rn] 6d¹ 7s²',facts:'Radioactive. Glows blue due to ionising radiation. Used in targeted alpha cancer therapy.'},
+  {n:90,sym:'Th',name:'Thorium',mass:232.04,period:9,col:4,color:'#F87171',config:'[Rn] 6d² 7s²',facts:'Weakly radioactive. Thorium reactors are a potential nuclear fuel. Found in gas mantles.'},
+  {n:91,sym:'Pa',name:'Protactinium',mass:231.04,period:9,col:5,color:'#F87171',config:'[Rn] 5f² 6d¹ 7s²',facts:'Radioactive and toxic. Produced from uranium-235 decay. Rare in nature.'},
+  {n:92,sym:'U',name:'Uranium',mass:238.03,period:9,col:6,color:'#F87171',config:'[Rn] 5f³ 6d¹ 7s²',facts:'Heaviest naturally occurring element. U-235 used in nuclear power and weapons. Mildly radioactive.'},
+  {n:93,sym:'Np',name:'Neptunium',mass:237,period:9,col:7,color:'#F87171',config:'[Rn] 5f⁴ 6d¹ 7s²',facts:'First transuranic element. Named after Neptune. Produced in nuclear reactors from uranium.'},
+  {n:94,sym:'Pu',name:'Plutonium',mass:244,period:9,col:8,color:'#F87171',config:'[Rn] 5f⁶ 7s²',facts:'Fissile material used in nuclear weapons and reactors. Pu-238 used in spacecraft RTGs (Voyager).'},
+  {n:95,sym:'Am',name:'Americium',mass:243,period:9,col:9,color:'#F87171',config:'[Rn] 5f⁷ 7s²',facts:'Used in smoke detectors (Am-241). First element named after a continent.'},
+  {n:96,sym:'Cm',name:'Curium',mass:247,period:9,col:10,color:'#F87171',config:'[Rn] 5f⁷ 6d¹ 7s²',facts:'Named after Marie and Pierre Curie. Used in alpha-particle X-ray spectrometers on Mars rovers.'},
+  {n:97,sym:'Bk',name:'Berkelium',mass:247,period:9,col:11,color:'#F87171',config:'[Rn] 5f⁹ 7s²',facts:'Named after Berkeley, California. Synthetic element. Used only in scientific research.'},
+  {n:98,sym:'Cf',name:'Californium',mass:251,period:9,col:12,color:'#F87171',config:'[Rn] 5f¹⁰ 7s²',facts:'Used as a portable neutron source for cancer treatment and oil well logging.'},
+  {n:99,sym:'Es',name:'Einsteinium',mass:252,period:9,col:13,color:'#F87171',config:'[Rn] 5f¹¹ 7s²',facts:'Named after Albert Einstein. Discovered in the fallout from the first hydrogen bomb test.'},
+  {n:100,sym:'Fm',name:'Fermium',mass:257,period:9,col:14,color:'#F87171',config:'[Rn] 5f¹² 7s²',facts:'Named after Enrico Fermi. Also discovered in hydrogen bomb fallout. No practical applications.'},
+  {n:101,sym:'Md',name:'Mendelevium',mass:258,period:9,col:15,color:'#F87171',config:'[Rn] 5f¹³ 7s²',facts:'Named after Dmitri Mendeleev (creator of the periodic table). First element made one atom at a time.'},
+  {n:102,sym:'No',name:'Nobelium',mass:259,period:9,col:16,color:'#F87171',config:'[Rn] 5f¹⁴ 7s²',facts:'Named after Alfred Nobel. Synthetic element with very short half-life. Difficult to study.'},
+  {n:103,sym:'Lr',name:'Lawrencium',mass:266,period:9,col:17,color:'#F87171',config:'[Rn] 5f¹⁴ 7s² 7p¹',facts:'Last actinide. Named after Ernest O. Lawrence (inventor of the cyclotron). Synthetic element.'},
 ];
 
 function renderPeriodicTable() {
   const grid = document.getElementById('pt-grid');
   if (!grid) return;
-  
-  // Build 18×7 grid
+
   const layout = {};
-  const periodRows = {1:1,2:2,3:3,4:4,5:5,6:6,7:7};
-  ELEMENTS.forEach(el => {
-    const row = el.period;
-    const col = el.col;
-    layout[`${row}-${col}`] = el;
-  });
+  ELEMENTS.forEach(el => { layout[`${el.period}-${el.col}`] = el; });
 
   let html = '';
+  // Main table: rows 1–7
   for (let row = 1; row <= 7; row++) {
+    for (let col = 1; col <= 18; col++) {
+      const el = layout[`${row}-${col}`];
+      if (el) {
+        html += `<div class="pt-cell" style="background:${el.color}22;border-color:${el.color}44" onclick="showElement(${el.n})">
+          <div class="pt-num">${el.n}</div>
+          <div class="pt-symbol" style="color:${el.color}">${el.sym}</div>
+          <div class="pt-name">${el.name}</div>
+        </div>`;
+      } else {
+        html += `<div class="pt-cell" style="visibility:hidden"></div>`;
+      }
+    }
+  }
+  // Separator row between main table and f-block
+  html += `<div style="grid-column:1/-1;height:.6rem;border-top:1px dashed rgba(255,255,255,.15);margin:.25rem 0"></div>`;
+  // Lanthanides (period 8) and Actinides (period 9), cols 1–18
+  for (let row = 8; row <= 9; row++) {
     for (let col = 1; col <= 18; col++) {
       const el = layout[`${row}-${col}`];
       if (el) {
@@ -8786,7 +9030,7 @@ if (tr) _tutorMO.observe(tr.parentNode || document.body, { childList: true, subt
 const _v11PrevShowDash = window.showDash;
 window.showDash = function(sub) {
   if (_v11PrevShowDash) _v11PrevShowDash(sub);
-  const v11Pages = ['calculator','periodic','formulas','bookmarks','goals','a11y'];
+  const v11Pages = ['calculator','periodic','formulas','bookmarks','goals','a11y','repetition','curriculum'];
   v11Pages.forEach(p => {
     const sp = document.getElementById('sp-'+p);
     if (sp) sp.classList.toggle('active', p === sub);
@@ -8800,6 +9044,8 @@ window.showDash = function(sub) {
   }
   if (sub === 'bookmarks') renderBookmarks();
   if (sub === 'goals') { loadGoals(); updateGoalDisplay(); }
+  if (sub === 'repetition') refreshSRPage();
+  if (sub === 'curriculum') showCurriculum(document.getElementById('curr-gcse-btn'), 'gcse');
 };
 
 // ─── PATCH enterDashboard ─────────────────────────────
@@ -8830,5 +9076,418 @@ if (_v11OrigGenQ && !window._v11QTracked) {
 }
 
 console.log('✦ Lumina AI v11 — Full product build complete');
+</script>
+<script>
+// ═══════════════════════════════════════════════════════
+// LUMINA AI v12 — Spaced Repetition Full Page + Curriculum
+// ═══════════════════════════════════════════════════════
+
+// ─── SR Page Functions ────────────────────────────────
+function refreshSRPage() {
+  let cards = [];
+  try { cards = JSON.parse(localStorage.getItem('lumina_sr_cards') || '[]'); } catch(e) {}
+  const today = new Date().toDateString();
+  const due = cards.filter(c => !c.nextReview || new Date(c.nextReview) <= new Date());
+  document.getElementById('sr-due-count').textContent = due.length;
+  const reviewed = cards.filter(c => c.lastReviewed === today);
+  document.getElementById('sr-done-count').textContent = reviewed.length;
+  renderAllSRCards(cards);
+}
+
+function renderAllSRCards(cards) {
+  const container = document.getElementById('sr-all-cards');
+  if (!container) return;
+  if (!cards.length) {
+    container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--muted)"><div style="font-size:2rem;margin-bottom:.5rem">🧠</div><div style="font-size:.875rem">No flashcards yet — generate some with AI or add your own!</div></div>';
+    return;
+  }
+  const subjectColors = { Mathematics:'#60A5FA', Physics:'#A78BFA', Chemistry:'#4ADE80', Biology:'#4ADE80', 'English Literature':'#F472B6', History:'#FBBF24', 'Computer Science':'#FB923C', Economics:'#C9A84C', French:'#60A5FA' };
+  container.innerHTML = cards.map((c, i) => `
+    <div style="background:var(--bg3);border-radius:12px;padding:1rem;margin-bottom:.75rem;border-left:3px solid ${subjectColors[c.subj]||'#C9A84C'}">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+        <span style="font-size:.75rem;font-weight:600;color:${subjectColors[c.subj]||'#C9A84C'}">${c.subj||'General'}</span>
+        <button onclick="deleteSRCard(${i})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:.9rem">✕</button>
+      </div>
+      <div style="font-weight:600;font-size:.9rem;margin-bottom:.4rem">${c.q}</div>
+      <div style="font-size:.8rem;color:var(--muted)">${c.a}</div>
+      <div style="font-size:.7rem;color:var(--muted);margin-top:.5rem">${c.nextReview ? 'Next: ' + new Date(c.nextReview).toLocaleDateString('en-GB') : 'Due now'}</div>
+    </div>`).join('');
+}
+
+function openAddSRCard() {
+  const form = document.getElementById('sr-add-form');
+  if (form) { form.style.display = form.style.display === 'none' ? 'block' : 'none'; }
+}
+
+function saveManualSRCard() {
+  const q = document.getElementById('sr-manual-q')?.value.trim();
+  const a = document.getElementById('sr-manual-a')?.value.trim();
+  const subj = document.getElementById('sr-manual-subj')?.value;
+  if (!q || !a) { showToast('Please enter both question and answer'); return; }
+  let cards = [];
+  try { cards = JSON.parse(localStorage.getItem('lumina_sr_cards') || '[]'); } catch(e) {}
+  cards.push({ q, a, subj, color: '#C9A84C', interval: 1, easiness: 2.5, created: new Date().toISOString() });
+  try { localStorage.setItem('lumina_sr_cards', JSON.stringify(cards)); } catch(e) {}
+  document.getElementById('sr-manual-q').value = '';
+  document.getElementById('sr-manual-a').value = '';
+  document.getElementById('sr-add-form').style.display = 'none';
+  showToast('✅ Flashcard saved!');
+  refreshSRPage();
+}
+
+function deleteSRCard(idx) {
+  let cards = [];
+  try { cards = JSON.parse(localStorage.getItem('lumina_sr_cards') || '[]'); } catch(e) {}
+  cards.splice(idx, 1);
+  try { localStorage.setItem('lumina_sr_cards', JSON.stringify(cards)); } catch(e) {}
+  refreshSRPage();
+}
+
+// ─── UK Curriculum ────────────────────────────────────
+const UK_CURRICULUM = {
+  gcse: {
+    Mathematics: { boards:['AQA','Edexcel','OCR','WJEC','Eduqas'], topics:{
+      'Number':['Place value & rounding','Fractions, decimals & percentages','Indices & surds','Standard form','Ratio & proportion','Bounds & error'],
+      'Algebra':['Expressions & formulae','Linear equations','Quadratics (factorising, formula, completing square)','Simultaneous equations','Sequences (nth term, arithmetic, geometric)','Inequalities','Functions & graphs','Iteration'],
+      'Geometry & Measures':['Angles, parallel lines & polygons','Circles (arc, sector, tangent)','Transformations','Vectors','Pythagoras & trigonometry (GCSE)','Mensuration (area, volume)','Constructions & loci','Similarity & congruence'],
+      'Statistics & Probability':['Data representation (histograms, box plots, cumulative frequency)','Averages & spread','Scatter diagrams & correlation','Sampling methods','Probability (single, combined, tree diagrams, Venn diagrams)','Conditional probability (Higher)']
+    }},
+    Physics: { boards:['AQA','Edexcel','OCR','WJEC','Cambridge'], topics:{
+      'Forces & Motion':['Speed, velocity & acceleration','Newton\'s laws','Momentum','Stopping distances','Terminal velocity','Hooke\'s Law & elastic deformation'],
+      'Energy':['Energy stores & transfers','Conservation of energy','Efficiency','Power','Specific heat capacity','Heating & cooling'],
+      'Waves':['Properties of waves (frequency, wavelength, amplitude)','EM spectrum','Reflection & refraction','Sound waves','Seismic waves'],
+      'Electricity':['Circuit components & symbols','Ohm\'s Law (V=IR)','Series & parallel circuits','Mains electricity & safety','Static electricity'],
+      'Magnetism & Electromagnetism':['Permanent & induced magnets','Electromagnets','Motor effect (F=BIl)','Generator effect & induction','Transformers'],
+      'Atomic Structure':['Atomic model (protons, neutrons, electrons)','Radioactive decay (alpha, beta, gamma)','Half-life','Nuclear fission & fusion','Uses & hazards of radiation']
+    }},
+    Chemistry: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Atomic Structure':['Atomic structure & isotopes','Electronic configuration','Periodic table trends','Development of the atomic model'],
+      'Bonding & Structure':['Ionic bonding & structure','Covalent bonding (simple & giant)','Metallic bonding','Intermolecular forces','Allotropes of carbon'],
+      'Quantitative Chemistry':['Moles & Avogadro\'s number','Empirical & molecular formulae','Reacting masses & volumes','Concentration & titration'],
+      'Chemical Changes':['Reactivity series','Displacement reactions','Oxidation & reduction','Electrolysis','Acids, bases & neutralisation','Salt preparation'],
+      'Energy Changes':['Exothermic & endothermic reactions','Bond enthalpies','Activation energy & catalysts','Hydrogen fuel cells'],
+      'Rates & Equilibrium':['Rate of reaction & factors','Collision theory','Le Chatelier\'s principle','Industrial processes (Haber, Contact)'],
+      'Organic Chemistry':['Alkanes & alkenes','Fractional distillation','Cracking','Polymers','Alcohols & carboxylic acids'],
+      'Analysis':['Tests for ions','Chromatography','Flame tests','Gas tests']
+    }},
+    Biology: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Cell Biology':['Cell structure (plant, animal, bacterial)','Microscopy & magnification','Cell division (mitosis & meiosis)','Stem cells','Diffusion, osmosis & active transport'],
+      'Organisation':['Enzymes & digestion','Circulatory system','Respiration (aerobic & anaerobic)','Breathing system','Plants (photosynthesis, transpiration)','Health & disease'],
+      'Infection & Response':['Communicable diseases & pathogens','Immune system & vaccination','Antibiotics & antivirals','Drugs development'],
+      'Bioenergetics':['Photosynthesis (equation, factors, limiting)','Aerobic & anaerobic respiration','Metabolism'],
+      'Homeostasis & Response':['Nervous system & synapses','Hormones (insulin, glucagon, ADH)','Menstrual cycle','Diabetes type 1 & 2','Temperature & water regulation'],
+      'Inheritance & Variation':['DNA structure & protein synthesis','Inheritance (dominant, recessive, codominant)','Punnett squares','Genetic disorders','Evolution & natural selection','Classification']
+    }},
+    'English Language': { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Reading':['Explicit & implicit information','Language analysis','Structural analysis','Comparing texts','Evaluation & critical reading'],
+      'Writing':['Descriptive writing','Narrative writing','Persuasive writing','Formal & informal register','Audience & purpose','Sentence variety & vocabulary']
+    }},
+    'English Literature': { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Shakespeare':['Character analysis','Themes & motifs','Context (Elizabethan/Jacobean)','Language & structure','Stagecraft'],
+      'Modern Novel/Prose':['Plot & narrative structure','Character development','Themes','Social & historical context','Writer\'s methods'],
+      'Poetry':['GCSE Anthology poems (AQA/Edexcel clusters)','Unseen poetry analysis','Poetic techniques (imagery, form, structure)','Comparative essay skills'],
+      'Skills':['PEE/PEEL essay structure','Embedding quotations','Contextual analysis','Comparing texts']
+    }},
+    History: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Medicine Through Time':['Medieval medicine','Renaissance surgery','Industrial era public health','20th century medicine (NHS, antibiotics, genetics)'],
+      'Conflict & Tension 1918–1939':['Treaty of Versailles','League of Nations','Rise of Hitler','Road to war'],
+      'Germany 1890–1945':['Kaiser Wilhelm & WW1','Weimar Republic','Nazi rise to power','Life in Nazi Germany','Holocaust'],
+      'USA 1920–1973':['Roaring Twenties & Prohibition','Great Depression','Civil Rights Movement','Cold War America'],
+      'Elizabethan England':['Elizabeth I & Court','Religious settlement','Challenges (Mary Queen of Scots, Armada)','Exploration & society'],
+      'Sources & Historical Skills':['Source analysis','Interpretations','Essay structure (GCSE mark scheme)','Cause, consequence, significance']
+    }},
+    Geography: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Physical Geography':['Tectonic hazards (earthquakes, volcanoes)','Tropical storms','River landscapes','Coastal landscapes','Glacial landscapes'],
+      'Human Geography':['Urban change in the UK','Urban challenges in developing cities','Economic development','Resource management (food, water, energy)','Global development'],
+      'Fieldwork & Skills':['Map reading & OS maps','Statistical skills','Graphs & data presentation','Fieldwork techniques']
+    }},
+    'Computer Science': { boards:['AQA','OCR','Edexcel'], topics:{
+      'Fundamentals of Programming':['Variables, data types & operators','Sequence, selection, iteration','Procedures & functions','String manipulation','File I/O','Pseudocode & flowcharts'],
+      'Data Structures':['Arrays (1D & 2D)','Records','Stacks & queues','Lists','Searching algorithms (linear, binary)','Sorting algorithms (bubble, merge, insertion)'],
+      'Theory of Computation':['Abstraction & decomposition','Algorithms & efficiency','Finite state machines','Regular expressions'],
+      'Computer Systems':['CPU architecture (fetch-execute cycle, registers, cache)','Memory (RAM, ROM, virtual memory)','Secondary storage','Boolean logic & gates','Binary & hexadecimal','Compression'],
+      'Networks':['Network topologies & types','Protocols (TCP/IP, HTTP, DNS, FTP)','Internet security & threats','Encryption'],
+      'Ethical & Legal Issues':['Data protection & privacy laws','Cybercrime','Digital divide','AI & impacts of technology']
+    }},
+    Economics: { boards:['AQA','Edexcel','OCR'], topics:{
+      'Microeconomics':['Supply & demand','Elasticity (PED, PES, YED)','Market failure & externalities','Government intervention (taxes, subsidies, regulations)','Business objectives & costs'],
+      'Macroeconomics':['GDP, economic growth & business cycle','Unemployment & inflation','Monetary & fiscal policy','Balance of payments & exchange rates'],
+      'International Trade':['Comparative advantage','Trade barriers & free trade','Globalisation'],
+      'Development':['Measures of development (HDI, GNI)','Poverty traps','Aid & trade']
+    }},
+    'Business Studies': { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Business in Context':['Entrepreneurs & business objectives','Stakeholders','Business location & size','Legal structures'],
+      'Marketing':['Market research','Marketing mix (4Ps)','Market segmentation','Branding'],
+      'Finance':['Revenue, costs & profit','Break-even analysis','Cash flow forecasting','Sources of finance'],
+      'Human Resources':['Recruitment & selection','Motivation theories (Maslow, Herzberg, Taylor)','Training & development','Organisational structure'],
+      'Operations':['Production methods','Quality management','Supply chain management','Technology in business']
+    }},
+    French: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Identity & Culture':['Self & relationships','Local & global community','Customs & festivals','Education'],
+      'Travel & Tourism':['Holidays & transport','Accommodation','Describing places','Future travel plans'],
+      'Employment & Technology':['Jobs & career aspirations','Technology in daily life','Social media'],
+      'Grammar':['Tenses (present, past perfect, imperfect, future, conditional)','Negation','Pronouns (subject, object, reflexive)','Agreement of adjectives','Subjunctive (A-Level)'],
+      'Speaking & Listening':['Role plays','Photo card descriptions','General conversation'],
+      'Reading & Writing':['Translation skills','Essay writing (A-Level)','Letter/email writing']
+    }},
+    Spanish: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Identity & Culture':['Self & family','Customs & traditions','Community & region'],
+      'Travel & Tourism':['Holidays & destinations','Transport & accommodation'],
+      'Employment & Technology':['Work & future plans','Digital world'],
+      'Grammar':['Ser vs estar','Preterite vs imperfect','Subjunctive','Object pronouns','Reflexive verbs'],
+      'Skills':['Speaking (role play, photo card)','Writing (letter, essay)','Listening comprehension','Translation']
+    }},
+    'Religious Studies': { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Christianity':['Beliefs (Trinity, incarnation, atonement, afterlife)','Practices (worship, prayer, sacraments, pilgrimage)','Christian ethics'],
+      'Islam':['Beliefs (tawhid, prophets, angels, akhirah)','Practices (Five Pillars, jihad)','Muslim ethics'],
+      'Themes in Ethics':['Relationships & family','Life & death (abortion, euthanasia)','Crime & punishment','War & peace','Human rights & social justice']
+    }},
+    'Physical Education': { boards:['AQA','Edexcel','OCR'], topics:{
+      'Anatomy & Physiology':['Skeletal & muscular systems','Cardiovascular & respiratory systems','Short & long-term effects of exercise'],
+      'Sports Psychology':['Motivation & arousal','Anxiety & stress management','Skill acquisition (cognitive, associative, autonomous)','Goal setting'],
+      'Socio-cultural Issues':['Sport & society','Participation barriers','Media & commercialisation','Ethics (doping, technology)'],
+      'Health, Fitness & Training':['Components of fitness','FITT principles','Training methods','Nutrition & hydration']
+    }},
+    'Design and Technology': { boards:['AQA','Edexcel','OCR'], topics:{
+      'Core Principles':['Materials & their properties','Design processes & methods','Sustainability & environment','Technology & innovation'],
+      'Technical Principles':['Electronics & systems','Mechanisms','Structural integrity','Manufacturing processes'],
+      'Designing Skills':['Sketching & CAD','Prototyping','Evaluation against criteria'],
+      'Making Skills':['Practical manufacture','Quality assurance','Health & safety']
+    }},
+    Art: { boards:['AQA','Edexcel','OCR'], topics:{
+      'Fine Art':['Drawing & painting techniques','Composition','Colour theory','Art movements & influences'],
+      'Graphic Design':['Typography','Layout & print design','Digital tools (Adobe suite)'],
+      'Personal Investigation':['Artist research','Annotation & analysis','Development of ideas','Final piece'],
+      'Assessment Objectives':['AO1 Develop','AO2 Explore','AO3 Record','AO4 Present']
+    }},
+    Music: { boards:['AQA','Edexcel','OCR'], topics:{
+      'Performing':['Solo & ensemble performance','Exam board set pieces','Technique & expression'],
+      'Composing':['Composition techniques','Harmony & counterpoint','Structure & form','Use of technology (DAW)'],
+      'Listening & Appraising':['Western classical tradition','Popular music','World music','Set works (exam board specific)'],
+      'Musical Elements':['Melody, harmony, rhythm, dynamics, texture, timbre, tempo, structure']
+    }},
+    Drama: { boards:['AQA','Edexcel','OCR'], topics:{
+      'Devising':['Physical theatre','Verbatim theatre','Stanislavski & Brecht techniques','Documentary theatre'],
+      'Performance from Text':['Script analysis','Character work','Genre & style','Staging & design'],
+      'Theatre Roles':['Actor','Director','Designer (set, costume, lighting, sound)'],
+      'Set Texts':['Modern drama texts (exam board specific)','Classical texts','Context & interpretation']
+    }},
+    Psychology: { boards:['AQA'], topics:{
+      'Social Influence':['Conformity (Asch)','Obedience (Milgram)','Minority influence','Social change'],
+      'Memory':['Multi-store model','Working memory model','Forgetting theories','Eyewitness testimony'],
+      'Attachment':['Caregiver-infant interactions','Learning theory vs Bowlby','Ainsworth Strange Situation','Privation & institutionalisation'],
+      'Psychopathology':['Definitions of abnormality','Phobias','Depression','OCD & treatments'],
+      'Research Methods':['Experiments (lab, field, natural)','Correlations','Observations','Questionnaires & interviews','Statistical tests']
+    }}
+  },
+  alevel: {
+    Mathematics: { boards:['AQA','Edexcel','OCR','MEI'], topics:{
+      'Pure — Algebra':['Proof & surds','Quadratics & polynomials','Binomial expansion','Partial fractions','Modulus function','Parametric equations'],
+      'Pure — Calculus':['Differentiation (chain, product, quotient rule)','Integration (by substitution, by parts)','Differential equations','Maclaurin series'],
+      'Pure — Trigonometry':['Radians & sector','Compound & double angle formulae','Solving trig equations','Inverse trig functions'],
+      'Pure — Exponentials & Logs':['e^x & ln(x)','Laws of logarithms','Exponential growth & decay'],
+      'Pure — Vectors':['3D vectors','Dot product','Equations of lines & planes'],
+      'Statistics':['Probability distributions (binomial, normal)','Hypothesis testing','Correlation & regression','Statistical sampling'],
+      'Mechanics':['Kinematics (SUVAT in 2D)','Forces & Newton\'s laws in 2D','Moments & equilibrium','Projectiles','Friction','Work, energy & power']
+    }},
+    'Further Mathematics': { boards:['AQA','Edexcel','OCR','MEI'], topics:{
+      'Further Pure':['Complex numbers','Matrices','Further calculus (polar coordinates, hyperbolic functions)','Series & sequences','Proof by induction'],
+      'Further Statistics':['Continuous probability distributions','Chi-squared tests','Non-parametric tests'],
+      'Further Mechanics':['Circular motion','Impulse & momentum','Elastic collisions','Simple harmonic motion'],
+      'Decision Mathematics':['Graph theory','Algorithms (Dijkstra, Prim, Kruskal)','Linear programming','Network flows']
+    }},
+    Physics: { boards:['AQA','Edexcel','OCR','Cambridge'], topics:{
+      'Mechanics':['Vectors & scalars in 2D','Projectile motion','Newton\'s laws (advanced)','Work-energy theorem','Circular motion','Gravitational fields'],
+      'Electricity':['Kirchhoff\'s laws (advanced)','Capacitors (charge/discharge)','Semiconductor physics','AC circuits'],
+      'Waves & Optics':['Superposition & interference','Diffraction','Standing waves','Refraction (Snell\'s law)','Lenses & optics'],
+      'Fields':['Gravitational fields','Electric fields (Coulomb\'s law)','Magnetic fields & electromagnetic induction','Faraday\'s & Lenz\'s laws'],
+      'Nuclear & Particle Physics':['Atomic spectra & energy levels','Photoelectric effect','Nuclear binding energy','Particle physics (standard model, quarks)'],
+      'Thermal Physics':['Ideal gas laws','Kinetic theory','Thermodynamics (first law)','Entropy']
+    }},
+    Chemistry: { boards:['AQA','Edexcel','OCR','Cambridge'], topics:{
+      'Physical Chemistry':['Thermodynamics (enthalpy, entropy, Gibbs free energy)','Kinetics (rate laws, Arrhenius equation)','Equilibrium (Kc, Kp, Ka, Kb)','Electrochemistry (standard electrode potentials, EMF)'],
+      'Inorganic Chemistry':['Periodicity & Period 3 reactions','Transition metals (complex ions, colour, catalysis)','Acid-base chemistry (buffers, pH calculations)','Group 2 & Group 7 chemistry'],
+      'Organic Chemistry':['Mechanisms (addition, substitution, elimination)','Carbonyl chemistry (aldehydes, ketones, carboxylic acids, esters, amides)','Amines & diazonium salts','Polymers','Aromatic chemistry','Stereoisomerism (optical, geometric)'],
+      'Analytical Chemistry':['NMR spectroscopy','Infrared spectroscopy','Mass spectrometry','Chromatography techniques']
+    }},
+    Biology: { boards:['AQA','Edexcel','OCR','Cambridge'], topics:{
+      'Cell Biology':['Ultrastructure (organelles, membranes)','Cell signalling','Mitosis & meiosis (detail)','DNA replication & protein synthesis'],
+      'Exchange & Transport':['Gas exchange (mammals, fish, insects, plants)','Mass transport (circulatory system detail, xylem, phloem)'],
+      'Genetics & Evolution':['Mendelian genetics & chi-squared test','Population genetics (Hardy-Weinberg)','Mutations & natural selection','Genetic technology (PCR, electrophoresis, GM organisms)'],
+      'Energy & Metabolism':['Photosynthesis (light & dark reactions)','Respiration (glycolysis, Krebs cycle, oxidative phosphorylation)','ATP synthesis & chemiosmosis'],
+      'Control & Regulation':['Nervous system (synapses, action potentials)','Endocrine system (feedback loops)','Muscle contraction','Plant hormones & tropisms'],
+      'Ecology':['Population dynamics','Succession','Nutrient cycles','Biodiversity & conservation']
+    }},
+    'English Literature': { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Shakespeare':['Close textual analysis','Tragedy & comedy conventions','Socio-historical context','Comparative essay skills'],
+      'Prose':['Victorian & modern fiction','Narrative voice & structure','Postcolonial & feminist readings'],
+      'Poetry':['Pre-1900 & contemporary poetry','Poetic tradition (Romantic, Modernist)','Comparative analysis','Unseen poetry'],
+      'Drama':['Greek tragedy to modern theatre','Dramatic techniques','Context & reception'],
+      'Critical Theory':['Marxist, feminist, psychoanalytic, postcolonial readings','Writing about critics']
+    }},
+    History: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Breadth Study':['Long-term change & continuity','Themes across 100+ years'],
+      'Depth Study':['Detailed understanding of a specific period','Causation & consequence','Significance'],
+      'Historical Enquiry':['Interpretations & historiography','Source evaluation (utility, limitation)','Essay structure (A-Level)'],
+      'Popular Topics':['Tudors (Henry VIII to Elizabeth I)','The Cold War','Nazi Germany & Holocaust','USA 1865–1975','Russian Revolution & Stalin','British Empire']
+    }},
+    Geography: { boards:['AQA','Edexcel','OCR'], topics:{
+      'Physical Systems':['Earth\'s life support systems','Coastal systems & landscapes','Glacial systems & landscapes','Hazardous Earth'],
+      'Human Systems':['Global systems (globalisation, trade, migration)','Urban environments','Power & borders','Resource security'],
+      'Geographical Skills':['Quantitative & qualitative methods','Fieldwork design & data collection','Mapping & GIS','Synoptic papers']
+    }},
+    Economics: { boards:['AQA','Edexcel','OCR','Cambridge'], topics:{
+      'Microeconomics':['Consumer theory (indifference curves, utility maximisation)','Production & cost theory','Market structures (perfect competition, monopoly, oligopoly, monopsony)','Game theory','Market failure & welfare economics','Behavioural economics'],
+      'Macroeconomics':['Circular flow & national income accounts','Aggregate demand & supply','Fiscal & monetary policy (advanced)','Supply-side economics','Open economy macroeconomics','Economic growth models'],
+      'International Economics':['Trade theory (comparative & competitive advantage)','Exchange rate systems','Current account & capital flows','Globalisation & protectionism'],
+      'Development Economics':['Development indicators & theories','Poverty & inequality','Sustainable development','Role of institutions & aid']
+    }},
+    'Business Studies': { boards:['AQA','Edexcel','OCR'], topics:{
+      'Business Objectives & Strategy':['Mission, vision & corporate objectives','Growth strategies (Ansoff matrix, Porter)','Mergers & acquisitions','Globalisation & MNCs'],
+      'Marketing':['Advanced market research','Digital marketing','Price elasticity in practice','International marketing'],
+      'Finance (Advanced)':['Investment appraisal (NPV, IRR, payback)','Ratio analysis','Financial strategy','Risk & uncertainty'],
+      'Operations':['Lean production & JIT','Capacity management','Critical path analysis','Operations strategy'],
+      'Human Resources (Advanced)':['Organisational change','Leadership styles','Corporate culture','Industrial relations']
+    }},
+    Psychology: { boards:['AQA','Edexcel','OCR'], topics:{
+      'Social Psychology':['Prosocial behaviour','Aggression','Social cognition','Prejudice & discrimination'],
+      'Cognition & Development':['Piaget, Vygotsky, Bruner','Language & thought','Moral development'],
+      'Biological Psychology':['Brain structure & function','Psychobiology of sleep','Stress (SAM, HPA axis)','Genetic basis of behaviour'],
+      'Abnormal Psychology':['Classification of mental disorders (DSM, ICD)','Schizophrenia','Mood disorders','Eating disorders','Forensic psychology'],
+      'Research Methods (Advanced)':['Statistical analysis','Meta-analysis','Validity & reliability','Ethics in research']
+    }},
+    Sociology: { boards:['AQA','OCR'], topics:{
+      'Theory & Methods':['Functionalism, Marxism, Feminism, Interactionism','Research methods (positivist vs interpretivist)','Sociological perspectives on society'],
+      'Education':['Role of education (functionalism, Marxism, feminism)','Educational achievement & social class, gender, ethnicity','Curriculum & hidden curriculum'],
+      'Families & Households':['Changing family structures','Demographic trends','Feminist & Marxist views on the family'],
+      'Crime & Deviance':['Theories of crime','Statistics & dark figure','Policing & control','Globalisation & crime'],
+      'Media':['Media ownership & control','Representation','Effects theories']
+    }},
+    'Computer Science': { boards:['AQA','OCR','Edexcel'], topics:{
+      'Theory of Computation':['Turing machine & Church-Turing thesis','Regular languages & finite automata','Context-free grammars','Computability & decidability','Complexity theory (P, NP)'],
+      'Data Structures & Algorithms':['Trees (binary, B-trees, AVL)','Hash tables','Graph algorithms','Algorithm design (divide & conquer, dynamic programming, greedy)','Time & space complexity (Big O)'],
+      'Computer Architecture':['RISC vs CISC','Pipelining','Parallel processing','Cache & virtual memory management'],
+      'Programming Paradigms':['OOP (inheritance, polymorphism, encapsulation)','Functional programming','Declarative programming','Event-driven programming'],
+      'Databases':['Relational databases & SQL','Normalisation (1NF–3NF)','Transactions & ACID','NoSQL'],
+      'Networks & Security':['Network protocols (TCP/IP stack)','Cryptography (public key, digital signatures)','Network threats & mitigation'],
+      'Ethical, Legal & Professional':['Data protection laws (GDPR)','AI ethics','Intellectual property']
+    }},
+    French: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Social Issues':['Equality (gender, race)','Social media impact','French-speaking world cultures'],
+      'Politics & Current Affairs':['Environment & climate change','Politics of France & Francophone world'],
+      'Literature & Film':['Set texts (exam board specific)','Close reading & analysis','Essay writing in French'],
+      'Grammar (Advanced)':['Subjunctive (all forms & uses)','Conditional & conditional perfect','Passive voice','Indirect speech','Register & stylistics']
+    }},
+    Spanish: { boards:['AQA','Edexcel','OCR'], topics:{
+      'Social Issues & Trends':['Cybercrime & technology','Equality & diversity in Spain/Latin America'],
+      'Political & Artistic Culture':['Political landscape (Spain)','Hispanic art & culture'],
+      'Literature & Film':['Set texts','Close analysis','Extended writing in Spanish'],
+      'Grammar (Advanced)':['Subjunctive','Conditional perfect','Passive voice & constructions']
+    }},
+    Law: { boards:['AQA','OCR'], topics:{
+      'English Legal System':['Sources of law (legislation, common law, EU law)','Court structure & hierarchy','Legal personnel & access to justice','Law reform'],
+      'Criminal Law':['Actus reus & mens rea','Strict liability','Murder, manslaughter & defences','Non-fatal offences','Property offences (theft, robbery, fraud)'],
+      'Tort Law':['Negligence & duty of care (Caparo test)','Occupiers\' liability','Nuisance','Product liability','Remedies'],
+      'Contract Law':['Offer & acceptance','Consideration & intention','Vitiating factors (misrepresentation, duress, undue influence)','Breach & remedies'],
+      'Legal Theory':['Natural law & legal positivism','Critical legal theory']
+    }},
+    Politics: { boards:['AQA','Edexcel','OCR'], topics:{
+      'UK Politics':['Democracy & participation','Electoral systems & voting behaviour','Political parties & ideologies','Parliament & the executive (Prime Minister, Cabinet)','Judiciary & Supreme Court','Devolution & multi-level governance'],
+      'US Politics':['Constitutional framework','Congress, Presidency & Supreme Court','Electoral system & voting behaviour','Civil rights & liberties','Pressure groups & lobbying'],
+      'Political Ideas':['Liberalism','Conservatism','Socialism & Marxism','Feminism','Nationalism','Anarchism','Ecologism'],
+      'Global Politics':['Power & polarity','Global governance (UN, WTO, IMF)','Human rights','Security (terrorism, nuclear proliferation)']
+    }},
+    Philosophy: { boards:['AQA','OCR'], topics:{
+      'Epistemology':['Empiricism vs rationalism','Theories of knowledge (a priori, a posteriori, justified true belief)','Scepticism & Descartes','Perception & the external world'],
+      'Metaphysics':['Substance dualism (Descartes) vs physicalism','Free will vs determinism','Personal identity','Philosophy of mind (functionalism, qualia)'],
+      'Ethics':['Utilitarianism (Bentham, Mill, Singer)','Kantian deontology','Virtue ethics (Aristotle)','Natural law','Metaethics (moral realism, relativism)'],
+      'Philosophy of Religion':['Arguments for God\'s existence (cosmological, teleological, ontological)','Problem of evil & theodicy','Religious language','Faith & reason'],
+      'Philosophy of Mind & Language':['Language games (Wittgenstein)','Truth theories','Meaning & reference']
+    }},
+    'Physical Education': { boards:['AQA','Edexcel','OCR'], topics:{
+      'Anatomy & Physiology (Advanced)':['Cardiovascular adaptations','Respiratory mechanics','Energy systems (ATP-PC, lactic, aerobic)','Muscle fibre types & sport','Biomechanics (Newton\'s laws applied)'],
+      'Exercise Physiology':['VO2 max & fitness testing','Altitude training','Nutrition & ergogenic aids','Recovery & injury prevention'],
+      'Sports Psychology (Advanced)':['Stress & anxiety management (IZOF, catastrophe theory)','Self-efficacy (Bandura)','Aggression theories','Team cohesion & group dynamics'],
+      'Socio-cultural Studies':['Historical development of sport','Commercialisation & media','Globalisation of sport','Ethics & doping in sport']
+    }}
+  }
+};
+
+function showCurriculum(btn, level) {
+  document.querySelectorAll('#sp-curriculum .style-pill').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const data = UK_CURRICULUM[level];
+  if (!data) return;
+  const container = document.getElementById('curriculum-content');
+  if (!container) return;
+  const subjects = Object.keys(data);
+  container.innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem">
+      ${subjects.map(subject => {
+        const s = data[subject];
+        const topicList = Object.keys(s.topics);
+        return `<div class="card" style="cursor:pointer" onclick="toggleCurriculumSubject(this,'${encodeURIComponent(subject)}','${level}')">
+          <div class="card-header">
+            <span class="card-title">${subject}</span>
+            <span style="font-size:.7rem;color:var(--muted)">${topicList.length} topics</span>
+          </div>
+          <div class="card-body" style="font-size:.75rem;color:var(--muted)">
+            <div style="margin-bottom:.5rem">Boards: ${s.boards.join(', ')}</div>
+            <div id="curr-${encodeURIComponent(subject)}-topics" style="display:none">
+              ${topicList.map(t => `<div style="margin-bottom:.75rem"><div style="color:var(--gold);font-weight:600;margin-bottom:.25rem">${t}</div>${s.topics[t].map(st => `<div style="padding-left:.75rem;margin-bottom:.2rem">• ${st}</div>`).join('')}</div>`).join('')}
+            </div>
+            <div style="color:var(--gold);font-size:.75rem;margin-top:.5rem">Click to expand topics ↓</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function toggleCurriculumSubject(card, subjectEnc, level) {
+  const topicsEl = document.getElementById('curr-' + subjectEnc + '-topics');
+  if (!topicsEl) return;
+  const isOpen = topicsEl.style.display !== 'none';
+  topicsEl.style.display = isOpen ? 'none' : 'block';
+  const arrow = card.querySelector('[style*="Click to"]');
+  if (arrow) arrow.textContent = isOpen ? 'Click to expand topics ↓' : 'Click to collapse ↑';
+}
+
+// ─── Activity Feed helper ──────────────────────────────
+function addActivity(icon, text, sub, time) {
+  const feed = document.getElementById('activity-feed');
+  if (!feed) return;
+  const empty = feed.querySelector('[style*="No activity"]');
+  if (empty) empty.remove();
+  const colors = { '📝':'rgba(96,165,250,0.15)','🤖':'rgba(201,168,76,0.15)','✅':'rgba(74,222,128,0.15)','🏆':'rgba(167,139,250,0.15)','🧠':'rgba(244,114,182,0.15)' };
+  const textColors = { '📝':'var(--blue)','🤖':'var(--gold)','✅':'var(--green)','🏆':'var(--purple)','🧠':'var(--pink)' };
+  const item = document.createElement('div');
+  item.className = 'activity-item';
+  item.innerHTML = `<div class="activity-icon" style="background:${colors[icon]||'rgba(201,168,76,0.15)'};color:${textColors[icon]||'var(--gold)'}">${icon}</div><div><div class="activity-text fw700">${text}</div><div style="font-size:.75rem;color:var(--muted)">${sub||''}</div></div><div class="activity-time">${time||'now'}</div>`;
+  feed.insertBefore(item, feed.firstChild);
+  // Keep max 10 items
+  const items = feed.querySelectorAll('.activity-item');
+  if (items.length > 10) items[items.length-1].remove();
+}
+
+// Hook question generation to add activity entry
+const _v12OrigGenQ = window.generateQuestions;
+if (_v12OrigGenQ) {
+  window.generateQuestions = async function() {
+    await _v12OrigGenQ.apply(this, arguments);
+    const sub = document.getElementById('q-subject')?.value || 'Questions';
+    addActivity('📝', 'Generated question paper', sub, 'now');
+  };
+}
+
+// Hook tutor messages to add activity entry
+const _v12OrigTutorSend = window.tutorSend;
+if (_v12OrigTutorSend) {
+  window.tutorSend = async function() {
+    await _v12OrigTutorSend.apply(this, arguments);
+    addActivity('🤖', 'AI Tutor session', state.subject || 'General', 'now');
+  };
+}
+
+console.log('✦ Lumina AI v12 — Spaced Repetition + Curriculum active');
 </script>
 </body>

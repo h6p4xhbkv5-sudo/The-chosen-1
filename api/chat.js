@@ -1,8 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { applyHeaders, isRateLimited } from './_lib.js';
 
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
-
 // Max request body size: 32 KB (protects against oversized prompts)
 const MAX_BODY_BYTES = 32 * 1024;
 
@@ -10,6 +8,12 @@ export default async function handler(req, res) {
   applyHeaders(res, 'POST, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  // Guard env vars before using them (prevents FUNCTION_INVOCATION_FAILED crash)
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
+    return res.status(500).json({ error: 'Server configuration error — SUPABASE env vars missing' });
+  }
+  const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
   // Authenticate — must have a valid Supabase session
   const token = req.headers.authorization?.replace('Bearer ', '');
