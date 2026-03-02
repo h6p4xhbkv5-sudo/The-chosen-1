@@ -4926,8 +4926,8 @@ function buildNumberLine(highlight) {
 // ═══════════════════════════════════════
 async function callClaude(messages, system) {
   const body = {
-    model: 'claude-opus-4-6',
-    max_tokens: 1500,
+    model: 'claude-sonnet-4-6',
+    max_tokens: 1024,
     messages
   };
   if (system) body.system = system;
