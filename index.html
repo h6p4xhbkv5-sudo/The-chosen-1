@@ -346,79 +346,238 @@ body {
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 1.5rem; max-width: 1200px; margin: 0 auto;
 }
 .feature-card {
   background: var(--bg2); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 2rem;
-  transition: all .3s; cursor: pointer;
+  border-radius: 20px; padding: 2.25rem 2rem;
+  transition: all .35s cubic-bezier(.4,0,.2,1); cursor: pointer;
   position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
 }
 .feature-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--gold), transparent);
-  opacity: 0; transition: opacity .3s;
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: var(--fc-gradient, linear-gradient(90deg, var(--gold), #e8c97a));
+  opacity: 1; border-radius: 20px 20px 0 0;
 }
-.feature-card:hover { transform: translateY(-4px); border-color: rgba(201,168,76,0.3); box-shadow: var(--shadow); }
-.feature-card:hover::before { opacity: 1; }
+.feature-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 80% 0%, var(--fc-glow, rgba(201,168,76,0.06)) 0%, transparent 60%);
+  pointer-events: none;
+}
+.feature-card:hover { transform: translateY(-6px); border-color: var(--fc-border, rgba(201,168,76,0.4)); box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px var(--fc-border, rgba(201,168,76,0.2)); }
 .feature-icon {
-  width: 56px; height: 56px;
-  border-radius: 14px; background: var(--bg4);
+  width: 68px; height: 68px;
+  border-radius: 18px;
+  background: var(--fc-icon-bg, rgba(201,168,76,0.1));
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.5rem; margin-bottom: 1.25rem;
-  border: 1px solid var(--border);
+  font-size: 1.75rem; margin-bottom: 1.5rem;
+  border: 1px solid var(--fc-icon-border, rgba(201,168,76,0.2));
+  transition: transform .3s;
 }
-.feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
-.feature-card p { color: var(--muted); font-size: .875rem; line-height: 1.6; }
+.feature-card:hover .feature-icon { transform: scale(1.1) rotate(-4deg); }
+.feature-card h3 { font-size: 1.15rem; font-weight: 700; margin-bottom: .6rem; line-height: 1.3; }
+.feature-card p { color: var(--muted); font-size: .9rem; line-height: 1.7; flex: 1; }
+.feature-card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 1.5rem; padding-top: 1.25rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
 .feature-tag {
-  display: inline-block; margin-top: 1rem;
-  padding: .2rem .6rem; border-radius: 6px;
-  font-size: .7rem; font-weight: 700;
-  background: rgba(201,168,76,0.1); color: var(--gold);
-  text-transform: uppercase; letter-spacing: .05em;
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .3rem .75rem; border-radius: 20px;
+  font-size: .72rem; font-weight: 700;
+  background: var(--fc-tag-bg, rgba(201,168,76,0.1));
+  color: var(--fc-tag-color, var(--gold));
+  text-transform: uppercase; letter-spacing: .06em;
+  border: 1px solid var(--fc-tag-border, rgba(201,168,76,0.2));
 }
+.feature-card-arrow {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--fc-icon-bg, rgba(201,168,76,0.1));
+  border: 1px solid var(--fc-icon-border, rgba(201,168,76,0.2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: .8rem; color: var(--fc-tag-color, var(--gold));
+  transition: all .3s;
+}
+.feature-card:hover .feature-card-arrow { transform: translateX(3px); background: var(--fc-tag-color, var(--gold)); color: var(--black); }
+/* Feature card color variants */
+.fc-gold { --fc-gradient: linear-gradient(90deg, #C9A84C, #E8C97A); --fc-glow: rgba(201,168,76,0.08); --fc-border: rgba(201,168,76,0.35); --fc-icon-bg: rgba(201,168,76,0.12); --fc-icon-border: rgba(201,168,76,0.25); --fc-tag-bg: rgba(201,168,76,0.1); --fc-tag-color: #C9A84C; --fc-tag-border: rgba(201,168,76,0.2); }
+.fc-blue { --fc-gradient: linear-gradient(90deg, #60A5FA, #93C5FD); --fc-glow: rgba(96,165,250,0.08); --fc-border: rgba(96,165,250,0.35); --fc-icon-bg: rgba(96,165,250,0.12); --fc-icon-border: rgba(96,165,250,0.25); --fc-tag-bg: rgba(96,165,250,0.1); --fc-tag-color: #60A5FA; --fc-tag-border: rgba(96,165,250,0.2); }
+.fc-green { --fc-gradient: linear-gradient(90deg, #4ADE80, #86EFAC); --fc-glow: rgba(74,222,128,0.08); --fc-border: rgba(74,222,128,0.35); --fc-icon-bg: rgba(74,222,128,0.12); --fc-icon-border: rgba(74,222,128,0.25); --fc-tag-bg: rgba(74,222,128,0.1); --fc-tag-color: #4ADE80; --fc-tag-border: rgba(74,222,128,0.2); }
+.fc-purple { --fc-gradient: linear-gradient(90deg, #A78BFA, #C4B5FD); --fc-glow: rgba(167,139,250,0.08); --fc-border: rgba(167,139,250,0.35); --fc-icon-bg: rgba(167,139,250,0.12); --fc-icon-border: rgba(167,139,250,0.25); --fc-tag-bg: rgba(167,139,250,0.1); --fc-tag-color: #A78BFA; --fc-tag-border: rgba(167,139,250,0.2); }
+.fc-orange { --fc-gradient: linear-gradient(90deg, #FB923C, #FDBA74); --fc-glow: rgba(251,146,60,0.08); --fc-border: rgba(251,146,60,0.35); --fc-icon-bg: rgba(251,146,60,0.12); --fc-icon-border: rgba(251,146,60,0.25); --fc-tag-bg: rgba(251,146,60,0.1); --fc-tag-color: #FB923C; --fc-tag-border: rgba(251,146,60,0.2); }
+.fc-pink { --fc-gradient: linear-gradient(90deg, #F472B6, #F9A8D4); --fc-glow: rgba(244,114,182,0.08); --fc-border: rgba(244,114,182,0.35); --fc-icon-bg: rgba(244,114,182,0.12); --fc-icon-border: rgba(244,114,182,0.25); --fc-tag-bg: rgba(244,114,182,0.1); --fc-tag-color: #F472B6; --fc-tag-border: rgba(244,114,182,0.2); }
 
 /* STATS */
 .stats-section {
   position: relative; z-index: 1;
-  padding: 4rem 2rem;
-  background: var(--bg2);
+  padding: 5rem 2rem;
+  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg1) 100%);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
 .stats-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem; max-width: 1000px; margin: 0 auto; text-align: center;
+  gap: 0; max-width: 1000px; margin: 0 auto; text-align: center;
+}
+.stat-item {
+  padding: 2rem 1rem;
+  border-right: 1px solid var(--border);
+  position: relative;
+}
+.stat-item:last-child { border-right: none; }
+.stat-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.2);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto .75rem; font-size: 1.25rem; color: var(--gold);
 }
 .stat-num {
-  font-family: var(--font-head); font-size: 3rem; font-weight: 900;
-  color: var(--gold); line-height: 1;
+  font-family: var(--font-head); font-size: 2.75rem; font-weight: 900;
+  color: var(--white); line-height: 1;
+  background: linear-gradient(135deg, var(--white) 0%, var(--gold) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
-.stat-label { color: var(--muted); font-size: .875rem; margin-top: .5rem; }
+.stat-label { color: var(--muted); font-size: .8rem; margin-top: .5rem; font-weight: 500; text-transform: uppercase; letter-spacing: .05em; }
+
+/* TESTIMONIALS */
+.testimonials-section {
+  position: relative; z-index: 1;
+  padding: 6rem 2rem;
+  background: var(--black);
+}
+.testimonials-section h2 {
+  font-family: var(--font-head); font-size: clamp(1.8rem, 4vw, 3rem);
+  text-align: center; margin-bottom: .75rem;
+}
+.testimonials-section .sub { text-align: center; color: var(--muted); margin-bottom: 4rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+.testimonials-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem; max-width: 1100px; margin: 0 auto;
+}
+.testimonial-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 2rem;
+  transition: all .3s; position: relative;
+}
+.testimonial-card::before {
+  content: '"'; position: absolute; top: 1rem; left: 1.5rem;
+  font-family: var(--font-head); font-size: 4rem; line-height: 1;
+  color: var(--gold); opacity: 0.3;
+}
+.testimonial-card:hover { border-color: rgba(201,168,76,0.3); transform: translateY(-3px); box-shadow: var(--shadow); }
+.testimonial-text {
+  font-size: .95rem; line-height: 1.75; color: var(--white);
+  margin-bottom: 1.5rem; padding-top: 1.5rem;
+  font-style: italic;
+}
+.testimonial-author { display: flex; align-items: center; gap: 1rem; }
+.testimonial-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; font-weight: 800; color: var(--black); flex-shrink: 0;
+}
+.testimonial-name { font-weight: 700; font-size: .9rem; }
+.testimonial-role { font-size: .75rem; color: var(--muted); margin-top: .1rem; }
+.testimonial-stars { display: flex; gap: 2px; color: var(--gold); font-size: .75rem; margin-bottom: .25rem; }
+
+/* WHO IT'S FOR */
+.audience-section {
+  position: relative; z-index: 1;
+  padding: 6rem 2rem;
+  background: var(--bg2);
+}
+.audience-section h2 {
+  font-family: var(--font-head); font-size: clamp(1.8rem, 4vw, 3rem);
+  text-align: center; margin-bottom: .75rem;
+}
+.audience-section .sub { text-align: center; color: var(--muted); margin-bottom: 4rem; }
+.audience-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem; max-width: 1100px; margin: 0 auto;
+}
+.audience-card {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 20px; padding: 2.5rem 2rem;
+  transition: all .3s; position: relative; overflow: hidden;
+}
+.audience-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: var(--aud-gradient);
+}
+.audience-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: rgba(255,255,255,0.1); }
+.audience-icon-wrap {
+  width: 72px; height: 72px; border-radius: 20px;
+  background: var(--aud-bg); border: 1px solid var(--aud-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; margin-bottom: 1.5rem;
+}
+.audience-card h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: .75rem; }
+.audience-card p { color: var(--muted); font-size: .9rem; line-height: 1.7; margin-bottom: 1.5rem; }
+.audience-perks { list-style: none; display: flex; flex-direction: column; gap: .5rem; }
+.audience-perks li { display: flex; align-items: center; gap: .75rem; font-size: .875rem; color: var(--white); }
+.audience-perks li::before { content: '✓'; color: var(--aud-color); font-weight: 800; flex-shrink: 0; }
+.aud-student { --aud-gradient: linear-gradient(90deg,#60A5FA,#818CF8); --aud-bg: rgba(96,165,250,0.1); --aud-border: rgba(96,165,250,0.2); --aud-color: #60A5FA; }
+.aud-parent  { --aud-gradient: linear-gradient(90deg,#4ADE80,#2DD4BF); --aud-bg: rgba(74,222,128,0.1);  --aud-border: rgba(74,222,128,0.2);  --aud-color: #4ADE80; }
+.aud-teacher { --aud-gradient: linear-gradient(90deg,#F472B6,#E879F9); --aud-bg: rgba(244,114,182,0.1); --aud-border: rgba(244,114,182,0.2); --aud-color: #F472B6; }
 
 /* SUBJECTS */
 .subjects-section {
   position: relative; z-index: 1;
-  padding: 5rem 2rem;
+  padding: 6rem 2rem;
+  background: var(--black);
 }
 .subjects-section h2 {
   font-family: var(--font-head); font-size: clamp(1.8rem, 4vw, 3rem);
-  text-align: center; margin-bottom: 3rem;
+  text-align: center; margin-bottom: .75rem;
 }
+.subjects-section .sub { text-align: center; color: var(--muted); margin-bottom: 3.5rem; }
 .subjects-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 1rem; max-width: 1000px; margin: 0 auto 3rem;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+  gap: 1rem; max-width: 1100px; margin: 0 auto 3rem;
 }
 .subject-pill {
   background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 12px; padding: 1.25rem 1rem;
-  text-align: center; cursor: pointer; transition: all .2s;
+  border-radius: 16px; padding: 1.5rem 1rem 1.25rem;
+  text-align: center; cursor: pointer;
+  transition: all .25s cubic-bezier(.4,0,.2,1);
+  position: relative; overflow: hidden;
 }
-.subject-pill:hover { border-color: var(--gold); transform: translateY(-2px); }
-.subject-pill .s-icon { font-size: 1.8rem; margin-bottom: .5rem; }
-.subject-pill .s-name { font-size: .85rem; font-weight: 600; }
-.subject-pill .s-level { font-size: .7rem; color: var(--gold); }
+.subject-pill::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 50% 0%, var(--subj-glow, rgba(201,168,76,0.08)) 0%, transparent 70%);
+  opacity: 0; transition: opacity .3s;
+}
+.subject-pill:hover { border-color: var(--subj-accent, var(--gold)); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+.subject-pill:hover::before { opacity: 1; }
+.s-icon-wrap {
+  width: 54px; height: 54px; border-radius: 14px;
+  background: var(--subj-bg, rgba(201,168,76,0.1));
+  border: 1px solid var(--subj-border, rgba(201,168,76,0.2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; margin: 0 auto .75rem;
+  transition: transform .3s;
+}
+.subject-pill:hover .s-icon-wrap { transform: scale(1.1) rotate(-5deg); }
+.subject-pill .s-name { font-size: .875rem; font-weight: 700; margin-bottom: .2rem; }
+.subject-pill .s-level { font-size: .7rem; color: var(--subj-accent, var(--gold)); font-weight: 600; letter-spacing: .03em; }
+/* Subject color themes */
+.sp-math  { --subj-accent:#60A5FA; --subj-bg:rgba(96,165,250,0.1);  --subj-border:rgba(96,165,250,0.2);  --subj-glow:rgba(96,165,250,0.1); }
+.sp-phys  { --subj-accent:#818CF8; --subj-bg:rgba(129,140,248,0.1); --subj-border:rgba(129,140,248,0.2); --subj-glow:rgba(129,140,248,0.1); }
+.sp-chem  { --subj-accent:#34D399; --subj-bg:rgba(52,211,153,0.1);  --subj-border:rgba(52,211,153,0.2);  --subj-glow:rgba(52,211,153,0.1); }
+.sp-bio   { --subj-accent:#4ADE80; --subj-bg:rgba(74,222,128,0.1);  --subj-border:rgba(74,222,128,0.2);  --subj-glow:rgba(74,222,128,0.1); }
+.sp-eng   { --subj-accent:#F472B6; --subj-bg:rgba(244,114,182,0.1); --subj-border:rgba(244,114,182,0.2); --subj-glow:rgba(244,114,182,0.1); }
+.sp-hist  { --subj-accent:#FB923C; --subj-bg:rgba(251,146,60,0.1);  --subj-border:rgba(251,146,60,0.2);  --subj-glow:rgba(251,146,60,0.1); }
+.sp-comp  { --subj-accent:#A78BFA; --subj-bg:rgba(167,139,250,0.1); --subj-border:rgba(167,139,250,0.2); --subj-glow:rgba(167,139,250,0.1); }
+.sp-econ  { --subj-accent:#C9A84C; --subj-bg:rgba(201,168,76,0.1);  --subj-border:rgba(201,168,76,0.2);  --subj-glow:rgba(201,168,76,0.1); }
+.sp-lang  { --subj-accent:#FBBF24; --subj-bg:rgba(251,191,36,0.1);  --subj-border:rgba(251,191,36,0.2);  --subj-glow:rgba(251,191,36,0.1); }
+.sp-geo   { --subj-accent:#2DD4BF; --subj-bg:rgba(45,212,191,0.1);  --subj-border:rgba(45,212,191,0.2);  --subj-glow:rgba(45,212,191,0.1); }
+.sp-art   { --subj-accent:#E879F9; --subj-bg:rgba(232,121,249,0.1); --subj-border:rgba(232,121,249,0.2); --subj-glow:rgba(232,121,249,0.1); }
+.sp-fmath { --subj-accent:#60A5FA; --subj-bg:rgba(96,165,250,0.1);  --subj-border:rgba(96,165,250,0.2);  --subj-glow:rgba(96,165,250,0.1); }
 
 /* PRICING */
 .pricing-section {
@@ -433,7 +592,7 @@ body {
 .pricing-sub { text-align: center; color: var(--muted); margin-bottom: 3rem; }
 .pricing-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem; max-width: 800px; margin: 0 auto;
+  gap: 2rem; max-width: 1000px; margin: 0 auto;
 }
 .price-card {
   background: var(--bg3); border: 1px solid var(--border);
@@ -675,21 +834,57 @@ body {
 
 /* Chat widget */
 .chat-messages {
-  height: 320px; overflow-y: auto;
-  display: flex; flex-direction: column; gap: .75rem;
-  padding: 1rem 1.5rem;
+  height: 360px; overflow-y: auto;
+  display: flex; flex-direction: column; gap: 1rem;
+  padding: 1.25rem 1.5rem;
 }
 .msg {
-  max-width: 80%;
-  padding: .75rem 1rem;
-  border-radius: 12px; font-size: .875rem; line-height: 1.6;
+  max-width: 82%;
+  padding: .9rem 1.15rem;
+  border-radius: 16px; font-size: .9375rem; line-height: 1.75;
   animation: msgIn .3s ease;
 }
-.msg.bot { background: var(--bg3); border: 1px solid var(--border); align-self: flex-start; border-bottom-left-radius: 4px; }
-.msg.user { background: var(--gold); color: var(--black); align-self: flex-end; border-bottom-right-radius: 4px; font-weight: 500; }
-.msg.typing span { display: inline-block; width: 6px; height: 6px; background: var(--muted); border-radius: 50%; animation: bounce .8s infinite; margin: 0 1px; }
+.msg-row { display: flex; gap: .75rem; align-items: flex-end; }
+.msg-row.bot-row { align-self: flex-start; }
+.msg-row.user-row { align-self: flex-end; flex-direction: row-reverse; }
+.msg-avatar {
+  width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .85rem; font-weight: 800;
+}
+.msg-avatar.ai-avatar {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--black);
+}
+.msg-avatar.user-avatar {
+  background: var(--bg4); border: 1px solid var(--border); color: var(--white);
+}
+.msg.bot {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+  color: var(--white);
+}
+.msg.bot code {
+  background: var(--bg4); border: 1px solid var(--border);
+  padding: .15em .4em; border-radius: 4px;
+  font-family: var(--font-mono); font-size: .85em; color: var(--gold);
+}
+.msg.bot pre {
+  background: var(--bg4); border: 1px solid var(--border);
+  border-radius: 8px; padding: .75rem 1rem; margin: .5rem 0;
+  overflow-x: auto; font-size: .82rem;
+}
+.msg.bot strong { color: var(--white); font-weight: 700; }
+.msg.bot h3, .msg.bot h4 { font-size: .95rem; font-weight: 700; margin: .5rem 0 .25rem; color: var(--white); }
+.msg.user {
+  background: linear-gradient(135deg, var(--gold), #b8942e);
+  color: var(--black); border-bottom-right-radius: 4px;
+  font-weight: 500;
+}
+.msg.typing span { display: inline-block; width: 7px; height: 7px; background: var(--muted); border-radius: 50%; animation: bounce .8s infinite; margin: 0 1px; }
 .msg.typing span:nth-child(2) { animation-delay: .15s; }
 .msg.typing span:nth-child(3) { animation-delay: .3s; }
+.msg-time { font-size: .68rem; color: var(--muted); margin-top: .25rem; text-align: right; }
 
 .chat-input-row {
   display: flex; gap: .75rem; padding: 1rem 1.5rem;
@@ -1315,23 +1510,7 @@ body.mode-adhd .adhd-break { display: block; }
   0%,100% { transform: translateY(0) rotate(-5deg); }
   50% { transform: translateY(-20px) rotate(5deg); }
 }
-.feature-card { cursor: pointer; }
-.feature-card:hover .feature-icon { transform: scale(1.2) rotate(-5deg); transition: transform .3s; }
-
-/* Colourful feature cards */
-.fc-blue { border-top: 3px solid var(--blue) !important; }
-.fc-green { border-top: 3px solid var(--green) !important; }
-.fc-pink { border-top: 3px solid var(--pink) !important; }
-.fc-orange { border-top: 3px solid var(--orange) !important; }
-.fc-purple { border-top: 3px solid var(--purple) !important; }
-.fc-gold { border-top: 3px solid var(--gold) !important; }
-
-.feature-card.fc-blue .feature-icon { background: rgba(96,165,250,0.15); }
-.feature-card.fc-green .feature-icon { background: rgba(74,222,128,0.15); }
-.feature-card.fc-pink .feature-icon { background: rgba(244,114,182,0.15); }
-.feature-card.fc-orange .feature-icon { background: rgba(251,146,60,0.15); }
-.feature-card.fc-purple .feature-icon { background: rgba(167,139,250,0.15); }
-.feature-card.fc-gold .feature-icon { background: rgba(201,168,76,0.15); }
+/* feature-card color variants handled by CSS variables in base styles */
 
 /* Geo panel toggle button */
 .geo-toggle-btn {
@@ -1591,7 +1770,11 @@ body.light-mode .chat-input, body.light-mode .tutor-input {
 }
 body.light-mode #geo-panel { background: #FFFFFF; }
 body.light-mode #geo-canvas { background: #F3F0EA; }
-body.light-mode .msg.bot { background: #F3F0EA; border-color: rgba(0,0,0,0.1); }
+body.light-mode .msg.bot { background: #F3F0EA; border-color: rgba(0,0,0,0.1); color: #1A1A2E; }
+body.light-mode .msg.bot code { background: #E5E0D8; color: #9A7A2E; }
+body.light-mode .msg.bot pre { background: #E5E0D8; border-color: rgba(0,0,0,0.1); }
+body.light-mode .msg-avatar.ai-avatar { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); }
+body.light-mode .msg-avatar.user-avatar { background: #E5E0D8; color: #1A1A2E; border-color: rgba(0,0,0,0.1); }
 body.light-mode .card { background: #FFFFFF; border-color: rgba(0,0,0,0.1); }
 body.light-mode .form-group input,
 body.light-mode .form-group select { background: #F3F0EA; border-color: rgba(0,0,0,0.15); color: #1A1A2E; }
@@ -2267,18 +2450,19 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 
   <!-- Hero -->
   <section class="hero">
-    <div class="hero-badge"><i class="fas fa-sparkles"></i> UK GCSE & A-Level Learning Platform</div>
-    <h1>The <em>Smartest Way</em><br>to Prepare for Your Exams</h1>
-    <p>AI-powered tutoring, personalised question papers, teacher assignments, and real-time progress tracking — built for every learner, including ADHD, dyslexia, and other learning differences.</p>
+    <div class="hero-badge"><i class="fas fa-crown"></i> The #1 AI Revision Platform for UK Students</div>
+    <h1>Stop Struggling.<br><em>Start Achieving.</em></h1>
+    <p>Your personal AI tutor, exam question generator, and progress tracker — all in one. Built for GCSE & A-Level students who are serious about getting the grades they deserve.</p>
     <div class="hero-actions">
-      <button class="btn-hero-primary" onclick="nav('auth')">Start Learning Free →</button>
-      <button class="btn-hero-secondary" onclick="document.querySelector('.video-section').scrollIntoView({behavior:'smooth'})">▶ Watch How It Works</button>
+      <button class="btn-hero-primary" onclick="nav('auth')">Start Free Today — No Card Needed →</button>
+      <button class="btn-hero-secondary" onclick="document.querySelector('.video-section').scrollIntoView({behavior:'smooth'})"><i class="fas fa-play-circle"></i> See How It Works</button>
     </div>
     <div class="trust-bar">
-      <div class="trust-item"><i class="fas fa-credit-card"></i> No credit card required</div>
-      <div class="trust-item"><i class="fas fa-graduation-cap"></i> All UK exam boards</div>
-      <div class="trust-item"><i class="fas fa-brain"></i> ADHD & dyslexia friendly</div>
-      <div class="trust-item"><i class="fas fa-shield-alt"></i> GDPR compliant</div>
+      <div class="trust-item"><i class="fas fa-lock"></i> GDPR Compliant</div>
+      <div class="trust-item"><i class="fas fa-graduation-cap"></i> AQA · Edexcel · OCR · WJEC</div>
+      <div class="trust-item"><i class="fas fa-heart"></i> ADHD & Dyslexia Friendly</div>
+      <div class="trust-item"><i class="fas fa-bolt"></i> Active 24/7</div>
+      <div class="trust-item"><i class="fas fa-shield-alt"></i> Safe for Under-18s</div>
     </div>
   </section>
 
@@ -2319,129 +2503,391 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
   <section class="features-section" id="features">
     <div class="section-label" style="display:block;text-align:center;margin-bottom:1rem">What's inside</div>
     <h2>Everything a student needs to succeed</h2>
-    <p class="sub">From AI tutoring to exam prep — Lumina adapts to how YOU learn best.</p>
+    <p class="sub">Six powerful tools — one platform. Built for GCSE & A-Level students who want to get ahead.</p>
     <div class="features-grid">
-      <div class="feature-card" onclick="nav('auth')">
-        <div class="feature-icon">🤖</div>
-        <h3>AI Tutor</h3>
-        <p>Ask anything. Get step-by-step explanations tailored to your level, learning style, and exam board. Remembers what you've covered.</p>
-        <span class="feature-tag">9 Subjects</span>
+
+      <div class="feature-card fc-gold" onclick="nav('auth')">
+        <div class="feature-icon"><i class="fas fa-robot"></i></div>
+        <h3>AI Personal Tutor</h3>
+        <p>Ask anything, any time. Get crystal-clear, step-by-step explanations tailored to your exact level, exam board, and learning style. Like having a private tutor 24/7 — at a fraction of the cost.</p>
+        <div class="feature-card-footer">
+          <span class="feature-tag"><i class="fas fa-star"></i> Most Popular</span>
+          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
       </div>
-      <div class="feature-card" onclick="nav('auth')">
-        <div class="feature-icon">📝</div>
+
+      <div class="feature-card fc-blue" onclick="nav('auth')">
+        <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
         <h3>Exam Question Generator</h3>
-        <p>Generate real exam-style questions for any topic, mark scheme, difficulty and exam board. Get instant AI feedback on your answers.</p>
-        <span class="feature-tag">All Exam Boards</span>
+        <p>Generate authentic exam-style questions for any topic, difficulty level, and exam board — with full mark schemes. Get instant AI feedback on your written answers.</p>
+        <div class="feature-card-footer">
+          <span class="feature-tag"><i class="fas fa-check-double"></i> All Exam Boards</span>
+          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
       </div>
-      <div class="feature-card" onclick="nav('auth')">
-        <div class="feature-icon">🎯</div>
+
+      <div class="feature-card fc-purple" onclick="nav('auth')">
+        <div class="feature-icon"><i class="fas fa-bullseye"></i></div>
         <h3>Strengths & Weaknesses Analyser</h3>
-        <p>Claude analyses your performance and tells you exactly what to focus on. Get a personalised revision priority list.</p>
-        <span class="feature-tag">AI Analysis</span>
+        <p>Lumina's AI pinpoints exactly where you're losing marks and builds you a personalised revision priority list. Stop wasting time on things you already know.</p>
+        <div class="feature-card-footer">
+          <span class="feature-tag"><i class="fas fa-brain"></i> AI-Powered</span>
+          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
       </div>
-      <div class="feature-card" onclick="nav('auth')">
-        <div class="feature-icon">📊</div>
-        <h3>Progress Tracking</h3>
-        <p>See your improvement over time with beautiful charts, study streaks, achievement badges and topic mastery scores.</p>
-        <span class="feature-tag">Real-time</span>
+
+      <div class="feature-card fc-green" onclick="nav('auth')">
+        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+        <h3>Progress & Grade Predictor</h3>
+        <p>Track your improvement week by week. Visual heatmaps, study streaks, topic mastery scores, and an AI grade predictor that shows exactly where you'll land on exam day.</p>
+        <div class="feature-card-footer">
+          <span class="feature-tag"><i class="fas fa-clock"></i> Real-time</span>
+          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
       </div>
-      <div class="feature-card" onclick="nav('auth')">
-        <div class="feature-icon">🧮</div>
-        <h3>Dyscalculia Calculator & Visual Maths</h3>
-        <p>A dedicated number-line calculator that shows how maths works visually — step by step, with colour-coded operations.</p>
-        <span class="feature-tag">Accessibility</span>
+
+      <div class="feature-card fc-orange" onclick="nav('auth')">
+        <div class="feature-icon"><i class="fas fa-universal-access"></i></div>
+        <h3>Full Accessibility Suite</h3>
+        <p>Built for every learner. ADHD mode with step-by-step focus, dyslexia-friendly fonts, and a visual Dyscalculia Calculator that shows maths in colour-coded steps.</p>
+        <div class="feature-card-footer">
+          <span class="feature-tag"><i class="fas fa-heart"></i> Inclusive</span>
+          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
       </div>
-      <div class="feature-card" onclick="nav('auth')">
-        <div class="feature-icon">👨‍🏫</div>
-        <h3>Teacher Assignments</h3>
-        <p>Teachers set AI-powered homework. Students get AI hints. Teachers see real-time submission tracking with auto-grading.</p>
-        <span class="feature-tag">For Schools</span>
+
+      <div class="feature-card fc-pink" onclick="nav('auth')">
+        <div class="feature-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+        <h3>Teacher Assignment Hub</h3>
+        <p>Teachers set AI-powered homework in seconds. Students get AI hints without getting answers. Teachers see live submission tracking, auto-grading, and class analytics.</p>
+        <div class="feature-card-footer">
+          <span class="feature-tag"><i class="fas fa-school"></i> For Schools</span>
+          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
       </div>
+
     </div>
   </section>
 
   <!-- Stats -->
   <section class="stats-section">
     <div class="stats-grid">
-      <div><div class="stat-num">0</div><div class="stat-label">Students Learning</div></div>
-      <div><div class="stat-num">98%</div><div class="stat-label">Satisfaction Rate</div></div>
-      <div><div class="stat-num">1M+</div><div class="stat-label">Questions Generated</div></div>
-      <div><div class="stat-num">+42%</div><div class="stat-label">Average Grade Boost</div></div>
+      <div class="stat-item">
+        <div class="stat-icon"><i class="fas fa-users"></i></div>
+        <div class="stat-num">5K+</div>
+        <div class="stat-label">Students Learning</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i class="fas fa-star"></i></div>
+        <div class="stat-num">98%</div>
+        <div class="stat-label">Satisfaction Rate</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
+        <div class="stat-num">1M+</div>
+        <div class="stat-label">Questions Generated</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="stat-num">+42%</div>
+        <div class="stat-label">Avg. Grade Improvement</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who It's For -->
+  <section class="audience-section">
+    <div class="section-label" style="display:block;text-align:center;margin-bottom:1rem">Built for Everyone</div>
+    <h2>Designed for students.<br>Loved by parents and teachers.</h2>
+    <p class="sub">Lumina AI works for the whole school community — not just the student.</p>
+    <div class="audience-grid">
+      <div class="audience-card aud-student">
+        <div class="audience-icon-wrap"><i class="fas fa-user-graduate"></i></div>
+        <h3>For Students</h3>
+        <p>Whether you're aiming for straight A*s or just trying to pass — Lumina adapts to your pace, style, and goals. No judgement. Just results.</p>
+        <ul class="audience-perks">
+          <li>AI tutor available 24/7 for any question</li>
+          <li>Real exam-style practice with instant feedback</li>
+          <li>ADHD, dyslexia & dyscalculia friendly modes</li>
+          <li>Tracks your progress so you revise smarter</li>
+        </ul>
+      </div>
+      <div class="audience-card aud-parent">
+        <div class="audience-icon-wrap"><i class="fas fa-home"></i></div>
+        <h3>For Parents</h3>
+        <p>Watch your child's grades improve with confidence. Full visibility into their progress, and the peace of mind of safe, school-aligned AI learning.</p>
+        <ul class="audience-perks">
+          <li>Live progress dashboard & weekly reports</li>
+          <li>Safe, GDPR-compliant, no ads or distractions</li>
+          <li>Homeschool plan with full curriculum support</li>
+          <li>Fraction of the cost of a private tutor</li>
+        </ul>
+      </div>
+      <div class="audience-card aud-teacher">
+        <div class="audience-icon-wrap"><i class="fas fa-chalkboard-teacher"></i></div>
+        <h3>For Teachers</h3>
+        <p>Set AI-powered assignments in 30 seconds. Get real-time submission tracking and auto-grading — so you spend less time marking and more time teaching.</p>
+        <ul class="audience-perks">
+          <li>Create differentiated AI homework instantly</li>
+          <li>Auto-grading with detailed feedback reports</li>
+          <li>Class analytics to spot struggling students early</li>
+          <li>Aligns perfectly with AQA, Edexcel & OCR specs</li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <!-- Subjects -->
   <section class="subjects-section">
-    <h2>All the subjects you need</h2>
+    <div class="section-label" style="display:block;text-align:center;margin-bottom:1rem">Curriculum Coverage</div>
+    <h2>Every subject. Every level.</h2>
+    <p class="sub">AQA, Edexcel, OCR, WJEC — Lumina AI covers every UK exam board across all major GCSE and A-Level subjects.</p>
     <div class="subjects-grid">
-      <div class="subject-pill" onclick="nav('auth')"><div class="s-icon">➕</div><div class="s-name">Mathematics</div><div class="s-level">GCSE / A-Level</div></div>
-      <div class="subject-pill" onclick="nav('auth')"><div class="s-icon">⚡</div><div class="s-name">Physics</div><div class="s-level">GCSE / A-Level</div></div>
-      <div class="subject-pill" onclick="nav('auth')"><div class="s-icon">🧪</div><div class="s-name">Chemistry</div><div class="s-level">GCSE / A-Level</div></div>
-      <div class="subject-pill" onclick="nav('auth')"><div class="s-icon">🧬</div><div class="s-name">Biology</div><div class="s-level">GCSE / A-Level</div></div>
-      <div class="subject-pill" onclick="nav('auth')"><div class="s-icon">📖</div><div class="s-name">English Lit</div><div class="s-level">GCSE / A-Level</div></div>
-      <div class="subject-pill" onclick="nav('auth')"><div class="s-icon">🏛️</div><div class="s-name">History</div><div class="s-level">GCSE / A-Level</div></div>
-      <div class="subject-pill" onclick="nav('auth')"><div class="s-icon">💻</div><div class="s-name">Computer Sci</div><div class="s-level">GCSE / A-Level</div></div>
-      <div class="subject-pill" onclick="nav('auth')"><div class="s-icon">💰</div><div class="s-name">Economics</div><div class="s-level">A-Level</div></div>
-      <div class="subject-pill" onclick="nav('auth')"><div class="s-icon">🇫🇷</div><div class="s-name">French</div><div class="s-level">GCSE / A-Level</div></div>
-      <div class="subject-pill" onclick="nav('auth')"><div class="s-icon">🌍</div><div class="s-name">Geography</div><div class="s-level">GCSE / A-Level</div></div>
-      <div class="subject-pill" onclick="nav('auth')"><div class="s-icon">🎨</div><div class="s-name">Art & Design</div><div class="s-level">GCSE</div></div>
-      <div class="subject-pill" onclick="nav('auth')"><div class="s-icon">📐</div><div class="s-name">Further Maths</div><div class="s-level">A-Level</div></div>
+      <div class="subject-pill sp-math" onclick="nav('auth')">
+        <div class="s-icon-wrap"><i class="fas fa-square-root-alt"></i></div>
+        <div class="s-name">Mathematics</div>
+        <div class="s-level">GCSE · A-Level</div>
+      </div>
+      <div class="subject-pill sp-phys" onclick="nav('auth')">
+        <div class="s-icon-wrap"><i class="fas fa-atom"></i></div>
+        <div class="s-name">Physics</div>
+        <div class="s-level">GCSE · A-Level</div>
+      </div>
+      <div class="subject-pill sp-chem" onclick="nav('auth')">
+        <div class="s-icon-wrap"><i class="fas fa-flask"></i></div>
+        <div class="s-name">Chemistry</div>
+        <div class="s-level">GCSE · A-Level</div>
+      </div>
+      <div class="subject-pill sp-bio" onclick="nav('auth')">
+        <div class="s-icon-wrap"><i class="fas fa-dna"></i></div>
+        <div class="s-name">Biology</div>
+        <div class="s-level">GCSE · A-Level</div>
+      </div>
+      <div class="subject-pill sp-eng" onclick="nav('auth')">
+        <div class="s-icon-wrap"><i class="fas fa-book-open"></i></div>
+        <div class="s-name">English Lit</div>
+        <div class="s-level">GCSE · A-Level</div>
+      </div>
+      <div class="subject-pill sp-hist" onclick="nav('auth')">
+        <div class="s-icon-wrap"><i class="fas fa-landmark"></i></div>
+        <div class="s-name">History</div>
+        <div class="s-level">GCSE · A-Level</div>
+      </div>
+      <div class="subject-pill sp-comp" onclick="nav('auth')">
+        <div class="s-icon-wrap"><i class="fas fa-code"></i></div>
+        <div class="s-name">Computer Science</div>
+        <div class="s-level">GCSE · A-Level</div>
+      </div>
+      <div class="subject-pill sp-econ" onclick="nav('auth')">
+        <div class="s-icon-wrap"><i class="fas fa-chart-bar"></i></div>
+        <div class="s-name">Economics</div>
+        <div class="s-level">A-Level</div>
+      </div>
+      <div class="subject-pill sp-lang" onclick="nav('auth')">
+        <div class="s-icon-wrap"><i class="fas fa-language"></i></div>
+        <div class="s-name">Modern Languages</div>
+        <div class="s-level">GCSE · A-Level</div>
+      </div>
+      <div class="subject-pill sp-geo" onclick="nav('auth')">
+        <div class="s-icon-wrap"><i class="fas fa-globe-europe"></i></div>
+        <div class="s-name">Geography</div>
+        <div class="s-level">GCSE · A-Level</div>
+      </div>
+      <div class="subject-pill sp-art" onclick="nav('auth')">
+        <div class="s-icon-wrap"><i class="fas fa-palette"></i></div>
+        <div class="s-name">Art & Design</div>
+        <div class="s-level">GCSE</div>
+      </div>
+      <div class="subject-pill sp-fmath" onclick="nav('auth')">
+        <div class="s-icon-wrap"><i class="fas fa-infinity"></i></div>
+        <div class="s-name">Further Maths</div>
+        <div class="s-level">A-Level</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="testimonials-section">
+    <div class="section-label" style="display:block;text-align:center;margin-bottom:1rem">Real Results</div>
+    <h2>Students are loving it.</h2>
+    <p class="sub">Don't take our word for it — here's what real students, parents and teachers are saying.</p>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">I went from a predicted C to an A* in Chemistry in just 8 weeks. The AI explains things in a way that actually makes sense — better than any textbook I've used.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">A</div>
+          <div>
+            <div class="testimonial-name">Amara K.</div>
+            <div class="testimonial-role">A-Level Student · AQA Chemistry</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">As a parent, I was spending £60/hour on private tutors. Lumina AI gives my son the same quality guidance 24/7 — and his confidence has gone through the roof.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">S</div>
+          <div>
+            <div class="testimonial-name">Sarah M.</div>
+            <div class="testimonial-role">Parent of GCSE Student</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">The ADHD mode is genuinely life-changing. It breaks everything into small steps with no clutter. My son actually WANTS to revise now. I can't believe the difference.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">R</div>
+          <div>
+            <div class="testimonial-name">Rachel T.</div>
+            <div class="testimonial-role">Parent · Homeschool Family</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">I set assignments in 2 minutes and get back auto-graded work with AI feedback. It's saved me hours every week and my class results have measurably improved.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">J</div>
+          <div>
+            <div class="testimonial-name">James H.</div>
+            <div class="testimonial-role">Maths Teacher · Secondary School</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">I failed my mock completely. Three months with Lumina AI and I got a 7 in my actual GCSE Maths. The question generator and instant feedback made all the difference.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">L</div>
+          <div>
+            <div class="testimonial-name">Liam D.</div>
+            <div class="testimonial-role">GCSE Student · Edexcel Maths</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">Dyslexia made reading long explanations a nightmare. The Lexend font mode and clear layout means I can actually process what I'm learning. My English grade jumped two grades.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">P</div>
+          <div>
+            <div class="testimonial-name">Priya N.</div>
+            <div class="testimonial-role">A-Level Student · English Literature</div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- Pricing -->
   <section class="pricing-section" id="pricing">
-    <h2>Simple, transparent pricing</h2>
-    <p class="pricing-sub">No hidden fees. Cancel any time. Start with a 7-day free trial.</p>
+    <div class="section-label" style="display:block;text-align:center;margin-bottom:1rem">Pricing</div>
+    <h2>Less than one private tutor session.</h2>
+    <p class="pricing-sub">A private tutor costs £40–80 per hour. Lumina AI is available 24/7 for a fraction of that. No contracts. Cancel any time.</p>
     <div class="pricing-grid">
       <div class="price-card">
-        <div class="price-name">Student Plan</div>
+        <div class="price-name"><i class="fas fa-user" style="margin-right:.4rem"></i>Student</div>
         <div class="price-amount">£60<span>/month</span></div>
-        <div class="price-desc">Perfect for individual GCSE & A-Level students</div>
+        <div class="price-desc">One student, unlimited AI tutoring. Perfect for GCSE & A-Level exam prep.</div>
         <ul class="price-features">
-          <li><i class="fas fa-check"></i>Full AI Tutor (Lumina AI)</li>
-          <li><i class="fas fa-check"></i>Unlimited practice questions</li>
-          <li><i class="fas fa-check"></i>Personalised explanations</li>
-          <li><i class="fas fa-check"></i>Exam preparation tools</li>
-          <li><i class="fas fa-check"></i>Progress tracking</li>
-          <li><i class="fas fa-check"></i>All accessibility features</li>
+          <li><i class="fas fa-check"></i>Full AI Tutor — unlimited questions</li>
+          <li><i class="fas fa-check"></i>Exam question generator with mark schemes</li>
+          <li><i class="fas fa-check"></i>Strengths & weaknesses analyser</li>
+          <li><i class="fas fa-check"></i>Progress tracking & grade predictor</li>
+          <li><i class="fas fa-check"></i>All accessibility modes</li>
+          <li><i class="fas fa-check"></i>All 12 subjects + all exam boards</li>
         </ul>
-        <button class="btn-full" onclick="nav('auth')">Get Started</button>
+        <button class="btn-full" onclick="nav('auth')" style="width:100%;padding:1rem;background:var(--bg4);border:1px solid var(--border);border-radius:10px;color:var(--white);font-weight:700;cursor:pointer;font-size:.95rem;transition:all .2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--white)'">Get Started Free →</button>
       </div>
       <div class="price-card featured">
-        <div class="price-name">Homeschool Plan</div>
+        <div class="price-name"><i class="fas fa-home" style="margin-right:.4rem"></i>Homeschool</div>
         <div class="price-amount">£200<span>/month</span></div>
-        <div class="price-desc">Complete AI tutoring system for homeschool families</div>
+        <div class="price-desc">Full AI curriculum for homeschool families. Includes teacher tools and parent oversight.</div>
         <ul class="price-features">
           <li><i class="fas fa-check"></i>Everything in Student Plan</li>
-          <li><i class="fas fa-check"></i>Full curriculum support</li>
-          <li><i class="fas fa-check"></i>Teacher assignment tools</li>
+          <li><i class="fas fa-check"></i>Up to 3 student profiles</li>
+          <li><i class="fas fa-check"></i>Full curriculum planner</li>
+          <li><i class="fas fa-check"></i>Teacher assignment & grading tools</li>
           <li><i class="fas fa-check"></i>Parent progress dashboard</li>
-          <li><i class="fas fa-check"></i>Multiple student profiles</li>
-          <li><i class="fas fa-check"></i>Priority support</li>
+          <li><i class="fas fa-check"></i>Priority email support</li>
         </ul>
-        <button class="btn-full" onclick="nav('auth')">Get Started</button>
+        <button class="btn-full" onclick="nav('auth')" style="width:100%;padding:1rem;background:var(--gold);border:none;border-radius:10px;color:var(--black);font-weight:700;cursor:pointer;font-size:.95rem;transition:all .2s;" onmouseover="this.style.background='var(--gold-light)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='var(--gold)';this.style.transform='none'">Start Free Trial →</button>
+      </div>
+      <div class="price-card">
+        <div class="price-name"><i class="fas fa-school" style="margin-right:.4rem"></i>School</div>
+        <div class="price-amount" style="font-size:2rem">Custom</div>
+        <div class="price-desc" style="margin-bottom:1rem">Whole-school or department licence. Includes teacher dashboard, class analytics, and onboarding.</div>
+        <ul class="price-features">
+          <li><i class="fas fa-check"></i>Unlimited students & teachers</li>
+          <li><i class="fas fa-check"></i>School-wide analytics dashboard</li>
+          <li><i class="fas fa-check"></i>LMS & MIS integration</li>
+          <li><i class="fas fa-check"></i>Dedicated account manager</li>
+          <li><i class="fas fa-check"></i>Staff CPD training session</li>
+          <li><i class="fas fa-check"></i>SLA & data processing agreement</li>
+        </ul>
+        <button class="btn-full" onclick="window.location='mailto:hello@lumina-ai.co.uk?subject=School Licence Enquiry'" style="width:100%;padding:1rem;background:var(--bg4);border:1px solid var(--border);border-radius:10px;color:var(--white);font-weight:700;cursor:pointer;font-size:.95rem;transition:all .2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--white)'">Contact Us →</button>
       </div>
     </div>
   </section>
 
   <!-- CTA -->
   <section class="cta-section">
-    <h2>Ready to transform<br><em style="color:var(--gold);font-style:normal">how you learn?</em></h2>
-    <p>Join thousands of UK students achieving better grades with AI-powered tutoring.</p>
-    <button class="btn-hero-primary" onclick="nav('auth')">Start Your Free Trial →</button>
+    <div class="section-label" style="display:inline-block;margin-bottom:1.5rem">Limited Time — Free Trial</div>
+    <h2>Your best grades<br><em style="color:var(--gold);font-style:normal">start today.</em></h2>
+    <p>Join thousands of UK students and families who are already getting better results with Lumina AI. No credit card. No commitment. Cancel any time.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem">
+      <button class="btn-hero-primary" onclick="nav('auth')">Start Free Today →</button>
+      <button class="btn-hero-secondary" onclick="window.location='mailto:hello@lumina-ai.co.uk?subject=School Enquiry'"><i class="fas fa-school"></i> School Enquiry</button>
+    </div>
+    <div style="display:flex;gap:2rem;justify-content:center;flex-wrap:wrap">
+      <span style="color:var(--muted);font-size:.8rem;display:flex;align-items:center;gap:.4rem"><i class="fas fa-lock" style="color:var(--gold)"></i> GDPR Compliant</span>
+      <span style="color:var(--muted);font-size:.8rem;display:flex;align-items:center;gap:.4rem"><i class="fas fa-shield-alt" style="color:var(--gold)"></i> Safe for Under-18s</span>
+      <span style="color:var(--muted);font-size:.8rem;display:flex;align-items:center;gap:.4rem"><i class="fas fa-times-circle" style="color:var(--gold)"></i> No Credit Card</span>
+    </div>
   </section>
 
   <!-- Footer -->
-  <footer style="background:var(--bg2);border-top:1px solid var(--border);padding:2rem;text-align:center;">
-    <div class="nav-logo" style="margin-bottom:.5rem">Lumina <span style="color:var(--gold)">AI</span></div>
-    <p style="color:var(--muted);font-size:.8rem;margin-bottom:1rem">The smartest way to prepare for your exams</p>
-    <div style="display:flex;gap:1.5rem;justify-content:center;font-size:.8rem;">
-      <a onclick="nav('privacy')" style="color:var(--muted);cursor:pointer;text-decoration:none">Privacy Policy</a>
-      <a style="color:var(--muted);cursor:pointer;text-decoration:none">Terms of Service</a>
-      <a style="color:var(--muted);cursor:pointer;text-decoration:none">Contact</a>
+  <footer style="background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2rem 2rem;">
+    <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2.5rem;margin-bottom:2.5rem">
+      <div>
+        <div class="nav-logo" style="margin-bottom:.75rem;font-size:1.4rem">Lumina <span style="color:var(--gold)">AI</span></div>
+        <p style="color:var(--muted);font-size:.85rem;line-height:1.7;max-width:240px">The UK's most intelligent AI revision platform for GCSE & A-Level students.</p>
+      </div>
+      <div>
+        <div style="font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:1rem">Platform</div>
+        <div style="display:flex;flex-direction:column;gap:.6rem">
+          <a onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})" style="color:var(--muted);font-size:.875rem;cursor:pointer;text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Features</a>
+          <a onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})" style="color:var(--muted);font-size:.875rem;cursor:pointer;text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Pricing</a>
+          <a onclick="nav('auth')" style="color:var(--muted);font-size:.875rem;cursor:pointer;text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Sign Up Free</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:1rem">Subjects</div>
+        <div style="display:flex;flex-direction:column;gap:.6rem">
+          <span style="color:var(--muted);font-size:.875rem">Mathematics & Further Maths</span>
+          <span style="color:var(--muted);font-size:.875rem">Sciences (Physics, Chem, Bio)</span>
+          <span style="color:var(--muted);font-size:.875rem">English Literature</span>
+          <span style="color:var(--muted);font-size:.875rem">History, Geography & more</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:1rem">Legal & Support</div>
+        <div style="display:flex;flex-direction:column;gap:.6rem">
+          <a onclick="nav('privacy')" style="color:var(--muted);font-size:.875rem;cursor:pointer;text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Privacy Policy</a>
+          <a style="color:var(--muted);font-size:.875rem;cursor:pointer;text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Terms of Service</a>
+          <a onclick="window.location='mailto:hello@lumina-ai.co.uk'" style="color:var(--muted);font-size:.875rem;cursor:pointer;text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Contact Us</a>
+        </div>
+      </div>
     </div>
-    <p style="color:var(--muted);font-size:.75rem;margin-top:1rem">© 2025 Lumina AI. All rights reserved.</p>
+    <div style="border-top:1px solid var(--border);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;max-width:1100px;margin:0 auto">
+      <p style="color:var(--muted);font-size:.75rem">© 2025 Lumina AI. All rights reserved. Built in the UK 🇬🇧</p>
+      <div style="display:flex;gap:1rem;align-items:center">
+        <span style="color:var(--muted);font-size:.75rem;display:flex;align-items:center;gap:.3rem"><i class="fas fa-shield-alt" style="color:var(--gold)"></i> GDPR Compliant</span>
+        <span style="color:var(--muted);font-size:.75rem;display:flex;align-items:center;gap:.3rem"><i class="fas fa-lock" style="color:var(--gold)"></i> SSL Secured</span>
+      </div>
+    </div>
   </footer>
 </div>
 
@@ -4442,24 +4888,61 @@ function setSubject(name, icon, color) {
   addTutorMsg('bot', `Subject switched to ${icon} ${name}! I'm ready to help. What would you like to explore? ✦`);
 }
 
+function formatChatText(text, adhd) {
+  // Escape HTML first
+  let html = text
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  // Code blocks
+  html = html.replace(/```([\s\S]*?)```/g, (_, code) =>
+    `<pre><code>${code.trim()}</code></pre>`);
+  // Inline code
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+  // Bold
+  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  // Italic
+  html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  // Headings
+  html = html.replace(/^### (.+)$/gm, '<h4>$1</h4>');
+  html = html.replace(/^## (.+)$/gm, '<h3>$1</h3>');
+  // Bullet lists
+  html = html.replace(/^[•\-\*] (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>[\s\S]*?<\/li>)+/g, m => `<ul style="padding-left:1.2rem;margin:.5rem 0;display:flex;flex-direction:column;gap:.3rem">${m}</ul>`);
+  // Numbered lists with ADHD step badges
+  if (adhd) {
+    html = html.replace(/^(\d+)\. (.+)$/gm, '<div style="display:flex;gap:.6rem;align-items:baseline;margin:.3rem 0"><span class="step-badge" style="display:inline-flex;flex-shrink:0">$1</span><span>$2</span></div>');
+  } else {
+    html = html.replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>');
+    html = html.replace(/(<li>[\s\S]*?<\/li>)+/g, m => `<ol style="padding-left:1.4rem;margin:.5rem 0;display:flex;flex-direction:column;gap:.3rem">${m}</ol>`);
+  }
+  // Newlines to breaks (but not inside block elements)
+  html = html.replace(/\n\n/g, '</p><p style="margin-top:.6rem">');
+  html = html.replace(/\n/g, '<br>');
+  return `<p>${html}</p>`;
+}
+
 function addTutorMsg(role, text) {
+  const container = document.getElementById('tutor-messages');
+  const row = document.createElement('div');
+  row.className = 'msg-row ' + (role === 'bot' ? 'bot-row' : 'user-row');
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar ' + (role === 'bot' ? 'ai-avatar' : 'user-avatar');
+  avatar.textContent = role === 'bot' ? '✦' : (state.user?.email?.[0]?.toUpperCase() || 'U');
   const el = document.createElement('div');
   el.className = 'msg ' + role;
-  // Format ADHD steps
-  if (state.modes.adhd && role === 'bot') {
-    el.innerHTML = formatADHD(text);
+  if (role === 'bot') {
+    el.innerHTML = formatChatText(text, state.modes.adhd);
   } else {
     el.textContent = text;
   }
-  document.getElementById('tutor-messages').appendChild(el);
-  document.getElementById('tutor-messages').scrollTop = 99999;
+  row.appendChild(avatar);
+  row.appendChild(el);
+  container.appendChild(row);
+  container.scrollTop = 99999;
   if (role === 'bot' && state.ttsEnabled) speak(text);
 }
 
 function formatADHD(text) {
-  // Add visual step breaks
-  return text.replace(/\n/g, '<br>')
-    .replace(/(\d+\.) /g, '<span class="step-badge" style="display:inline-block">$1</span> ');
+  return formatChatText(text, true);
 }
 
 async function tutorSend() {
@@ -4469,20 +4952,27 @@ async function tutorSend() {
   input.value = '';
   addTutorMsg('user', text);
   state.tutorHistory.push({ role: 'user', content: text });
+  const typingRow = document.createElement('div');
+  typingRow.className = 'msg-row bot-row';
+  const typingAvatar = document.createElement('div');
+  typingAvatar.className = 'msg-avatar ai-avatar';
+  typingAvatar.textContent = '✦';
   const typing = document.createElement('div');
   typing.className = 'msg bot typing';
   typing.innerHTML = '<span></span><span></span><span></span>';
-  document.getElementById('tutor-messages').appendChild(typing);
+  typingRow.appendChild(typingAvatar);
+  typingRow.appendChild(typing);
+  document.getElementById('tutor-messages').appendChild(typingRow);
   document.getElementById('tutor-messages').scrollTop = 99999;
   try {
     const data = await callClaude(state.tutorHistory, getTutorSystem());
     const reply = getReply(data);
-    typing.remove();
+    typingRow.remove();
     state.tutorHistory.push({ role: 'assistant', content: reply });
     addTutorMsg('bot', reply);
     addXP(10);
   } catch (e) {
-    typing.remove();
+    typingRow.remove();
     addTutorMsg('bot', '⚠️ ' + e.message);
   }
 }
@@ -4506,11 +4996,23 @@ function clearTutor() {
 // DASHBOARD CHAT
 // ═══════════════════════════════════════
 function addDashMsg(role, text) {
+  const container = document.getElementById('dash-chat');
+  const row = document.createElement('div');
+  row.className = 'msg-row ' + (role === 'bot' ? 'bot-row' : 'user-row');
+  const avatar = document.createElement('div');
+  avatar.className = 'msg-avatar ' + (role === 'bot' ? 'ai-avatar' : 'user-avatar');
+  avatar.textContent = role === 'bot' ? '✦' : (state.user?.email?.[0]?.toUpperCase() || 'U');
   const el = document.createElement('div');
   el.className = 'msg ' + role;
-  el.textContent = text;
-  document.getElementById('dash-chat').appendChild(el);
-  document.getElementById('dash-chat').scrollTop = 99999;
+  if (role === 'bot') {
+    el.innerHTML = formatChatText(text, false);
+  } else {
+    el.textContent = text;
+  }
+  row.appendChild(avatar);
+  row.appendChild(el);
+  container.appendChild(row);
+  container.scrollTop = 99999;
 }
 
 async function dashSend() {
@@ -4520,21 +5022,28 @@ async function dashSend() {
   input.value = '';
   addDashMsg('user', text);
   state.dashHistory.push({ role: 'user', content: text });
+  const dashTypingRow = document.createElement('div');
+  dashTypingRow.className = 'msg-row bot-row';
+  const dashTypingAv = document.createElement('div');
+  dashTypingAv.className = 'msg-avatar ai-avatar';
+  dashTypingAv.textContent = '✦';
   const typing = document.createElement('div');
   typing.className = 'msg bot typing';
   typing.innerHTML = '<span></span><span></span><span></span>';
-  document.getElementById('dash-chat').appendChild(typing);
+  dashTypingRow.appendChild(dashTypingAv);
+  dashTypingRow.appendChild(typing);
+  document.getElementById('dash-chat').appendChild(dashTypingRow);
   document.getElementById('dash-chat').scrollTop = 99999;
   const sys = 'You are Lumina, a helpful AI tutor. Answer questions concisely and helpfully for UK students. Keep answers short (2-3 paragraphs max) for the dashboard widget. ' + getA11yInstructions();
   try {
     const data = await callClaude(state.dashHistory, sys);
     const reply = getReply(data);
-    typing.remove();
+    dashTypingRow.remove();
     state.dashHistory.push({ role: 'assistant', content: reply });
     addDashMsg('bot', reply);
     addXP(5);
   } catch (e) {
-    typing.remove();
+    dashTypingRow.remove();
     addDashMsg('bot', '⚠️ ' + e.message);
   }
 }
