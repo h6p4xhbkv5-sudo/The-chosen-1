@@ -4207,7 +4207,7 @@ function logout() {
   state.user = null;
   state.tutorHistory = [];
   state.dashHistory = [];
-  try { localStorage.removeItem('lumina_user'); } catch(e) {}
+  try { localStorage.removeItem('lumina_user'); localStorage.removeItem('lumina_token'); } catch(e) {}
   document.getElementById('app-nav').style.display = 'none';
   document.getElementById('public-nav').style.display = 'flex';
   document.getElementById('auth-buttons').style.display = 'flex';

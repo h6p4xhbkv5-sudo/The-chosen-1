@@ -2,8 +2,6 @@ import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 import { applyHeaders, isRateLimited, getIp } from './_lib.js';
 
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
-
 export default async function handler(req, res) {
   applyHeaders(res, 'GET, POST, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(200).end();
@@ -13,10 +11,16 @@ export default async function handler(req, res) {
     return res.status(429).json({ error: 'Too many requests' });
   }
 
+  // Guard: reject if admin key env var is not configured (prevents bypass when var is undefined)
   const adminKey = req.headers['x-admin-key'];
-  if (!adminKey || adminKey !== process.env.ADMIN_SECRET_KEY) {
+  if (!process.env.ADMIN_SECRET_KEY || !adminKey || adminKey !== process.env.ADMIN_SECRET_KEY) {
     return res.status(403).json({ error: 'Forbidden' });
   }
+
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
+    return res.status(500).json({ error: 'Server configuration error' });
+  }
+  const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
   const { action } = req.query;
 
@@ -45,7 +49,7 @@ export default async function handler(req, res) {
         } catch (_) { /* Stripe unavailable — MRR stays 0 */ }
       }
 
-      await logAudit('stats', {});
+      await logAudit(supabase, 'stats', {});
       return res.status(200).json({
         total_users: users.count || 0,
         active_7d: active.count || 0,
@@ -65,7 +69,7 @@ export default async function handler(req, res) {
         .order('created_at', { ascending: false })
         .range(offset, offset + limit - 1);
 
-      await logAudit('users_list', { page, limit });
+      await logAudit(supabase, 'users_list', { page, limit });
       return res.status(200).json({
         users: data || [],
         total: count || 0,
@@ -108,7 +112,7 @@ export default async function handler(req, res) {
         }
       }
 
-      await logAudit('send_weekly_emails', { sent, failed });
+      await logAudit(supabase, 'send_weekly_emails', { sent, failed });
       return res.status(200).json({ sent, failed, errors: errors.slice(0, 10) });
     }
 
@@ -127,7 +131,7 @@ export default async function handler(req, res) {
   }
 }
 
-async function logAudit(action, details) {
+async function logAudit(supabase, action, details) {
   try {
     await supabase.from('admin_audit_log').insert({
       action,

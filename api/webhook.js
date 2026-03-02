@@ -1,9 +1,6 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
-
 export const config = { api: { bodyParser: false } };
 
 async function getRawBody(req) {
@@ -16,7 +13,7 @@ async function getRawBody(req) {
 }
 
 /** Mark event as processed (idempotency). Returns false if already processed. */
-async function markProcessed(eventId) {
+async function markProcessed(supabase, eventId) {
   const { error } = await supabase
     .from('processed_webhooks')
     .insert({ id: eventId, processed_at: new Date().toISOString() });
@@ -27,6 +24,12 @@ async function markProcessed(eventId) {
 export default async function handler(req, res) {
   // Webhook endpoint has no CORS — only Stripe calls it
   if (req.method !== 'POST') return res.status(405).end();
+
+  if (!process.env.STRIPE_SECRET_KEY || !process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_KEY) {
+    return res.status(500).end();
+  }
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
   const rawBody = await getRawBody(req);
   const sig = req.headers['stripe-signature'];
@@ -40,7 +43,7 @@ export default async function handler(req, res) {
   }
 
   // Idempotency: skip if we've already processed this event
-  const isNew = await markProcessed(event.id);
+  const isNew = await markProcessed(supabase, event.id);
   if (!isNew) {
     console.log(`Duplicate webhook skipped: ${event.id}`);
     return res.status(200).json({ received: true, duplicate: true });

@@ -1,8 +1,6 @@
 import Stripe from 'stripe';
 import { applyHeaders, isRateLimited, getIp } from './_lib.js';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const VALID_PLANS = ['student', 'homeschool'];
 
@@ -10,6 +8,11 @@ export default async function handler(req, res) {
   applyHeaders(res, 'POST, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  if (!process.env.STRIPE_SECRET_KEY) {
+    return res.status(500).json({ error: 'Payment service not configured' });
+  }
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
   // Rate limit: 20 per IP per hour (Stripe has its own limits too)
   if (isRateLimited(`${getIp(req)}:stripe`, 20, 60 * 60_000)) {

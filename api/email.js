@@ -120,9 +120,9 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(200).json({
-    success: true,
-    note: 'Add RESEND_API_KEY to Vercel to send real emails',
-    preview: template.html,
+  // RESEND_API_KEY not configured — tell the caller explicitly so it doesn't assume success
+  return res.status(503).json({
+    success: false,
+    error: 'Email service not configured — add RESEND_API_KEY to Vercel environment variables',
   });
 }
