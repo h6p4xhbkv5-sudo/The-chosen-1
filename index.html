@@ -7288,7 +7288,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
   * { color: black !important; background: white !important; border-color: #ccc !important; }
 }
 
-</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</style>
 </head>
   <body><h1>📝 Lumina AI — Practice Questions</h1><p style="color:#888">Generated ${new Date().toLocaleDateString('en-GB')}</p><hr>
   ${Array.from(questions.children).map((q,i) => {
@@ -7296,8 +7296,11 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     const marks = q.querySelector('.q-marks')?.textContent || '';
     return `<div class="q"><span class="marks">${marks}</span><strong>Q${i+1}.</strong> ${text}<div class="answer-space"></div></div>`;
   }).join('')}
-  
-<script>
+  </body></html>`);
+  printWindow.document.close();
+  printWindow.print();
+}
+
 // ═══════════════════════════════════════
 // STRIPE PAYMENTS
 // ═══════════════════════════════════════
@@ -7469,12 +7472,6 @@ window.enterDashboard = function() {
 };
 
 console.log('✦ Lumina AI v10 FINAL — Stripe + Supabase + All Features');
-</script>
-
-</body></html>`);
-  printWindow.document.close();
-  printWindow.print();
-}
 
 // ─── SHARE QUESTION ──────────────────────────────────
 function shareQuestion() {
