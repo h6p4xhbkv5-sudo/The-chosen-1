@@ -1800,6 +1800,50 @@ body.light-mode #pomodoro-widget { background: #FFFFFF; }
 body.light-mode .hero-bg .orb { opacity: 0.05; }
 body.light-mode .calc-key { background: #F3F0EA; color: #1A1A2E; }
 
+/* ── Light mode: landing page new sections ── */
+body.light-mode .feature-card { background: #FFFFFF; border-color: rgba(0,0,0,0.1); }
+body.light-mode .feature-card:hover { border-color: var(--fc-border, rgba(201,168,76,0.4)); }
+body.light-mode .feature-card::after { opacity: 0.4; }
+body.light-mode .feature-card-footer { border-top-color: rgba(0,0,0,0.07); }
+
+body.light-mode .subject-pill { background: #FFFFFF; border-color: rgba(0,0,0,0.1); }
+body.light-mode .subject-pill:hover { border-color: var(--subj-accent, var(--gold)); }
+
+body.light-mode .stats-section { background: linear-gradient(180deg, #F3F0EA 0%, #FFFFFF 100%); }
+body.light-mode .stat-item { border-color: rgba(0,0,0,0.1); }
+body.light-mode .stat-icon { background: rgba(201,168,76,0.12); border-color: rgba(201,168,76,0.25); }
+
+body.light-mode .audience-section { background: #F3F0EA; }
+body.light-mode .audience-card { background: #FFFFFF; border-color: rgba(0,0,0,0.1); }
+body.light-mode .audience-card:hover { border-color: rgba(0,0,0,0.15); box-shadow: 0 12px 40px rgba(0,0,0,0.1); }
+body.light-mode .audience-perks li { color: #1A1A2E; }
+
+body.light-mode .testimonials-section { background: #FFFFFF; }
+body.light-mode .testimonial-card { background: #F3F0EA; border-color: rgba(0,0,0,0.1); }
+body.light-mode .testimonial-card:hover { border-color: rgba(0,0,0,0.15); box-shadow: 0 12px 40px rgba(0,0,0,0.1); }
+body.light-mode .testimonial-text { color: #1A1A2E; }
+
+body.light-mode .pricing-section { background: #F3F0EA; }
+body.light-mode .price-card { background: #FFFFFF; border-color: rgba(0,0,0,0.1); }
+body.light-mode .price-card.featured { border-color: var(--gold); }
+body.light-mode .price-features li { color: #4B5563; border-bottom-color: rgba(0,0,0,0.06); }
+
+body.light-mode .cta-section { background: radial-gradient(ellipse at center, rgba(201,168,76,0.12) 0%, transparent 70%); }
+
+body.light-mode .subjects-section { background: #FFFFFF; }
+body.light-mode .video-section { background: #F3F0EA; }
+body.light-mode #demo-chat { background: #FFFFFF; }
+body.light-mode #demo-chat .msg.bot { background: #F3F0EA; border-color: rgba(0,0,0,0.1); color: #1A1A2E; }
+
+body.light-mode .testimonial-card::before { color: var(--gold); opacity: 0.2; }
+
+/* Reveal animation base */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .6s ease, transform .6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-delay-1 { transition-delay: .1s; }
+.reveal-delay-2 { transition-delay: .2s; }
+.reveal-delay-3 { transition-delay: .3s; }
+
 
 /* ════════════════════════════════════
    ESSAY MARKER
@@ -2529,7 +2573,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     <p class="sub">Six powerful tools — one platform. Built for GCSE & A-Level students who want to get ahead.</p>
     <div class="features-grid">
 
-      <div class="feature-card fc-gold" onclick="nav('auth')">
+      <div class="feature-card fc-gold reveal" onclick="nav('auth')">
         <div class="feature-icon"><i class="fas fa-robot"></i></div>
         <h3>AI Personal Tutor</h3>
         <p>Ask anything, any time. Get crystal-clear, step-by-step explanations tailored to your exact level, exam board, and learning style. Like having a private tutor 24/7 — at a fraction of the cost.</p>
@@ -2539,7 +2583,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         </div>
       </div>
 
-      <div class="feature-card fc-blue" onclick="nav('auth')">
+      <div class="feature-card fc-blue reveal reveal-delay-1" onclick="nav('auth')">
         <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
         <h3>Exam Question Generator</h3>
         <p>Generate authentic exam-style questions for any topic, difficulty level, and exam board — with full mark schemes. Get instant AI feedback on your written answers.</p>
@@ -2549,7 +2593,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         </div>
       </div>
 
-      <div class="feature-card fc-purple" onclick="nav('auth')">
+      <div class="feature-card fc-purple reveal reveal-delay-2" onclick="nav('auth')">
         <div class="feature-icon"><i class="fas fa-bullseye"></i></div>
         <h3>Strengths & Weaknesses Analyser</h3>
         <p>Lumina's AI pinpoints exactly where you're losing marks and builds you a personalised revision priority list. Stop wasting time on things you already know.</p>
@@ -2559,7 +2603,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         </div>
       </div>
 
-      <div class="feature-card fc-green" onclick="nav('auth')">
+      <div class="feature-card fc-green reveal" onclick="nav('auth')">
         <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
         <h3>Progress & Grade Predictor</h3>
         <p>Track your improvement week by week. Visual heatmaps, study streaks, topic mastery scores, and an AI grade predictor that shows exactly where you'll land on exam day.</p>
@@ -2569,7 +2613,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         </div>
       </div>
 
-      <div class="feature-card fc-orange" onclick="nav('auth')">
+      <div class="feature-card fc-orange reveal reveal-delay-1" onclick="nav('auth')">
         <div class="feature-icon"><i class="fas fa-universal-access"></i></div>
         <h3>Full Accessibility Suite</h3>
         <p>Built for every learner. ADHD mode with step-by-step focus, dyslexia-friendly fonts, and a visual Dyscalculia Calculator that shows maths in colour-coded steps.</p>
@@ -2579,7 +2623,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         </div>
       </div>
 
-      <div class="feature-card fc-pink" onclick="nav('auth')">
+      <div class="feature-card fc-pink reveal reveal-delay-2" onclick="nav('auth')">
         <div class="feature-icon"><i class="fas fa-chalkboard-teacher"></i></div>
         <h3>Teacher Assignment Hub</h3>
         <p>Teachers set AI-powered homework in seconds. Students get AI hints without getting answers. Teachers see live submission tracking, auto-grading, and class analytics.</p>
@@ -2595,24 +2639,24 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
   <!-- Stats -->
   <section class="stats-section">
     <div class="stats-grid">
-      <div class="stat-item">
+      <div class="stat-item reveal">
         <div class="stat-icon"><i class="fas fa-users"></i></div>
-        <div class="stat-num">5K+</div>
+        <div class="stat-num" data-target="5K+">5K+</div>
         <div class="stat-label">Students Learning</div>
       </div>
-      <div class="stat-item">
+      <div class="stat-item reveal reveal-delay-1">
         <div class="stat-icon"><i class="fas fa-star"></i></div>
-        <div class="stat-num">98%</div>
+        <div class="stat-num" data-target="98%">98%</div>
         <div class="stat-label">Satisfaction Rate</div>
       </div>
-      <div class="stat-item">
+      <div class="stat-item reveal reveal-delay-2">
         <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
-        <div class="stat-num">1M+</div>
+        <div class="stat-num" data-target="1M+">1M+</div>
         <div class="stat-label">Questions Generated</div>
       </div>
-      <div class="stat-item">
+      <div class="stat-item reveal reveal-delay-3">
         <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
-        <div class="stat-num">+42%</div>
+        <div class="stat-num" data-target="+42%">+42%</div>
         <div class="stat-label">Avg. Grade Improvement</div>
       </div>
     </div>
@@ -2624,7 +2668,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     <h2>Designed for students.<br>Loved by parents and teachers.</h2>
     <p class="sub">Lumina AI works for the whole school community — not just the student.</p>
     <div class="audience-grid">
-      <div class="audience-card aud-student">
+      <div class="audience-card aud-student reveal">
         <div class="audience-icon-wrap"><i class="fas fa-user-graduate"></i></div>
         <h3>For Students</h3>
         <p>Whether you're aiming for straight A*s or just trying to pass — Lumina adapts to your pace, style, and goals. No judgement. Just results.</p>
@@ -2635,7 +2679,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
           <li>Tracks your progress so you revise smarter</li>
         </ul>
       </div>
-      <div class="audience-card aud-parent">
+      <div class="audience-card aud-parent reveal reveal-delay-1">
         <div class="audience-icon-wrap"><i class="fas fa-home"></i></div>
         <h3>For Parents</h3>
         <p>Watch your child's grades improve with confidence. Full visibility into their progress, and the peace of mind of safe, school-aligned AI learning.</p>
@@ -2646,7 +2690,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
           <li>Fraction of the cost of a private tutor</li>
         </ul>
       </div>
-      <div class="audience-card aud-teacher">
+      <div class="audience-card aud-teacher reveal reveal-delay-2">
         <div class="audience-icon-wrap"><i class="fas fa-chalkboard-teacher"></i></div>
         <h3>For Teachers</h3>
         <p>Set AI-powered assignments in 30 seconds. Get real-time submission tracking and auto-grading — so you spend less time marking and more time teaching.</p>
@@ -2667,7 +2711,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     <p class="sub">AQA, Edexcel, OCR, WJEC — Lumina AI covers every UK exam board across all major GCSE and A-Level subjects.</p>
     <div class="subjects-grid">
       <div class="subject-pill sp-math" onclick="nav('auth')">
-        <div class="s-icon-wrap"><i class="fas fa-square-root-alt"></i></div>
+        <div class="s-icon-wrap"><i class="fas fa-square-root-variable"></i></div>
         <div class="s-name">Mathematics</div>
         <div class="s-level">GCSE · A-Level</div>
       </div>
@@ -2712,7 +2756,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         <div class="s-level">GCSE · A-Level</div>
       </div>
       <div class="subject-pill sp-geo" onclick="nav('auth')">
-        <div class="s-icon-wrap"><i class="fas fa-globe-europe"></i></div>
+        <div class="s-icon-wrap"><i class="fas fa-earth-europe"></i></div>
         <div class="s-name">Geography</div>
         <div class="s-level">GCSE · A-Level</div>
       </div>
@@ -2722,7 +2766,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         <div class="s-level">GCSE</div>
       </div>
       <div class="subject-pill sp-fmath" onclick="nav('auth')">
-        <div class="s-icon-wrap"><i class="fas fa-infinity"></i></div>
+        <div class="s-icon-wrap"><i class="fas fa-calculator"></i></div>
         <div class="s-name">Further Maths</div>
         <div class="s-level">A-Level</div>
       </div>
@@ -2735,7 +2779,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     <h2>Students are loving it.</h2>
     <p class="sub">Don't take our word for it — here's what real students, parents and teachers are saying.</p>
     <div class="testimonials-grid">
-      <div class="testimonial-card">
+      <div class="testimonial-card reveal">
         <div class="testimonial-stars">★★★★★</div>
         <p class="testimonial-text">I went from a predicted C to an A* in Chemistry in just 8 weeks. The AI explains things in a way that actually makes sense — better than any textbook I've used.</p>
         <div class="testimonial-author">
@@ -2746,7 +2790,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
           </div>
         </div>
       </div>
-      <div class="testimonial-card">
+      <div class="testimonial-card reveal reveal-delay-1">
         <div class="testimonial-stars">★★★★★</div>
         <p class="testimonial-text">As a parent, I was spending £60/hour on private tutors. Lumina AI gives my son the same quality guidance 24/7 — and his confidence has gone through the roof.</p>
         <div class="testimonial-author">
@@ -2757,7 +2801,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
           </div>
         </div>
       </div>
-      <div class="testimonial-card">
+      <div class="testimonial-card reveal reveal-delay-2">
         <div class="testimonial-stars">★★★★★</div>
         <p class="testimonial-text">The ADHD mode is genuinely life-changing. It breaks everything into small steps with no clutter. My son actually WANTS to revise now. I can't believe the difference.</p>
         <div class="testimonial-author">
@@ -2768,7 +2812,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
           </div>
         </div>
       </div>
-      <div class="testimonial-card">
+      <div class="testimonial-card reveal reveal-delay-3">
         <div class="testimonial-stars">★★★★★</div>
         <p class="testimonial-text">I set assignments in 2 minutes and get back auto-graded work with AI feedback. It's saved me hours every week and my class results have measurably improved.</p>
         <div class="testimonial-author">
@@ -2779,7 +2823,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
           </div>
         </div>
       </div>
-      <div class="testimonial-card">
+      <div class="testimonial-card reveal">
         <div class="testimonial-stars">★★★★★</div>
         <p class="testimonial-text">I failed my mock completely. Three months with Lumina AI and I got a 7 in my actual GCSE Maths. The question generator and instant feedback made all the difference.</p>
         <div class="testimonial-author">
@@ -2790,7 +2834,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
           </div>
         </div>
       </div>
-      <div class="testimonial-card">
+      <div class="testimonial-card reveal">
         <div class="testimonial-stars">★★★★★</div>
         <p class="testimonial-text">Dyslexia made reading long explanations a nightmare. The Lexend font mode and clear layout means I can actually process what I'm learning. My English grade jumped two grades.</p>
         <div class="testimonial-author">
@@ -2810,7 +2854,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     <h2>Less than one private tutor session.</h2>
     <p class="pricing-sub">A private tutor costs £40–80 per hour. Lumina AI is available 24/7 for a fraction of that. No contracts. Cancel any time.</p>
     <div class="pricing-grid">
-      <div class="price-card">
+      <div class="price-card reveal">
         <div class="price-name"><i class="fas fa-user" style="margin-right:.4rem"></i>Student</div>
         <div class="price-amount">£60<span>/month</span></div>
         <div class="price-desc">One student, unlimited AI tutoring. Perfect for GCSE & A-Level exam prep.</div>
@@ -2824,7 +2868,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         </ul>
         <button class="btn-full" onclick="nav('auth')" style="width:100%;padding:1rem;background:var(--bg4);border:1px solid var(--border);border-radius:10px;color:var(--white);font-weight:700;cursor:pointer;font-size:.95rem;transition:all .2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--white)'">Get Started Free →</button>
       </div>
-      <div class="price-card featured">
+      <div class="price-card featured reveal reveal-delay-1">
         <div class="price-name"><i class="fas fa-home" style="margin-right:.4rem"></i>Homeschool</div>
         <div class="price-amount">£200<span>/month</span></div>
         <div class="price-desc">Full AI curriculum for homeschool families. Includes teacher tools and parent oversight.</div>
@@ -2838,7 +2882,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         </ul>
         <button class="btn-full" onclick="nav('auth')" style="width:100%;padding:1rem;background:var(--gold);border:none;border-radius:10px;color:var(--black);font-weight:700;cursor:pointer;font-size:.95rem;transition:all .2s;" onmouseover="this.style.background='var(--gold-light)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='var(--gold)';this.style.transform='none'">Start Free Trial →</button>
       </div>
-      <div class="price-card">
+      <div class="price-card reveal reveal-delay-2">
         <div class="price-name"><i class="fas fa-school" style="margin-right:.4rem"></i>School</div>
         <div class="price-amount" style="font-size:2rem">Custom</div>
         <div class="price-desc" style="margin-bottom:1rem">Whole-school or department licence. Includes teacher dashboard, class analytics, and onboarding.</div>
@@ -4736,6 +4780,44 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   } catch(e) {}
   buildNumberLine(0);
+
+  // ── Scroll-reveal observer ──
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  // ── Stat counter animation ──
+  const statObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      const raw = el.dataset.target || el.textContent;
+      const prefix = raw.match(/^[+£]*/)?.[0] || '';
+      const suffix = raw.match(/[%KM+]*$/)?.[0] || '';
+      const num = parseFloat(raw.replace(/[^0-9.]/g, ''));
+      if (isNaN(num)) return;
+      let start = null;
+      const duration = 1800;
+      const step = (ts) => {
+        if (!start) start = ts;
+        const progress = Math.min((ts - start) / duration, 1);
+        const ease = 1 - Math.pow(1 - progress, 3);
+        const cur = num < 10 ? (Math.round(ease * num * 10) / 10) : Math.round(ease * num);
+        el.textContent = prefix + cur + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = prefix + (Number.isInteger(num) ? num : num) + suffix;
+      };
+      requestAnimationFrame(step);
+      statObs.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stat-num[data-target]').forEach(el => statObs.observe(el));
 });
 
 // ═══════════════════════════════════════
