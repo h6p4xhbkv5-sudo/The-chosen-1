@@ -4,7 +4,7 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SER
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
@@ -27,6 +27,22 @@ export default async function handler(req, res) {
       tag,
       created_at: new Date().toISOString()
     }).select().single();
+    return res.status(200).json({ note: data });
+  }
+
+  if (req.method === 'PUT') {
+    const { id, text, subject, tag } = req.body;
+    const updates = {};
+    if (text !== undefined) updates.text = text;
+    if (subject !== undefined) updates.subject = subject;
+    if (tag !== undefined) updates.tag = tag;
+    const { data, error: updateErr } = await supabase.from('notes')
+      .update(updates)
+      .eq('id', id)
+      .eq('user_id', user.id)
+      .select()
+      .single();
+    if (updateErr) return res.status(400).json({ error: updateErr.message });
     return res.status(200).json({ note: data });
   }
 

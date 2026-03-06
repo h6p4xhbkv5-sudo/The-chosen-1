@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
-  const { action } = req.query;
+  const action = req.query?.action || req.body?.action;
 
   if (action === 'stats') {
     const [users, active, paying] = await Promise.all([
