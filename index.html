@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lumina AI — The Smartest Way to Learn</title>
+<title>Lumina AI — AI-Powered Learning for UK Students</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Space+Mono&family=Lexend:wght@300;400;600&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Lexend:wght@300;400;600&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 <script>
@@ -29,16 +29,17 @@ window.MathJax = {
   --subj-econ: #C9A84C;
   --subj-lang: #FBBF24;
   --subj-geo: #34D399;
-  --gold-light: #E8C97A;
-  --gold-dark: #9A7A2E;
+  --gold-light: #E8C96A;
+  --gold-dark: #A07830;
   --black: #07080C;
+  --bg: #08090E;
   --bg1: #0A0C12;
-  --bg2: #0F1118;
-  --bg3: #151821;
-  --bg4: #1C2030;
-  --white: #F5F2EC;
-  --muted: #8892A4;
-  --border: rgba(201,168,76,0.15);
+  --bg2: #0D0F18;
+  --bg3: #121520;
+  --bg4: #181C2A;
+  --white: #F0EEF8;
+  --muted: #6B7394;
+  --border: rgba(255,255,255,0.07);
   --green: #4ADE80;
   --red: #FB7185;
   --blue: #60A5FA;
@@ -49,8 +50,8 @@ window.MathJax = {
   --shadow: 0 8px 32px rgba(0,0,0,0.4);
   --glow: 0 0 40px rgba(201,168,76,0.15);
   --font-body: 'DM Sans', sans-serif;
-  --font-head: 'Playfair Display', serif;
-  --font-mono: 'Space Mono', monospace;
+  --font-head: 'Syne', sans-serif;
+  --font-mono: 'DM Mono', monospace;
 }
 
 /* ACCESSIBILITY MODES */
@@ -64,7 +65,7 @@ body.mode-dyscalculia .math-visual { display: block !important; }
 html { scroll-behavior: smooth; }
 body {
   font-family: var(--font-body);
-  background: var(--black);
+  background: var(--bg);
   color: var(--white);
   min-height: 100vh;
   overflow-x: hidden;
@@ -2211,6 +2212,18 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(async function() {
+  try {
+    const r = await fetch('/api/config');
+    if (r.ok) {
+      const c = await r.json();
+      window.SUPABASE_URL = c.supabaseUrl;
+      window.SUPABASE_ANON_KEY = c.supabaseAnonKey;
+    }
+  } catch(e) {}
+})();
+</script>
 </head>
 <body>
 
@@ -2606,44 +2619,36 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
     </div>
     <div class="sidebar-nav">
-      <div class="sidebar-section-label">Learning</div>
       <div class="sidebar-item active" id="si-home" onclick="showDash('home')"><i class="fas fa-house"></i>Dashboard</div>
+      <div class="sidebar-section-label">LEARN</div>
       <div class="sidebar-item" id="si-tutor" onclick="showDash('tutor')"><i class="fas fa-robot"></i>AI Tutor</div>
-      <div class="sidebar-item" id="si-questions" onclick="showDash('questions')"><i class="fas fa-file-lines"></i>Question Papers</div>
-      <div class="sidebar-section-label">Progress</div>
-      <div class="sidebar-item" id="si-progress" onclick="showDash('progress')"><i class="fas fa-chart-line"></i>Progress</div>
-      <div class="sidebar-item" id="si-strengths" onclick="showDash('strengths')"><i class="fas fa-bullseye"></i>Strengths</div>
-      <div class="sidebar-section-label">School</div>
-      <div class="sidebar-section-label">REFERENCE</div>
+      <div class="sidebar-item" id="si-questions" onclick="showDash('questions')"><i class="fas fa-file-lines"></i>Practice Questions</div>
+      <div class="sidebar-item" id="si-essay" onclick="showDash('essay')"><i class="fas fa-pen-nib"></i>Essay Marker</div>
+      <div class="sidebar-item" id="si-photo" onclick="showDash('photo')"><i class="fas fa-camera"></i>Photo Question</div>
+      <div class="sidebar-item" id="si-video" onclick="showDash('video')"><i class="fas fa-film"></i>Video Explainer</div>
+      <div class="sidebar-section-label">REVISION</div>
+      <div class="sidebar-item" id="si-flashcards" onclick="showDash('flashcards')"><i class="fas fa-clone"></i>Flashcards</div>
+      <div class="sidebar-item" id="si-exams" onclick="showDash('exams')"><i class="fas fa-calendar"></i>Exam Countdown</div>
+      <div class="sidebar-item" id="si-timetable" onclick="showDash('timetable')"><i class="fas fa-table"></i>Revision Timetable</div>
+      <div class="sidebar-item" id="si-papers" onclick="showDash('papers')"><i class="fas fa-file-alt"></i>Past Papers</div>
+      <div class="sidebar-item" id="si-glossary" onclick="showDash('glossary')"><i class="fas fa-book-open"></i>Glossary</div>
+      <div class="sidebar-section-label">TOOLS</div>
       <div class="sidebar-item" id="si-calculator" onclick="showDash('calculator')"><i class="fas fa-calculator"></i>Calculator</div>
       <div class="sidebar-item" id="si-periodic" onclick="showDash('periodic')"><i class="fas fa-atom"></i>Periodic Table</div>
       <div class="sidebar-item" id="si-formulas" onclick="showDash('formulas')"><i class="fas fa-square-root-alt"></i>Formula Sheets</div>
-      <div class="sidebar-item" id="si-bookmarks" onclick="showDash('bookmarks')"><i class="fas fa-bookmark"></i>Bookmarks</div>
-      <div class="sidebar-item" id="si-goals" onclick="showDash('goals')"><i class="fas fa-bullseye"></i>Daily Goals</div>
-      <div class="sidebar-item" id="si-a11y" onclick="showDash('a11y')"><i class="fas fa-universal-access"></i>Accessibility</div>
-      <div class="sidebar-section-label">TOOLS</div>
-      <div class="sidebar-item" id="si-photo" onclick="showDash('photo')"><i class="fas fa-camera"></i>Photo Question</div>
       <div class="sidebar-item" id="si-mindmap" onclick="showDash('mindmap')"><i class="fas fa-project-diagram"></i>Mind Map</div>
       <div class="sidebar-item" id="si-grade" onclick="showDash('grade')"><i class="fas fa-chart-bar"></i>Grade Predictor</div>
-      <div class="sidebar-item" id="si-compare" onclick="showDash('compare')"><i class="fas fa-balance-scale"></i>Compare</div>
-      <div class="sidebar-item" id="si-examples" onclick="showDash('examples')"><i class="fas fa-graduation-cap"></i>Worked Examples</div>
-      <div class="sidebar-item" id="si-simplify" onclick="showDash('simplify')"><i class="fas fa-text-height"></i>Simplify</div>
-      <div class="sidebar-item" id="si-mnemonics" onclick="showDash('mnemonics')"><i class="fas fa-brain"></i>Mnemonics</div>
-      <div class="sidebar-item" id="si-mistakes" onclick="showDash('mistakes')"><i class="fas fa-exclamation-triangle"></i>Mistakes</div>
+      <div class="sidebar-section-label">TRACK</div>
+      <div class="sidebar-item" id="si-progress" onclick="showDash('progress')"><i class="fas fa-chart-line"></i>Progress</div>
+      <div class="sidebar-item" id="si-goals" onclick="showDash('goals')"><i class="fas fa-bullseye"></i>Daily Goals</div>
+      <div class="sidebar-item" id="si-notes" onclick="showDash('notes')"><i class="fas fa-book"></i>My Notes</div>
+      <div class="sidebar-item" id="si-bookmarks" onclick="showDash('bookmarks')"><i class="fas fa-bookmark"></i>Bookmarks</div>
+      <div class="sidebar-item" id="si-mistakes" onclick="showDash('mistakes')"><i class="fas fa-exclamation-triangle"></i>Mistakes Tracker</div>
+      <div class="sidebar-section-label">WELLBEING</div>
       <div class="sidebar-item" id="si-mood" onclick="showDash('mood')"><i class="fas fa-smile"></i>Mood Check-in</div>
       <div class="sidebar-item" id="si-music" onclick="showDash('music')"><i class="fas fa-music"></i>Study Music</div>
-      <div class="sidebar-section-label">SCHOOL</div>
-      <div class="sidebar-item" id="si-essay" onclick="showDash('essay')"><i class="fas fa-pen-nib"></i>Essay Marker</div>
-      <div class="sidebar-item" id="si-exams" onclick="showDash('exams')"><i class="fas fa-calendar"></i>Exam Countdown</div>
-      <div class="sidebar-item" id="si-video" onclick="showDash('video')"><i class="fas fa-film"></i>Video Explainer</div>
-      <div class="sidebar-item" id="si-papers" onclick="showDash('papers')"><i class="fas fa-file-alt"></i>Past Papers</div>
-      <div class="sidebar-item" id="si-glossary" onclick="showDash('glossary')"><i class="fas fa-book-open"></i>Glossary</div>
-      <div class="sidebar-item" id="si-history" onclick="showDash('history')"><i class="fas fa-clock"></i>Chat History</div>
-      <div class="sidebar-item" id="si-leaderboard" onclick="showDash('leaderboard')"><i class="fas fa-trophy"></i>Leaderboard</div>
-      <div class="sidebar-item" id="si-notes" onclick="showDash('notes')"><i class="fas fa-book"></i>Notebook</div>
-      <div class="sidebar-item" id="si-assign" onclick="showDash('assignments')"><i class="fas fa-clipboard-list"></i>Assignments<span class="sidebar-badge">2</span></div>
-      <div class="sidebar-section-label">Account</div>
       <div class="sidebar-item" id="si-settings" onclick="showDash('settings')"><i class="fas fa-gear"></i>Settings</div>
+      <div class="sidebar-item" id="si-a11y" onclick="showDash('a11y')"><i class="fas fa-universal-access"></i>Accessibility</div>
     </div>
   </div>
 
@@ -3886,6 +3891,57 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       </div>
     </div>
 
+    <!-- ── FLASHCARDS ── -->
+    <div class="subpage" id="sp-flashcards">
+      <h2 class="page-title">Flashcards</h2>
+      <p class="page-subtitle">Spaced repetition to help you remember</p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem">
+        <select class="input" id="fc-subject" style="max-width:200px">
+          <option value="">All Subjects</option>
+          <option>Maths</option><option>English</option><option>Physics</option>
+          <option>Chemistry</option><option>Biology</option><option>History</option>
+          <option>Geography</option><option>Computer Science</option><option>Economics</option>
+        </select>
+        <button class="btn-gold btn-sm" onclick="showFcCreate()"><i class="fas fa-plus"></i> New Card</button>
+      </div>
+      <div id="fc-create" style="display:none;margin-bottom:1.5rem" class="card">
+        <label>Front (Question)</label>
+        <input class="input" id="fc-front" placeholder="e.g. What is Pythagoras' theorem?">
+        <label>Back (Answer)</label>
+        <textarea class="input" id="fc-back" rows="3" placeholder="e.g. a² + b² = c²"></textarea>
+        <label>Subject</label>
+        <input class="input" id="fc-tag" placeholder="e.g. Maths">
+        <button class="btn-gold btn-sm" onclick="addFlashcard()" style="margin-top:0.5rem">Save Card</button>
+      </div>
+      <div id="fc-review-area" class="flashcard-area">
+        <div class="fc-progress" id="fc-progress-text">No cards due today</div>
+        <div class="flashcard" id="fc-card" onclick="document.getElementById('fc-card').classList.toggle('flipped')" style="display:none">
+          <div class="flashcard-inner">
+            <div class="flashcard-front" id="fc-front-display">Front</div>
+            <div class="flashcard-back" id="fc-back-display">Back</div>
+          </div>
+        </div>
+        <div class="flashcard-actions" id="fc-actions" style="display:none">
+          <button class="fc-wrong" onclick="fcAnswer(false)"><i class="fas fa-times"></i> Didn't Know</button>
+          <button class="fc-right" onclick="fcAnswer(true)"><i class="fas fa-check"></i> Got It</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── REVISION TIMETABLE ── -->
+    <div class="subpage" id="sp-timetable">
+      <h2 class="page-title">Revision Timetable</h2>
+      <p class="page-subtitle">AI-generated study plan based on your exams</p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;align-items:flex-end">
+        <div>
+          <label>Available hours per day</label>
+          <input class="input" type="number" id="tt-hours" value="3" min="1" max="12" style="width:120px">
+        </div>
+        <button class="btn-gold btn-sm" onclick="generateTimetable()"><i class="fas fa-magic"></i> Generate Timetable</button>
+      </div>
+      <div id="tt-result"></div>
+    </div>
+
   </div><!-- end main-content -->
 </div><!-- end page-dashboard -->
 
@@ -4020,6 +4076,7 @@ function showDash(sub) {
   state.currentSubpage = sub;
 
   if (sub === 'progress') buildHeatmap();
+  if (sub === 'flashcards') loadFcDue();
   if (sub === 'home') {
     updateGreeting();
     if (state.dashHistory.length === 0) addDashMsg('bot', "Hello! I'm your Lumina AI tutor. What would you like to learn today? 🎓");
@@ -4298,7 +4355,7 @@ function buildNumberLine(highlight) {
 // ═══════════════════════════════════════
 async function callClaude(messages, system) {
   const body = {
-    model: 'claude-opus-4-6',
+    model: 'claude-sonnet-4-20250514',
     max_tokens: 1500,
     messages
   };
@@ -7635,7 +7692,7 @@ async function solvePhoto() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-opus-4-6', max_tokens: 1500,
+        model: 'claude-sonnet-4-20250514', max_tokens: 1500,
         system: sys,
         messages: [{ role: 'user', content: [
           { type: 'image', source: { type: 'base64', media_type: photoImageData.type, data: photoImageData.data } },
@@ -8778,6 +8835,171 @@ if (_v11OrigGenQ && !window._v11QTracked) {
   };
 }
 
-console.log('✦ Lumina AI v11 — Full product build complete');
+// ══════════════════════════════════════════
+// FLASHCARDS
+// ══════════════════════════════════════════
+let fcCards = JSON.parse(localStorage.getItem('lumina_fc') || '[]');
+let fcCurrent = 0;
+let fcDue = [];
+
+function showFcCreate() {
+  const el = document.getElementById('fc-create');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function addFlashcard() {
+  const front = document.getElementById('fc-front').value.trim();
+  const back = document.getElementById('fc-back').value.trim();
+  const subject = document.getElementById('fc-tag').value.trim() || 'General';
+  if (!front || !back) return;
+  fcCards.push({
+    id: Date.now(), front, back, subject,
+    nextReview: new Date().toISOString().split('T')[0],
+    ease: 2
+  });
+  localStorage.setItem('lumina_fc', JSON.stringify(fcCards));
+  document.getElementById('fc-front').value = '';
+  document.getElementById('fc-back').value = '';
+  document.getElementById('fc-tag').value = '';
+  document.getElementById('fc-create').style.display = 'none';
+  loadFcDue();
+  showToast('Flashcard added!');
+}
+
+function loadFcDue() {
+  const today = new Date().toISOString().split('T')[0];
+  const subj = document.getElementById('fc-subject')?.value || '';
+  fcDue = fcCards.filter(c => c.nextReview <= today && (!subj || c.subject === subj));
+  fcCurrent = 0;
+  showFcCard();
+}
+
+function showFcCard() {
+  const card = document.getElementById('fc-card');
+  const actions = document.getElementById('fc-actions');
+  const prog = document.getElementById('fc-progress-text');
+  if (fcCurrent >= fcDue.length) {
+    card.style.display = 'none';
+    actions.style.display = 'none';
+    prog.textContent = fcDue.length === 0 ? 'No cards due today. Create some cards to get started!' : 'All done for today!';
+    return;
+  }
+  const c = fcDue[fcCurrent];
+  document.getElementById('fc-front-display').textContent = c.front;
+  document.getElementById('fc-back-display').textContent = c.back;
+  card.style.display = 'block';
+  card.classList.remove('flipped');
+  actions.style.display = 'flex';
+  prog.textContent = `Card ${fcCurrent + 1} of ${fcDue.length}`;
+}
+
+function fcAnswer(correct) {
+  const c = fcDue[fcCurrent];
+  const idx = fcCards.findIndex(x => x.id === c.id);
+  if (idx >= 0) {
+    const days = correct ? fcCards[idx].ease * 2 : 1;
+    const next = new Date();
+    next.setDate(next.getDate() + days);
+    fcCards[idx].nextReview = next.toISOString().split('T')[0];
+    if (correct) fcCards[idx].ease = Math.min(fcCards[idx].ease + 1, 10);
+    else fcCards[idx].ease = Math.max(1, fcCards[idx].ease - 1);
+    localStorage.setItem('lumina_fc', JSON.stringify(fcCards));
+  }
+  fcCurrent++;
+  showFcCard();
+}
+
+document.getElementById('fc-subject')?.addEventListener('change', loadFcDue);
+
+// ══════════════════════════════════════════
+// REVISION TIMETABLE
+// ══════════════════════════════════════════
+async function generateTimetable() {
+  const hours = document.getElementById('tt-hours').value || 3;
+  const subjects = (state.subjects || ['Maths','English','Science']).join(', ');
+  const result = document.getElementById('tt-result');
+  result.innerHTML = '<p style="color:var(--muted)">Generating your revision timetable...</p>';
+
+  const exams = JSON.parse(localStorage.getItem('lumina_exams') || '[]');
+  const examInfo = exams.length > 0
+    ? exams.map(e => `${e.subject} (${e.board || 'Unknown board'}) on ${e.date}`).join(', ')
+    : 'No specific exam dates set';
+
+  const sys = 'You are a UK GCSE/A-Level revision planner. Create a detailed weekly revision timetable in HTML format. Use UK English. Return ONLY the HTML for a 7-day timetable grid.';
+  const prompt = `Create a revision timetable for a student studying: ${subjects}. They have ${hours} hours per day available. Exam info: ${examInfo}. Create a Monday-Sunday timetable with specific time slots and topics. Format as a clean HTML table with styling using these CSS vars: --bg2, --bg3, --border, --gold, --white, --muted. Make it practical and include breaks.`;
+
+  try {
+    const data = await callClaude([{role:'user',content:prompt}], sys);
+    const text = data?.content?.[0]?.text || 'Could not generate timetable. Please try again.';
+    result.innerHTML = '<div class="card" style="padding:1.5rem;overflow-x:auto">' + text + '</div>';
+  } catch(e) {
+    result.innerHTML = '<div class="card" style="padding:1.5rem"><h3 style="color:var(--gold)">Sample Revision Timetable</h3>' +
+      '<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:0.5rem;margin-top:1rem">' +
+      ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(day => {
+        const subjs = (state.subjects || ['Maths','English','Science']);
+        const s1 = subjs[Math.floor(Math.random()*subjs.length)];
+        const s2 = subjs[Math.floor(Math.random()*subjs.length)];
+        return `<div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:0.75rem;min-height:120px">
+          <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem">${day}</div>
+          <div style="background:var(--bg4);border-radius:6px;padding:0.4rem 0.6rem;font-size:0.75rem;margin-bottom:0.3rem;border-left:3px solid var(--gold)">${s1} - ${hours > 2 ? '2' : '1'}hr</div>
+          <div style="background:var(--bg4);border-radius:6px;padding:0.4rem 0.6rem;font-size:0.75rem;margin-bottom:0.3rem;border-left:3px solid var(--blue)">${s2} - 1hr</div>
+          ${day === 'Sat' || day === 'Sun' ? '<div style="background:var(--bg4);border-radius:6px;padding:0.4rem 0.6rem;font-size:0.75rem;border-left:3px solid var(--green)">Review - 1hr</div>' : ''}
+        </div>`;
+      }).join('') + '</div></div>';
+  }
+}
+
+// ══════════════════════════════════════════
+// COOKIE CONSENT
+// ══════════════════════════════════════════
+(function() {
+  if (localStorage.getItem('lumina_cookies_accepted')) return;
+  const banner = document.createElement('div');
+  banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:9999;background:var(--bg2,#0D0F18);border-top:1px solid var(--border,rgba(255,255,255,0.07));padding:1.25rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;transform:translateY(100%);transition:transform 0.3s';
+  banner.innerHTML = '<p style="flex:1;font-size:0.85rem;color:var(--muted,#6B7394);min-width:200px">We use essential cookies to keep you logged in, and optional analytics cookies to improve Lumina AI. <a href="/cookies" style="color:var(--gold,#C9A84C)">Learn more</a></p><div style="display:flex;gap:0.75rem"><button onclick="this.parentElement.parentElement.style.transform=\'translateY(100%)\';localStorage.setItem(\'lumina_cookies_accepted\',\'essential\')" style="background:transparent;color:var(--white,#F0EEF8);border:1px solid var(--border,rgba(255,255,255,0.07));border-radius:10px;padding:0.6rem 1.5rem;cursor:pointer;font-size:0.85rem;font-family:var(--font-head,Syne,sans-serif);font-weight:700">Essential Only</button><button onclick="this.parentElement.parentElement.style.transform=\'translateY(100%)\';localStorage.setItem(\'lumina_cookies_accepted\',\'all\')" style="background:linear-gradient(135deg,#C9A84C,#A07830);color:#08090E;border:none;border-radius:10px;padding:0.6rem 1.5rem;cursor:pointer;font-size:0.85rem;font-family:var(--font-head,Syne,sans-serif);font-weight:700">Accept All</button></div>';
+  document.body.appendChild(banner);
+  setTimeout(() => banner.style.transform = 'translateY(0)', 500);
+})();
+
+// ══════════════════════════════════════════
+// SERVICE WORKER (Offline Mode)
+// ══════════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE = 'lumina-v11';
+    self.addEventListener('install', e => {
+      e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/'])));
+      self.skipWaiting();
+    });
+    self.addEventListener('activate', e => {
+      e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))));
+    });
+    self.addEventListener('fetch', e => {
+      if (e.request.method !== 'GET') return;
+      e.respondWith(fetch(e.request).catch(() => caches.match(e.request).then(r => r || caches.match('/'))));
+    });
+  `;
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(() => {});
+}
+
+window.addEventListener('online', () => showToast('Back online!'));
+window.addEventListener('offline', () => showToast('You are offline — some features unavailable'));
+
+function showToast(msg) {
+  let toast = document.getElementById('lumina-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'lumina-toast';
+    toast.style.cssText = 'position:fixed;top:80px;right:1.5rem;z-index:10000;background:var(--bg2,#0D0F18);border:1px solid var(--border,rgba(255,255,255,0.07));border-radius:12px;padding:0.75rem 1.25rem;font-size:0.85rem;color:var(--white,#F0EEF8);transform:translateX(120%);transition:transform 0.3s';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.transform = 'translateX(0)';
+  setTimeout(() => { toast.style.transform = 'translateX(120%)'; }, 3000);
+}
+
+console.log('Lumina AI v11 — Full product build complete');
 </script>
 </body>

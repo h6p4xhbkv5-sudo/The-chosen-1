@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "builds": [{ "src": "api/*.js", "use": "@vercel/node" }],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1.js" },
+    { "src": "/admin", "dest": "/admin.html" },
+    { "src": "/privacy", "dest": "/privacy-policy.html" },
+    { "src": "/terms", "dest": "/terms.html" },
+    { "src": "/cookies", "dest": "/cookies.html" },
+    { "src": "/contact", "dest": "/contact.html" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
