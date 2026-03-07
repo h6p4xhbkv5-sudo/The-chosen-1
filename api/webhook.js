@@ -84,22 +84,22 @@ async function sendEmail(to, type, data) {
   if (!process.env.RESEND_API_KEY) return;
   const templates = {
     payment_confirmed: {
-      subject: 'Your Lumina AI subscription is active!',
+      subject: 'Your Synaptiq subscription is active!',
       html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#0D0F18;color:#F0EEF8;border-radius:16px;overflow:hidden">
         <div style="background:linear-gradient(135deg,#C9A84C,#A07830);padding:2rem;text-align:center">
           <h1 style="margin:0;font-size:1.8rem;color:#08090E">You're in!</h1>
         </div>
         <div style="padding:2rem">
           <p>Your <strong>${data.plan === 'homeschool' ? 'Homeschool' : 'Student'} Plan</strong> is now active.</p>
-          <p>You now have full access to all Lumina AI features.</p>
+          <p>You now have full access to all Synaptiq features.</p>
           <a href="${process.env.SITE_URL}" style="display:inline-block;background:#C9A84C;color:#08090E;padding:.875rem 2rem;border-radius:10px;font-weight:700;text-decoration:none;margin-top:1rem">Start Learning</a>
         </div></div>`
     },
     payment_failed: {
-      subject: 'Lumina AI — Payment failed',
+      subject: 'Synaptiq — Payment failed',
       html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#0D0F18;color:#F0EEF8;padding:2rem">
         <p>Hi ${data.name},</p>
-        <p>We couldn't process your payment. Please update your payment method to continue accessing Lumina AI.</p>
+        <p>We couldn't process your payment. Please update your payment method to continue accessing Synaptiq.</p>
         <a href="${process.env.SITE_URL}" style="background:#C9A84C;color:#08090E;padding:.75rem 1.5rem;border-radius:10px;font-weight:700;text-decoration:none">Update Payment</a>
       </div>`
     }
@@ -109,6 +109,6 @@ async function sendEmail(to, type, data) {
   await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: 'Lumina AI <hello@luminaai.co.uk>', to, subject: template.subject, html: template.html })
+    body: JSON.stringify({ from: 'Synaptiq <hello@synaptiqai.co.uk>', to, subject: template.subject, html: template.html })
   }).catch(() => {});
 }

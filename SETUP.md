@@ -1,4 +1,4 @@
-# Lumina AI v11 — Complete Setup Guide
+# Synaptiq v11 — Complete Setup Guide
 
 ## New Files in This Version
 - privacy-policy.html  ← Legal ✅
@@ -24,7 +24,7 @@ Add ALL of these in Vercel → Settings → Environment Variables:
 | SUPABASE_URL | Supabase → Settings → API |
 | SUPABASE_SERVICE_KEY | Supabase → Settings → API → service_role |
 | SUPABASE_ANON_KEY | Supabase → Settings → API → anon public |
-| SITE_URL | Your Vercel URL e.g. https://lumina-ai.vercel.app |
+| SITE_URL | Your Vercel URL e.g. https://synaptiq.vercel.app |
 | STRIPE_SECRET_KEY | dashboard.stripe.com → Developers → API keys |
 | STRIPE_PRICE_STUDENT | Stripe → Products → Student Plan → price ID |
 | STRIPE_PRICE_HOMESCHOOL | Stripe → Products → Homeschool Plan → price ID |

@@ -1,4 +1,4 @@
-# Lumina AI
+# Synaptiq
 
 AI-powered educational platform for UK GCSE and A-Level students.
 
@@ -16,8 +16,8 @@ AI-powered educational platform for UK GCSE and A-Level students.
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/your-org/lumina-ai.git
-cd lumina-ai
+git clone https://github.com/your-org/synaptiq.git
+cd synaptiq
 npm install
 ```
 
@@ -43,7 +43,7 @@ Set these in [Vercel Dashboard](https://vercel.com) → Settings → Environment
 | `SUPABASE_URL` | Supabase project URL |
 | `SUPABASE_ANON_KEY` | Supabase anonymous/public key |
 | `SUPABASE_SERVICE_KEY` | Supabase service role key |
-| `SITE_URL` | Your deployed URL (e.g. `https://lumina-ai.vercel.app`) |
+| `SITE_URL` | Your deployed URL (e.g. `https://synaptiq.vercel.app`) |
 | `RESEND_API_KEY` | Resend API key for emails |
 | `ADMIN_SECRET_KEY` | Password for admin dashboard |
 | `STRIPE_SECRET_KEY` | Stripe secret key |
@@ -93,4 +93,4 @@ npx vercel dev
 
 ## Licence
 
-© 2026 Lumina AI Ltd. All rights reserved.
+© 2026 Synaptiq Ltd. All rights reserved.
