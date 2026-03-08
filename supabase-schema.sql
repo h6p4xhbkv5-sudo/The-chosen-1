@@ -1,7 +1,8 @@
--- ══════════════════════════════════════════
+-- ══════════════════════════════════════════════════════════════
 -- LUMINA AI — SUPABASE DATABASE SCHEMA
--- Run this in Supabase SQL Editor
--- ══════════════════════════════════════════
+-- Run this in Supabase SQL Editor → New Query → Run
+-- Safe to re-run (uses CREATE IF NOT EXISTS / ADD COLUMN IF NOT EXISTS)
+-- ══════════════════════════════════════════════════════════════
 
 -- PROFILES (one per user)
 create table profiles (
@@ -65,8 +66,8 @@ create table flashcards (
   front text,
   back text,
   next_review date default current_date,
-  ease integer default 2,
-  created_at timestamptz default now()
+  ease        integer default 2,
+  created_at  timestamptz default now()
 );
 
 -- MISTAKES TRACKER
@@ -97,32 +98,51 @@ create table activity_log (
   user_id uuid references profiles(id) on delete cascade,
   date date default current_date,
   minutes_studied integer default 0,
-  questions_done integer default 0,
-  xp_earned integer default 0
+  questions_done  integer default 0,
+  xp_earned       integer default 0
 );
 
--- RPC: increment user stats atomically
+-- ─── WEBHOOK IDEMPOTENCY ──────────────────────────────────────
+-- Prevents duplicate processing of Stripe webhook events
+create table if not exists processed_webhooks (
+  id           text primary key,             -- Stripe event ID (evt_...)
+  processed_at timestamptz default now()
+);
+
+-- Auto-clean old webhook records after 90 days (keeps table small)
+create index if not exists processed_webhooks_age_idx on processed_webhooks (processed_at);
+
+-- ─── ADMIN AUDIT LOG ──────────────────────────────────────────
+create table if not exists admin_audit_log (
+  id           uuid default gen_random_uuid() primary key,
+  action       text not null,
+  performed_at timestamptz default now(),
+  details      jsonb
+);
+
+-- ─── RPC: increment user stats atomically ────────────────────
 create or replace function increment_user_stats(uid uuid, xp_add integer, questions_add integer)
 returns void language plpgsql as $$
 begin
   update profiles set
-    xp = xp + xp_add,
+    xp                 = xp + xp_add,
     questions_answered = questions_answered + questions_add,
-    level = greatest(1, floor((xp + xp_add) / 500)::integer + 1),
-    last_active = current_date
+    level              = greatest(1, floor((xp + xp_add) / 200)::integer + 1),
+    last_active        = current_date
   where id = uid;
 end;
 $$;
 
--- Row Level Security
-alter table profiles enable row level security;
-alter table progress enable row level security;
-alter table notes enable row level security;
-alter table chat_history enable row level security;
-alter table flashcards enable row level security;
-alter table mistakes enable row level security;
-alter table exams enable row level security;
-alter table activity_log enable row level security;
+-- ─── ROW LEVEL SECURITY ───────────────────────────────────────
+alter table profiles         enable row level security;
+alter table progress         enable row level security;
+alter table notes            enable row level security;
+alter table chat_history     enable row level security;
+alter table flashcards       enable row level security;
+alter table mistakes         enable row level security;
+alter table exams            enable row level security;
+alter table activity_log     enable row level security;
+-- processed_webhooks and admin_audit_log are service-key only; no RLS needed.
 
 -- Policies: users can only see their own data
 create policy "Own profile" on profiles for all using (auth.uid() = id);
