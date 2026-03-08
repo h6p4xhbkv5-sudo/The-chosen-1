@@ -205,9 +205,9 @@ async function initAuth() {
   }
   // Fallback: check localStorage token
   try {
-    const token = localStorage.getItem('lumina_token');
+    const token = localStorage.getItem('synaptiq_token');
     if (token) { currentUser = { token }; overlay.remove(); return; }
-    const saved = localStorage.getItem('lumina_user');
+    const saved = localStorage.getItem('synaptiq_user');
     if (saved) { currentUser = JSON.parse(saved); overlay.remove(); return; }
   } catch(e) {}
   // Not logged in — redirect

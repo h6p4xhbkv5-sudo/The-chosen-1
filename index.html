@@ -4781,7 +4781,7 @@ async function createAccount() {
       }, 2000);
     }
   } catch(e) {
-    showToast(e.message === 'Failed to fetch' ? 'Network error — please check your connection and try again.' : e.message);
+    showToast(/fetch|network/i.test(e.message) ? 'Network error — please check your connection and try again.' : e.message);
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = 'Start Learning Free'; }
   }
@@ -4825,7 +4825,7 @@ async function loginUser() {
     enterDashboard();
     if (state.user.streak > 1) showToast(`${state.user.streak}-day streak! Keep it up!`);
   } catch(e) {
-    showToast(e.message === 'Failed to fetch' ? 'Network error — please check your connection and try again.' : e.message);
+    showToast(/fetch|network/i.test(e.message) ? 'Network error — please check your connection and try again.' : e.message);
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = 'Log In →'; }
   }
@@ -9461,7 +9461,7 @@ window.enterDashboard = function() {
 window.addEventListener('DOMContentLoaded', () => {
   // If there's a stored token, show a loading overlay to prevent flash of login screen
   try {
-    const hasToken = localStorage.getItem('lumina_token');
+    const hasToken = localStorage.getItem('synaptiq_token');
     if (hasToken) {
       const overlay = document.createElement('div');
       overlay.id = 'auth-loading-overlay';
