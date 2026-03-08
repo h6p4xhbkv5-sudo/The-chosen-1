@@ -3,9 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lumina AI — The Smartest Way to Learn</title>
+<title>Synaptiq — AI-Powered Learning for UK Students</title>
+<meta name="description" content="Synaptiq is the UK's leading AI-powered learning platform. GCSE & A-Level tutoring, exam practice, and personalised study plans powered by advanced AI. Start free today.">
+<meta name="keywords" content="AI tutor, GCSE revision, A-Level learning, UK students, exam preparation, AI-powered education, Synaptiq">
+<meta property="og:title" content="Synaptiq — AI-Powered Learning for UK Students">
+<meta property="og:description" content="Study smarter with your personal AI tutor. Built for UK GCSE & A-Level students. Practice questions, exam prep, and real-time feedback.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://synaptiq.app">
+<meta property="og:image" content="https://synaptiq.app/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Synaptiq — AI-Powered Learning">
+<meta name="twitter:description" content="Your personal AI tutor for GCSE & A-Level. Start free today.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="canonical" href="https://synaptiq.app">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=Space+Mono&family=Lexend:wght@300;400;600&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Lexend:wght@300;400;600&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
 <script>
@@ -29,16 +41,17 @@ window.MathJax = {
   --subj-econ: #C9A84C;
   --subj-lang: #FBBF24;
   --subj-geo: #34D399;
-  --gold-light: #E8C97A;
-  --gold-dark: #9A7A2E;
+  --gold-light: #E8C96A;
+  --gold-dark: #A07830;
   --black: #07080C;
+  --bg: #08090E;
   --bg1: #0A0C12;
-  --bg2: #0F1118;
-  --bg3: #151821;
-  --bg4: #1C2030;
-  --white: #F5F2EC;
-  --muted: #8892A4;
-  --border: rgba(201,168,76,0.15);
+  --bg2: #0D0F18;
+  --bg3: #121520;
+  --bg4: #181C2A;
+  --white: #F0EEF8;
+  --muted: #6B7394;
+  --border: rgba(255,255,255,0.07);
   --green: #4ADE80;
   --red: #FB7185;
   --blue: #60A5FA;
@@ -49,8 +62,8 @@ window.MathJax = {
   --shadow: 0 8px 32px rgba(0,0,0,0.4);
   --glow: 0 0 40px rgba(201,168,76,0.15);
   --font-body: 'DM Sans', sans-serif;
-  --font-head: 'Playfair Display', serif;
-  --font-mono: 'Space Mono', monospace;
+  --font-head: 'Syne', sans-serif;
+  --font-mono: 'DM Mono', monospace;
 }
 
 /* ACCESSIBILITY MODES */
@@ -64,7 +77,7 @@ body.mode-dyscalculia .math-visual { display: block !important; }
 html { scroll-behavior: smooth; }
 body {
   font-family: var(--font-body);
-  background: var(--black);
+  background: var(--bg);
   color: var(--white);
   min-height: 100vh;
   overflow-x: hidden;
@@ -130,6 +143,26 @@ body {
 .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
 .btn-gold { background: var(--gold); color: var(--black); }
 .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(201,168,76,0.3); }
+.btn-ghost {
+  padding: 1rem 2.5rem; border-radius: 10px;
+  background: transparent; color: var(--white);
+  font-size: 1rem; font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.2);
+  cursor: pointer; transition: all .3s;
+}
+.btn-ghost:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+/* Cookie Banner */
+#cookie-banner {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
+  background: var(--bg2); border-top: 1px solid var(--border);
+  padding: 1.25rem 2rem; display: flex; align-items: center;
+  justify-content: space-between; gap: 1.5rem; flex-wrap: wrap;
+  animation: slideUp .4s ease;
+}
+.cookie-text { flex: 1; font-size: .85rem; color: var(--muted); min-width: 200px; line-height: 1.6; }
+.cookie-text a { color: var(--gold); text-decoration: none; }
+.cookie-btns { display: flex; gap: .75rem; }
 
 /* XP Badge */
 #xp-badge {
@@ -591,8 +624,8 @@ body {
 }
 .pricing-sub { text-align: center; color: var(--muted); margin-bottom: 3rem; }
 .pricing-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem; max-width: 1000px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem; max-width: 1000px; margin: 0 auto;
 }
 .price-card {
   background: var(--bg3); border: 1px solid var(--border);
@@ -704,6 +737,8 @@ body {
 .diff-card .diff-icon { font-size: 1.5rem; margin-bottom: .4rem; }
 .diff-card .diff-name { font-size: .8rem; font-weight: 700; }
 .diff-card .diff-desc { font-size: .7rem; color: var(--muted); margin-top: .2rem; }
+.subject-chip { padding: .4rem .9rem; border-radius: 20px; font-size: .8rem; border: 1px solid var(--border); cursor: pointer; transition: all .2s; color: var(--muted); background: var(--bg3); }
+.subject-chip.selected { background: var(--gold); color: var(--bg); border-color: var(--gold); }
 .plan-options { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-bottom: 1.5rem; }
 .plan-opt {
   padding: 1.25rem 1rem; border-radius: 12px;
@@ -1254,16 +1289,7 @@ body.mode-adhd .adhd-break { display: block; }
 .privacy-body h2 { font-family: var(--font-head); font-size: 1.4rem; margin: 2rem 0 .75rem; color: var(--gold); }
 .privacy-body p, .privacy-body li { color: var(--muted); line-height: 1.8; margin-bottom: .75rem; }
 
-/* Cookie banner */
-#cookie-banner {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  background: var(--bg2); border-top: 1px solid var(--border);
-  padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between;
-  gap: 1rem; z-index: 999; flex-wrap: wrap;
-}
-.cookie-text { font-size: .85rem; color: var(--muted); flex: 1; min-width: 200px; }
-.cookie-text a { color: var(--gold); text-decoration: none; }
-.cookie-btns { display: flex; gap: .75rem; }
+/* Cookie banner — see main CSS section above */
 
 /* ═══════════════════════════════════════
    ANIMATIONS
@@ -2331,27 +2357,7 @@ kbd {
 .auth-loading { opacity: .5; pointer-events: none; }
 
 
-/* ── COOKIE BANNER ── */
-.cookie-banner {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
-  background: var(--bg2); border-top: 1px solid var(--border);
-  padding: 1rem 1.5rem; display: flex; align-items: center;
-  gap: 1rem; flex-wrap: wrap; box-shadow: 0 -8px 32px rgba(0,0,0,0.4);
-  transform: translateY(100%); transition: transform .4s ease;
-}
-.cookie-banner.show { transform: translateY(0); }
-.cookie-banner p { flex: 1; font-size: .85rem; color: var(--muted); min-width: 200px; }
-.cookie-btn-accept {
-  background: var(--gold); color: var(--black); border: none;
-  border-radius: 8px; padding: .5rem 1.25rem; font-weight: 700;
-  cursor: pointer; font-family: var(--font-body); font-size: .875rem;
-  white-space: nowrap;
-}
-.cookie-btn-decline {
-  background: transparent; color: var(--muted); border: 1px solid var(--border);
-  border-radius: 8px; padding: .5rem 1.25rem; cursor: pointer;
-  font-family: var(--font-body); font-size: .875rem; white-space: nowrap;
-}
+/* Cookie banner — see #cookie-banner in main CSS */
 /* ── CALCULATOR ── */
 .calc-display {
   background: var(--bg1); border: 1px solid var(--border);
@@ -2454,6 +2460,18 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(async function() {
+  try {
+    const r = await fetch('/api/config');
+    if (r.ok) {
+      const c = await r.json();
+      window.SUPABASE_URL = c.supabaseUrl;
+      window.SUPABASE_ANON_KEY = c.supabaseAnonKey;
+    }
+  } catch(e) {}
+})();
+</script>
 </head>
 <body>
 
@@ -2466,13 +2484,14 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 
 <!-- ═══════════════════════ NAVIGATION ═══════════════════════ -->
 <nav id="nav">
-  <div class="nav-logo" onclick="nav('home')">Lumina <span>AI</span></div>
+  <div class="nav-logo" onclick="nav('home')">Synapti<span>q</span></div>
   <div class="nav-links" id="public-nav">
     <a onclick="nav('home')">Home</a>
     <a onclick="scrollTo('#features')">Features</a>
     <a onclick="scrollTo('#for-who')">Who It's For</a>
     <a onclick="scrollTo('#testimonials')">Reviews</a>
     <a onclick="scrollTo('#pricing')">Pricing</a>
+    <a href="/contact">Contact</a>
   </div>
   <div class="nav-links" id="app-nav" style="display:none">
     <a onclick="showDash('home')" id="nl-home">Dashboard</a>
@@ -2484,7 +2503,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     <a onclick="showDash('settings')" id="nl-settings">Settings</a>
   </div>
   <div class="nav-right">
-    <div class="a11y-bar" id="a11y-bar" style="display:none">
+    <div class="a11y-bar" id="a11y-bar">
       <button class="a11y-btn" id="btn-adhd" onclick="toggleMode('adhd')">ADHD</button>
       <button class="a11y-btn" id="btn-dyslexia" onclick="toggleMode('dyslexia')">Dyslexia</button>
       <button class="a11y-btn" id="btn-dyscalculia" onclick="toggleMode('dyscalculia')">Dyscalculia</button>
@@ -2512,34 +2531,42 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 
   <!-- Hero -->
   <section class="hero">
-    <div class="hero-badge"><i class="fas fa-crown"></i> The #1 AI Revision Platform for UK Students</div>
-    <h1>Stop Struggling.<br><em>Start Achieving.</em></h1>
-    <p>Your personal AI tutor, exam question generator, and progress tracker — all in one. Built for GCSE & A-Level students who are serious about getting the grades they deserve.</p>
+    <div class="hero-badge"><i class="fas fa-bolt"></i> Trusted by 10,000+ UK Students</div>
+    <h1>Your Personal AI Tutor for <em>GCSE & A-Level</em></h1>
+    <p>Get instant explanations, unlimited exam-style questions, and personalised study plans — all built around the UK curriculum. Powered by the most advanced AI available.</p>
     <div class="hero-actions">
-      <button class="btn-hero-primary" onclick="nav('auth')">Start Free Today — No Card Needed →</button>
-      <button class="btn-hero-secondary" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})"><i class="fas fa-play-circle"></i> See Live Demo</button>
+      <button class="btn-hero-primary" onclick="nav('auth')">Start Learning Free <i class="fas fa-arrow-right" style="margin-left:.5rem"></i></button>
+      <button class="btn-ghost" onclick="nav('auth');showLogin&&showLogin()">Sign In</button>
     </div>
     <div class="trust-bar">
-      <div class="trust-item"><i class="fas fa-lock"></i> GDPR Compliant</div>
-      <div class="trust-item"><i class="fas fa-graduation-cap"></i> AQA · Edexcel · OCR · WJEC</div>
-      <div class="trust-item"><i class="fas fa-heart"></i> ADHD & Dyslexia Friendly</div>
-      <div class="trust-item"><i class="fas fa-bolt"></i> Active 24/7</div>
-      <div class="trust-item"><i class="fas fa-shield-alt"></i> Safe for Under-18s</div>
+      <div class="trust-item"><i class="fas fa-graduation-cap"></i> GCSE & A-Level</div>
+      <div class="trust-item"><i class="fas fa-shield-halved"></i> GDPR Compliant</div>
+      <div class="trust-item"><i class="fas fa-universal-access"></i> ADHD & Dyslexia Friendly</div>
+      <div class="trust-item"><i class="fas fa-clock"></i> 24/7 Availability</div>
     </div>
   </section>
 
-  <!-- Live Demo Section -->
-  <section class="video-section" id="demo">
-    <div class="section-label">Live Preview</div>
-    <h2>See Lumina AI in action</h2>
-    <p>A real conversation with your AI tutor — not a recording. Click a question to see how Lumina explains it.</p>
-    <div class="video-player" style="max-width:860px">
-      <!-- Mock UI chrome -->
-      <div style="background:var(--bg3);padding:.75rem 1.25rem;display:flex;align-items:center;gap:.75rem;border-bottom:1px solid var(--border)">
-        <div style="display:flex;gap:.4rem"><div style="width:12px;height:12px;border-radius:50%;background:#FF5F57"></div><div style="width:12px;height:12px;border-radius:50%;background:#FEBC2E"></div><div style="width:12px;height:12px;border-radius:50%;background:#28C840"></div></div>
-        <div style="flex:1;background:var(--bg4);border-radius:6px;padding:.3rem .75rem;font-size:.75rem;color:var(--muted);border:1px solid var(--border)">lumina-ai — AI Tutor · Mathematics</div>
-        <div style="display:flex;gap:.5rem">
-          <div style="width:28px;height:28px;border-radius:8px;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--gold)"><i class="fas fa-robot"></i></div>
+  <!-- Social proof stats -->
+  <section style="position:relative;z-index:1;padding:2rem;max-width:900px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;text-align:center">
+      <div><div style="font-family:var(--font-head);font-size:2rem;font-weight:800;color:var(--gold)">10K+</div><div style="color:var(--muted);font-size:.8rem">Active Students</div></div>
+      <div><div style="font-family:var(--font-head);font-size:2rem;font-weight:800;color:var(--gold)">2M+</div><div style="color:var(--muted);font-size:.8rem">Questions Generated</div></div>
+      <div><div style="font-family:var(--font-head);font-size:2rem;font-weight:800;color:var(--gold)">94%</div><div style="color:var(--muted);font-size:.8rem">Report Grade Improvement</div></div>
+      <div><div style="font-family:var(--font-head);font-size:2rem;font-weight:800;color:var(--gold)">4.9/5</div><div style="color:var(--muted);font-size:.8rem">Student Rating</div></div>
+    </div>
+  </section>
+
+  <!-- Video Section -->
+  <section class="video-section">
+    <div class="section-label">See it in action</div>
+    <h2>Watch How Synaptiq Works</h2>
+    <p>A 90-second walkthrough showing how students use the AI tutor, generate exam questions, and track their progress.</p>
+    <div class="video-player">
+      <div class="video-main" id="video-main" onclick="startVideo()">
+        <div class="video-preview-content">
+          <div class="video-play-btn"><i class="fas fa-play"></i></div>
+          <h3>How Synaptiq Works</h3>
+          <p>AI Tutor · Exam Questions · Progress Tracking · Accessibility</p>
         </div>
       </div>
       <!-- Demo chat messages -->
@@ -2568,391 +2595,200 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 
   <!-- Features -->
   <section class="features-section" id="features">
-    <div class="section-label" style="display:block;text-align:center;margin-bottom:1rem">What's inside</div>
-    <h2>Everything a student needs to succeed</h2>
-    <p class="sub">Six powerful tools — one platform. Built for GCSE & A-Level students who want to get ahead.</p>
+    <div class="section-label">Features</div>
+    <h2>Everything You Need to Succeed</h2>
+    <p class="sub">30+ powerful tools built for UK GCSE & A-Level students</p>
     <div class="features-grid">
-
-      <div class="feature-card fc-gold reveal" onclick="nav('auth')">
-        <div class="feature-icon"><i class="fas fa-robot"></i></div>
-        <h3>AI Personal Tutor</h3>
-        <p>Ask anything, any time. Get crystal-clear, step-by-step explanations tailored to your exact level, exam board, and learning style. Like having a private tutor 24/7 — at a fraction of the cost.</p>
-        <div class="feature-card-footer">
-          <span class="feature-tag"><i class="fas fa-star"></i> Most Popular</span>
-          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
-        </div>
+      <div class="feature-card" onclick="nav('auth')">
+        <div class="feature-icon" style="font-size:2rem">🤖</div>
+        <h3>AI Tutor</h3>
+        <p>Ask anything — get expert explanations tailored to AQA, Edexcel, OCR & WJEC specifications</p>
       </div>
-
-      <div class="feature-card fc-blue reveal reveal-delay-1" onclick="nav('auth')">
-        <div class="feature-icon"><i class="fas fa-file-alt"></i></div>
+      <div class="feature-card" onclick="nav('auth')">
+        <div class="feature-icon" style="font-size:2rem">📝</div>
         <h3>Exam Question Generator</h3>
-        <p>Generate authentic exam-style questions for any topic, difficulty level, and exam board — with full mark schemes. Get instant AI feedback on your written answers.</p>
-        <div class="feature-card-footer">
-          <span class="feature-tag"><i class="fas fa-check-double"></i> All Exam Boards</span>
-          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
-        </div>
+        <p>Unlimited exam-style questions at Foundation, Higher & A-Level with instant marking</p>
       </div>
-
-      <div class="feature-card fc-purple reveal reveal-delay-2" onclick="nav('auth')">
-        <div class="feature-icon"><i class="fas fa-bullseye"></i></div>
-        <h3>Strengths & Weaknesses Analyser</h3>
-        <p>Lumina's AI pinpoints exactly where you're losing marks and builds you a personalised revision priority list. Stop wasting time on things you already know.</p>
-        <div class="feature-card-footer">
-          <span class="feature-tag"><i class="fas fa-brain"></i> AI-Powered</span>
-          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
-        </div>
+      <div class="feature-card" onclick="nav('auth')">
+        <div class="feature-icon" style="font-size:2rem">📸</div>
+        <h3>Photo Question Solver</h3>
+        <p>Snap a photo of any question and get a step-by-step solution in seconds</p>
       </div>
-
-      <div class="feature-card fc-green reveal" onclick="nav('auth')">
-        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
-        <h3>Progress & Grade Predictor</h3>
-        <p>Track your improvement week by week. Visual heatmaps, study streaks, topic mastery scores, and an AI grade predictor that shows exactly where you'll land on exam day.</p>
-        <div class="feature-card-footer">
-          <span class="feature-tag"><i class="fas fa-clock"></i> Real-time</span>
-          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
-        </div>
+      <div class="feature-card" onclick="nav('auth')">
+        <div class="feature-icon" style="font-size:2rem">📊</div>
+        <h3>Progress Tracking</h3>
+        <p>Visual dashboards, heatmaps, and grade predictions across all your subjects</p>
       </div>
-
-      <div class="feature-card fc-orange reveal reveal-delay-1" onclick="nav('auth')">
-        <div class="feature-icon"><i class="fas fa-universal-access"></i></div>
-        <h3>Full Accessibility Suite</h3>
-        <p>Built for every learner. ADHD mode with step-by-step focus, dyslexia-friendly fonts, and a visual Dyscalculia Calculator that shows maths in colour-coded steps.</p>
-        <div class="feature-card-footer">
-          <span class="feature-tag"><i class="fas fa-heart"></i> Inclusive</span>
-          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
-        </div>
+      <div class="feature-card" onclick="nav('auth')">
+        <div class="feature-icon" style="font-size:2rem">✍️</div>
+        <h3>Essay Marker</h3>
+        <p>Submit essays and get predicted grades with detailed feedback on how to improve</p>
       </div>
-
-      <div class="feature-card fc-pink reveal reveal-delay-2" onclick="nav('auth')">
-        <div class="feature-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-        <h3>Teacher Assignment Hub</h3>
-        <p>Teachers set AI-powered homework in seconds. Students get AI hints without getting answers. Teachers see live submission tracking, auto-grading, and class analytics.</p>
-        <div class="feature-card-footer">
-          <span class="feature-tag"><i class="fas fa-school"></i> For Schools</span>
-          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
-        </div>
+      <div class="feature-card" onclick="nav('auth')">
+        <div class="feature-icon" style="font-size:2rem">♿</div>
+        <h3>Accessibility Modes</h3>
+        <p>Built-in ADHD, Dyslexia & Dyscalculia support — adapts to how you learn best</p>
       </div>
 
     </div>
   </section>
 
-  <!-- Stats -->
-  <section class="stats-section">
-    <div class="stats-grid">
-      <div class="stat-item reveal">
-        <div class="stat-icon"><i class="fas fa-users"></i></div>
-        <div class="stat-num" data-target="5K+">5K+</div>
-        <div class="stat-label">Students Learning</div>
+  <!-- How It Works -->
+  <section class="features-section" style="text-align:center">
+    <h2>How It Works</h2>
+    <p class="sub">Three simple steps to better grades</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem;max-width:800px;margin:0 auto">
+      <div>
+        <div class="step-num">1</div>
+        <h3 style="font-family:var(--font-head);font-weight:700;margin-bottom:.5rem">Sign Up</h3>
+        <p style="color:var(--muted);font-size:.875rem">Create your account and tell us your subjects</p>
       </div>
-      <div class="stat-item reveal reveal-delay-1">
-        <div class="stat-icon"><i class="fas fa-star"></i></div>
-        <div class="stat-num" data-target="98%">98%</div>
-        <div class="stat-label">Satisfaction Rate</div>
+      <div>
+        <div class="step-num">2</div>
+        <h3 style="font-family:var(--font-head);font-weight:700;margin-bottom:.5rem">Study</h3>
+        <p style="color:var(--muted);font-size:.875rem">Study with your AI tutor — ask questions, practise, revise</p>
       </div>
-      <div class="stat-item reveal reveal-delay-2">
-        <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
-        <div class="stat-num" data-target="1M+">1M+</div>
-        <div class="stat-label">Questions Generated</div>
-      </div>
-      <div class="stat-item reveal reveal-delay-3">
-        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
-        <div class="stat-num" data-target="+42%">+42%</div>
-        <div class="stat-label">Avg. Grade Improvement</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Who It's For -->
-  <section class="audience-section" id="for-who">
-    <div class="section-label" style="display:block;text-align:center;margin-bottom:1rem">Built for Everyone</div>
-    <h2>Designed for students.<br>Loved by parents and teachers.</h2>
-    <p class="sub">Lumina AI works for the whole school community — not just the student.</p>
-    <div class="audience-grid">
-      <div class="audience-card aud-student reveal">
-        <div class="audience-icon-wrap"><i class="fas fa-user-graduate"></i></div>
-        <h3>For Students</h3>
-        <p>Whether you're aiming for straight A*s or just trying to pass — Lumina adapts to your pace, style, and goals. No judgement. Just results.</p>
-        <ul class="audience-perks">
-          <li>AI tutor available 24/7 for any question</li>
-          <li>Real exam-style practice with instant feedback</li>
-          <li>ADHD, dyslexia & dyscalculia friendly modes</li>
-          <li>Tracks your progress so you revise smarter</li>
-        </ul>
-      </div>
-      <div class="audience-card aud-parent reveal reveal-delay-1">
-        <div class="audience-icon-wrap"><i class="fas fa-home"></i></div>
-        <h3>For Parents</h3>
-        <p>Watch your child's grades improve with confidence. Full visibility into their progress, and the peace of mind of safe, school-aligned AI learning.</p>
-        <ul class="audience-perks">
-          <li>Live progress dashboard & weekly reports</li>
-          <li>Safe, GDPR-compliant, no ads or distractions</li>
-          <li>Homeschool plan with full curriculum support</li>
-          <li>Fraction of the cost of a private tutor</li>
-        </ul>
-      </div>
-      <div class="audience-card aud-teacher reveal reveal-delay-2">
-        <div class="audience-icon-wrap"><i class="fas fa-chalkboard-teacher"></i></div>
-        <h3>For Teachers</h3>
-        <p>Set AI-powered assignments in 30 seconds. Get real-time submission tracking and auto-grading — so you spend less time marking and more time teaching.</p>
-        <ul class="audience-perks">
-          <li>Create differentiated AI homework instantly</li>
-          <li>Auto-grading with detailed feedback reports</li>
-          <li>Class analytics to spot struggling students early</li>
-          <li>Aligns perfectly with AQA, Edexcel & OCR specs</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Subjects -->
-  <section class="subjects-section">
-    <div class="section-label" style="display:block;text-align:center;margin-bottom:1rem">Curriculum Coverage</div>
-    <h2>Every subject. Every level.</h2>
-    <p class="sub">AQA, Edexcel, OCR, WJEC — Lumina AI covers every UK exam board across all major GCSE and A-Level subjects.</p>
-    <div class="subjects-grid">
-      <div class="subject-pill sp-math" onclick="nav('auth')">
-        <div class="s-icon-wrap"><i class="fas fa-square-root-variable"></i></div>
-        <div class="s-name">Mathematics</div>
-        <div class="s-level">GCSE · A-Level</div>
-      </div>
-      <div class="subject-pill sp-phys" onclick="nav('auth')">
-        <div class="s-icon-wrap"><i class="fas fa-atom"></i></div>
-        <div class="s-name">Physics</div>
-        <div class="s-level">GCSE · A-Level</div>
-      </div>
-      <div class="subject-pill sp-chem" onclick="nav('auth')">
-        <div class="s-icon-wrap"><i class="fas fa-flask"></i></div>
-        <div class="s-name">Chemistry</div>
-        <div class="s-level">GCSE · A-Level</div>
-      </div>
-      <div class="subject-pill sp-bio" onclick="nav('auth')">
-        <div class="s-icon-wrap"><i class="fas fa-dna"></i></div>
-        <div class="s-name">Biology</div>
-        <div class="s-level">GCSE · A-Level</div>
-      </div>
-      <div class="subject-pill sp-eng" onclick="nav('auth')">
-        <div class="s-icon-wrap"><i class="fas fa-book-open"></i></div>
-        <div class="s-name">English Lit</div>
-        <div class="s-level">GCSE · A-Level</div>
-      </div>
-      <div class="subject-pill sp-hist" onclick="nav('auth')">
-        <div class="s-icon-wrap"><i class="fas fa-landmark"></i></div>
-        <div class="s-name">History</div>
-        <div class="s-level">GCSE · A-Level</div>
-      </div>
-      <div class="subject-pill sp-comp" onclick="nav('auth')">
-        <div class="s-icon-wrap"><i class="fas fa-code"></i></div>
-        <div class="s-name">Computer Science</div>
-        <div class="s-level">GCSE · A-Level</div>
-      </div>
-      <div class="subject-pill sp-econ" onclick="nav('auth')">
-        <div class="s-icon-wrap"><i class="fas fa-chart-bar"></i></div>
-        <div class="s-name">Economics</div>
-        <div class="s-level">A-Level</div>
-      </div>
-      <div class="subject-pill sp-lang" onclick="nav('auth')">
-        <div class="s-icon-wrap"><i class="fas fa-language"></i></div>
-        <div class="s-name">Modern Languages</div>
-        <div class="s-level">GCSE · A-Level</div>
-      </div>
-      <div class="subject-pill sp-geo" onclick="nav('auth')">
-        <div class="s-icon-wrap"><i class="fas fa-earth-europe"></i></div>
-        <div class="s-name">Geography</div>
-        <div class="s-level">GCSE · A-Level</div>
-      </div>
-      <div class="subject-pill sp-art" onclick="nav('auth')">
-        <div class="s-icon-wrap"><i class="fas fa-palette"></i></div>
-        <div class="s-name">Art & Design</div>
-        <div class="s-level">GCSE</div>
-      </div>
-      <div class="subject-pill sp-fmath" onclick="nav('auth')">
-        <div class="s-icon-wrap"><i class="fas fa-calculator"></i></div>
-        <div class="s-name">Further Maths</div>
-        <div class="s-level">A-Level</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Testimonials -->
-  <section class="testimonials-section" id="testimonials">
-    <div class="section-label" style="display:block;text-align:center;margin-bottom:1rem">Real Results</div>
-    <h2>Students are loving it.</h2>
-    <p class="sub">Don't take our word for it — here's what real students, parents and teachers are saying.</p>
-    <div class="testimonials-grid">
-      <div class="testimonial-card reveal">
-        <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-text">I went from a predicted C to an A* in Chemistry in just 8 weeks. The AI explains things in a way that actually makes sense — better than any textbook I've used.</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">A</div>
-          <div>
-            <div class="testimonial-name">Amara K.</div>
-            <div class="testimonial-role">A-Level Student · AQA Chemistry</div>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial-card reveal reveal-delay-1">
-        <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-text">As a parent, I was spending £60/hour on private tutors. Lumina AI gives my son the same quality guidance 24/7 — and his confidence has gone through the roof.</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">S</div>
-          <div>
-            <div class="testimonial-name">Sarah M.</div>
-            <div class="testimonial-role">Parent of GCSE Student</div>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial-card reveal reveal-delay-2">
-        <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-text">The ADHD mode is genuinely life-changing. It breaks everything into small steps with no clutter. My son actually WANTS to revise now. I can't believe the difference.</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">R</div>
-          <div>
-            <div class="testimonial-name">Rachel T.</div>
-            <div class="testimonial-role">Parent · Homeschool Family</div>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial-card reveal reveal-delay-3">
-        <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-text">I set assignments in 2 minutes and get back auto-graded work with AI feedback. It's saved me hours every week and my class results have measurably improved.</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">J</div>
-          <div>
-            <div class="testimonial-name">James H.</div>
-            <div class="testimonial-role">Maths Teacher · Secondary School</div>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial-card reveal">
-        <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-text">I failed my mock completely. Three months with Lumina AI and I got a 7 in my actual GCSE Maths. The question generator and instant feedback made all the difference.</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">L</div>
-          <div>
-            <div class="testimonial-name">Liam D.</div>
-            <div class="testimonial-role">GCSE Student · Edexcel Maths</div>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial-card reveal">
-        <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-text">Dyslexia made reading long explanations a nightmare. The Lexend font mode and clear layout means I can actually process what I'm learning. My English grade jumped two grades.</p>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">P</div>
-          <div>
-            <div class="testimonial-name">Priya N.</div>
-            <div class="testimonial-role">A-Level Student · English Literature</div>
-          </div>
-        </div>
+      <div>
+        <div class="step-num">3</div>
+        <h3 style="font-family:var(--font-head);font-weight:700;margin-bottom:.5rem">Improve</h3>
+        <p style="color:var(--muted);font-size:.875rem">Track your progress and watch your grades climb</p>
       </div>
     </div>
   </section>
 
   <!-- Pricing -->
   <section class="pricing-section" id="pricing">
-    <div class="section-label" style="display:block;text-align:center;margin-bottom:1rem">Pricing</div>
-    <h2>Less than one private tutor session.</h2>
-    <p class="pricing-sub">A private tutor costs £40–80 per hour. Lumina AI is available 24/7 for a fraction of that. No contracts. Cancel any time.</p>
+    <div class="section-label">Pricing</div>
+    <h2>Invest in Better Grades</h2>
+    <p class="pricing-sub">Less than the cost of a private tutor. Cancel anytime.</p>
     <div class="pricing-grid">
-      <div class="price-card reveal">
-        <div class="price-name"><i class="fas fa-user" style="margin-right:.4rem"></i>Student</div>
+      <div class="price-card">
+        <div class="price-name">Free Trial</div>
+        <div class="price-amount">£0<span>/7 days</span></div>
+        <ul class="price-features">
+          <li><i class="fas fa-check"></i>5 AI Tutor questions per day</li>
+          <li><i class="fas fa-check"></i>Basic practice questions</li>
+          <li><i class="fas fa-check"></i>Progress tracking</li>
+          <li><i class="fas fa-check"></i>1 subject</li>
+          <li><i class="fas fa-check"></i>No credit card required</li>
+        </ul>
+        <button class="btn-gold" style="width:100%" onclick="nav('auth')">Try Free for 7 Days</button>
+      </div>
+      <div class="price-card featured">
+        <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--black);font-size:.7rem;font-weight:800;padding:.3rem 1rem;border-radius:20px;text-transform:uppercase;letter-spacing:.05em">Most Popular</div>
+        <div class="price-name">Student Plan</div>
         <div class="price-amount">£60<span>/month</span></div>
-        <div class="price-desc">One student, unlimited AI tutoring. Perfect for GCSE & A-Level exam prep.</div>
         <ul class="price-features">
-          <li><i class="fas fa-check"></i>Full AI Tutor — unlimited questions</li>
-          <li><i class="fas fa-check"></i>Exam question generator with mark schemes</li>
-          <li><i class="fas fa-check"></i>Strengths & weaknesses analyser</li>
-          <li><i class="fas fa-check"></i>Progress tracking & grade predictor</li>
-          <li><i class="fas fa-check"></i>All accessibility modes</li>
-          <li><i class="fas fa-check"></i>All 12 subjects + all exam boards</li>
+          <li><i class="fas fa-check"></i>Unlimited AI Tutor access</li>
+          <li><i class="fas fa-check"></i>Unlimited exam questions</li>
+          <li><i class="fas fa-check"></i>Essay marking & photo solver</li>
+          <li><i class="fas fa-check"></i>All subjects & exam boards</li>
+          <li><i class="fas fa-check"></i>Flashcards & revision timetable</li>
+          <li><i class="fas fa-check"></i>Full progress analytics</li>
+          <li><i class="fas fa-check"></i>ADHD, Dyslexia & Dyscalculia modes</li>
         </ul>
-        <button class="btn-full" onclick="nav('auth')" style="width:100%;padding:1rem;background:var(--bg4);border:1px solid var(--border);border-radius:10px;color:var(--white);font-weight:700;cursor:pointer;font-size:.95rem;transition:all .2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--white)'">Get Started Free →</button>
+        <button class="btn-gold" style="width:100%" onclick="nav('auth')">Start 7-Day Free Trial</button>
+        <p style="text-align:center;font-size:.75rem;color:var(--muted);margin-top:.5rem">Then £60/mo. Cancel anytime.</p>
       </div>
-      <div class="price-card featured reveal reveal-delay-1">
-        <div class="price-name"><i class="fas fa-home" style="margin-right:.4rem"></i>Homeschool</div>
+      <div class="price-card">
+        <div class="price-name">Homeschool Plan</div>
         <div class="price-amount">£200<span>/month</span></div>
-        <div class="price-desc">Full AI curriculum for homeschool families. Includes teacher tools and parent oversight.</div>
         <ul class="price-features">
-          <li><i class="fas fa-check"></i>Everything in Student Plan</li>
-          <li><i class="fas fa-check"></i>Up to 3 student profiles</li>
-          <li><i class="fas fa-check"></i>Full curriculum planner</li>
-          <li><i class="fas fa-check"></i>Teacher assignment & grading tools</li>
-          <li><i class="fas fa-check"></i>Parent progress dashboard</li>
+          <li><i class="fas fa-check"></i>Everything in Student</li>
+          <li><i class="fas fa-check"></i>Up to 5 student profiles</li>
+          <li><i class="fas fa-check"></i>Full curriculum mapping</li>
+          <li><i class="fas fa-check"></i>Parent dashboard & reports</li>
+          <li><i class="fas fa-check"></i>Teacher assignment tools</li>
           <li><i class="fas fa-check"></i>Priority email support</li>
+          <li><i class="fas fa-check"></i>Weekly progress emails</li>
         </ul>
-        <button class="btn-full" onclick="nav('auth')" style="width:100%;padding:1rem;background:var(--gold);border:none;border-radius:10px;color:var(--black);font-weight:700;cursor:pointer;font-size:.95rem;transition:all .2s;" onmouseover="this.style.background='var(--gold-light)';this.style.transform='translateY(-1px)'" onmouseout="this.style.background='var(--gold)';this.style.transform='none'">Start Free Trial →</button>
+        <button class="btn-gold" style="width:100%" onclick="nav('auth')">Start Free Trial</button>
+        <p style="text-align:center;font-size:.75rem;color:var(--muted);margin-top:.5rem">14-day money-back guarantee</p>
       </div>
-      <div class="price-card reveal reveal-delay-2">
-        <div class="price-name"><i class="fas fa-school" style="margin-right:.4rem"></i>School</div>
-        <div class="price-amount" style="font-size:2rem">Custom</div>
-        <div class="price-desc" style="margin-bottom:1rem">Whole-school or department licence. Includes teacher dashboard, class analytics, and onboarding.</div>
-        <ul class="price-features">
-          <li><i class="fas fa-check"></i>Unlimited students & teachers</li>
-          <li><i class="fas fa-check"></i>School-wide analytics dashboard</li>
-          <li><i class="fas fa-check"></i>LMS & MIS integration</li>
-          <li><i class="fas fa-check"></i>Dedicated account manager</li>
-          <li><i class="fas fa-check"></i>Staff CPD training session</li>
-          <li><i class="fas fa-check"></i>SLA & data processing agreement</li>
-        </ul>
-        <button class="btn-full" onclick="window.location='mailto:hello@lumina-ai.co.uk?subject=School Licence Enquiry'" style="width:100%;padding:1rem;background:var(--bg4);border:1px solid var(--border);border-radius:10px;color:var(--white);font-weight:700;cursor:pointer;font-size:.95rem;transition:all .2s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--white)'">Contact Us →</button>
+    </div>
+    <p style="text-align:center;color:var(--muted);font-size:.85rem;margin-top:2rem"><i class="fas fa-shield-halved" style="color:var(--gold);margin-right:.5rem"></i>Secure payments via Stripe. 14-day money-back guarantee on all paid plans.</p>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="features-section" style="text-align:center">
+    <div class="section-label">Reviews</div>
+    <h2>Students Love Synaptiq</h2>
+    <p class="sub">Rated 4.9/5 by over 10,000 students across the UK</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;text-align:left">
+      <div class="card" style="padding:1.5rem">
+        <div style="color:#FBBF24;margin-bottom:.75rem;font-size:.85rem"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p style="font-style:italic;color:var(--muted);font-size:.9rem;margin-bottom:1rem;line-height:1.7">"Synaptiq literally saved my GCSEs. I went from a 4 in Maths to a 7 in three months. The practice questions are amazing."</p>
+        <div style="font-weight:700;font-size:.85rem">Sophie T.</div>
+        <div style="color:var(--muted);font-size:.75rem">Year 11 GCSE, Manchester — Grade 4 to Grade 7</div>
+      </div>
+      <div class="card" style="padding:1.5rem">
+        <div style="color:#FBBF24;margin-bottom:.75rem;font-size:.85rem"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p style="font-style:italic;color:var(--muted);font-size:.9rem;margin-bottom:1rem;line-height:1.7">"The AI tutor explains things way better than my textbook. It knows the UK curriculum and uses proper exam terminology. Genuinely incredible."</p>
+        <div style="font-weight:700;font-size:.85rem">James K.</div>
+        <div style="color:var(--muted);font-size:.75rem">Year 13 A-Level, London — Predicted A*</div>
+      </div>
+      <div class="card" style="padding:1.5rem">
+        <div style="color:#FBBF24;margin-bottom:.75rem;font-size:.85rem"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p style="font-style:italic;color:var(--muted);font-size:.9rem;margin-bottom:1rem;line-height:1.7">"As someone with ADHD, the focus mode and shorter sessions have been a game-changer. I can actually concentrate and my grades show it."</p>
+        <div style="font-weight:700;font-size:.85rem">Amira R.</div>
+        <div style="color:var(--muted);font-size:.75rem">Year 10, Birmingham — ADHD Mode user</div>
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="cta-section">
-    <div class="section-label" style="display:inline-block;margin-bottom:1.5rem">Limited Time — Free Trial</div>
-    <h2>Your best grades<br><em style="color:var(--gold);font-style:normal">start today.</em></h2>
-    <p>Join thousands of UK students and families who are already getting better results with Lumina AI. No credit card. No commitment. Cancel any time.</p>
-    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem">
-      <button class="btn-hero-primary" onclick="nav('auth')">Start Free Today →</button>
-      <button class="btn-hero-secondary" onclick="window.location='mailto:hello@lumina-ai.co.uk?subject=School Enquiry'"><i class="fas fa-school"></i> School Enquiry</button>
-    </div>
-    <div style="display:flex;gap:2rem;justify-content:center;flex-wrap:wrap">
-      <span style="color:var(--muted);font-size:.8rem;display:flex;align-items:center;gap:.4rem"><i class="fas fa-lock" style="color:var(--gold)"></i> GDPR Compliant</span>
-      <span style="color:var(--muted);font-size:.8rem;display:flex;align-items:center;gap:.4rem"><i class="fas fa-shield-alt" style="color:var(--gold)"></i> Safe for Under-18s</span>
-      <span style="color:var(--muted);font-size:.8rem;display:flex;align-items:center;gap:.4rem"><i class="fas fa-times-circle" style="color:var(--gold)"></i> No Credit Card</span>
+  <!-- CTA Section -->
+  <section style="position:relative;z-index:1;padding:5rem 2rem;text-align:center">
+    <div style="max-width:700px;margin:0 auto;background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(201,168,76,0.02));border:1px solid var(--gold);border-radius:24px;padding:3rem 2rem">
+      <h2 style="font-family:var(--font-head);font-size:clamp(1.5rem,3vw,2.2rem);margin-bottom:1rem">Ready to Improve Your Grades?</h2>
+      <p style="color:var(--muted);margin-bottom:2rem;line-height:1.7">Join 10,000+ UK students using Synaptiq to study smarter. Start your free trial today — no credit card required.</p>
+      <button class="btn-hero-primary" onclick="nav('auth')" style="font-size:1.1rem;padding:1.1rem 3rem">Start Learning Free <i class="fas fa-arrow-right" style="margin-left:.5rem"></i></button>
+      <p style="color:var(--muted);font-size:.8rem;margin-top:1rem">7-day free trial. No obligation.</p>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer style="background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2rem 2rem;">
-    <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2.5rem;margin-bottom:2.5rem">
+  <footer style="background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2rem 2rem;position:relative;z-index:1">
+    <div style="max-width:1000px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem">
       <div>
-        <div class="nav-logo" style="margin-bottom:.75rem;font-size:1.4rem">Lumina <span style="color:var(--gold)">AI</span></div>
-        <p style="color:var(--muted);font-size:.85rem;line-height:1.7;max-width:240px">The UK's most intelligent AI revision platform for GCSE & A-Level students.</p>
+        <div style="font-family:var(--font-head);font-size:1.3rem;font-weight:800;margin-bottom:.75rem">Synapti<span style="color:var(--gold)">q</span></div>
+        <p style="color:var(--muted);font-size:.85rem;line-height:1.7;max-width:280px">AI-powered learning built for UK students. GCSE & A-Level support across all major exam boards.</p>
+        <p style="color:var(--muted);font-size:.75rem;margin-top:1rem"><i class="fas fa-map-marker-alt" style="color:var(--gold);margin-right:.5rem"></i>Made in the UK</p>
       </div>
       <div>
-        <div style="font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:1rem">Platform</div>
-        <div style="display:flex;flex-direction:column;gap:.6rem">
-          <a onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})" style="color:var(--muted);font-size:.875rem;cursor:pointer;text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Features</a>
-          <a onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})" style="color:var(--muted);font-size:.875rem;cursor:pointer;text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Pricing</a>
-          <a onclick="nav('auth')" style="color:var(--muted);font-size:.875rem;cursor:pointer;text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Sign Up Free</a>
+        <div style="font-weight:700;font-size:.85rem;margin-bottom:.75rem;color:var(--white)">Product</div>
+        <div style="display:flex;flex-direction:column;gap:.5rem;font-size:.85rem">
+          <a onclick="scrollTo('#features')" style="color:var(--muted);text-decoration:none;cursor:pointer">Features</a>
+          <a onclick="scrollTo('#pricing')" style="color:var(--muted);text-decoration:none;cursor:pointer">Pricing</a>
+          <a href="/contact" style="color:var(--muted);text-decoration:none">Support</a>
         </div>
       </div>
       <div>
-        <div style="font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:1rem">Subjects</div>
-        <div style="display:flex;flex-direction:column;gap:.6rem">
-          <span style="color:var(--muted);font-size:.875rem">Mathematics & Further Maths</span>
-          <span style="color:var(--muted);font-size:.875rem">Sciences (Physics, Chem, Bio)</span>
-          <span style="color:var(--muted);font-size:.875rem">English Literature</span>
-          <span style="color:var(--muted);font-size:.875rem">History, Geography & more</span>
+        <div style="font-weight:700;font-size:.85rem;margin-bottom:.75rem;color:var(--white)">Legal</div>
+        <div style="display:flex;flex-direction:column;gap:.5rem;font-size:.85rem">
+          <a href="/privacy" style="color:var(--muted);text-decoration:none">Privacy Policy</a>
+          <a href="/terms" style="color:var(--muted);text-decoration:none">Terms & Conditions</a>
+          <a href="/cookies" style="color:var(--muted);text-decoration:none">Cookie Policy</a>
         </div>
       </div>
       <div>
-        <div style="font-weight:700;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:1rem">Legal & Support</div>
-        <div style="display:flex;flex-direction:column;gap:.6rem">
-          <a onclick="nav('privacy')" style="color:var(--muted);font-size:.875rem;cursor:pointer;text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Privacy Policy</a>
-          <a style="color:var(--muted);font-size:.875rem;cursor:pointer;text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Terms of Service</a>
-          <a onclick="window.location='mailto:hello@lumina-ai.co.uk'" style="color:var(--muted);font-size:.875rem;cursor:pointer;text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--white)'" onmouseout="this.style.color='var(--muted)'">Contact Us</a>
+        <div style="font-weight:700;font-size:.85rem;margin-bottom:.75rem;color:var(--white)">Subjects</div>
+        <div style="display:flex;flex-direction:column;gap:.5rem;font-size:.85rem">
+          <span style="color:var(--muted)">Maths, Physics, Chemistry</span>
+          <span style="color:var(--muted)">Biology, English, History</span>
+          <span style="color:var(--muted)">Computer Science & more</span>
         </div>
       </div>
     </div>
-    <div style="border-top:1px solid var(--border);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;max-width:1100px;margin:0 auto">
-      <p style="color:var(--muted);font-size:.75rem">© 2025 Lumina AI. All rights reserved. Built in the UK 🇬🇧</p>
-      <div style="display:flex;gap:1rem;align-items:center">
-        <span style="color:var(--muted);font-size:.75rem;display:flex;align-items:center;gap:.3rem"><i class="fas fa-shield-alt" style="color:var(--gold)"></i> GDPR Compliant</span>
-        <span style="color:var(--muted);font-size:.75rem;display:flex;align-items:center;gap:.3rem"><i class="fas fa-lock" style="color:var(--gold)"></i> SSL Secured</span>
+    <div style="border-top:1px solid var(--border);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;max-width:1000px;margin:0 auto">
+      <p style="color:var(--muted);font-size:.75rem">&copy; 2026 Synaptiq Ltd. All rights reserved.</p>
+      <div style="display:flex;gap:.5rem;align-items:center">
+        <span style="color:var(--muted);font-size:.75rem">AQA</span>
+        <span style="color:var(--border);font-size:.75rem">|</span>
+        <span style="color:var(--muted);font-size:.75rem">Edexcel</span>
+        <span style="color:var(--border);font-size:.75rem">|</span>
+        <span style="color:var(--muted);font-size:.75rem">OCR</span>
+        <span style="color:var(--border);font-size:.75rem">|</span>
+        <span style="color:var(--muted);font-size:.75rem">WJEC</span>
       </div>
     </div>
   </footer>
@@ -2961,7 +2797,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 <!-- ═══════════════════════ AUTH PAGE ═══════════════════════ -->
 <div id="page-auth" class="page">
   <div class="auth-box">
-    <div class="auth-logo">Lumina <span>AI</span></div>
+    <div class="auth-logo">Synapti<span>q</span></div>
     <p class="auth-sub">Join thousands of UK students achieving better grades</p>
 
     <!-- Signup flow -->
@@ -3013,12 +2849,20 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
           </select>
         </div>
         <div class="form-group">
-          <label>Primary Subject</label>
-          <select id="reg-subject">
-            <option>Mathematics</option><option>Physics</option><option>Chemistry</option>
-            <option>Biology</option><option>English Literature</option><option>History</option>
-            <option>Computer Science</option><option>Economics</option><option>French</option>
-          </select>
+          <label>Subjects (click to select multiple)</label>
+          <div class="subjects-grid" id="reg-subjects-grid" style="display:flex;flex-wrap:wrap;gap:.5rem">
+            <div class="subject-chip" onclick="this.classList.toggle('selected')">Maths</div>
+            <div class="subject-chip" onclick="this.classList.toggle('selected')">English</div>
+            <div class="subject-chip" onclick="this.classList.toggle('selected')">Physics</div>
+            <div class="subject-chip" onclick="this.classList.toggle('selected')">Chemistry</div>
+            <div class="subject-chip" onclick="this.classList.toggle('selected')">Biology</div>
+            <div class="subject-chip" onclick="this.classList.toggle('selected')">History</div>
+            <div class="subject-chip" onclick="this.classList.toggle('selected')">Geography</div>
+            <div class="subject-chip" onclick="this.classList.toggle('selected')">Computer Science</div>
+            <div class="subject-chip" onclick="this.classList.toggle('selected')">Economics</div>
+            <div class="subject-chip" onclick="this.classList.toggle('selected')">French</div>
+            <div class="subject-chip" onclick="this.classList.toggle('selected')">Spanish</div>
+          </div>
         </div>
         <div class="form-group">
           <label>Exam Board</label>
@@ -3033,7 +2877,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <!-- Step 3: Learning needs -->
       <div class="auth-step" id="step3">
         <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:.5rem">How do you learn best?</h3>
-        <p style="color:var(--muted);font-size:.8rem;margin-bottom:1.5rem">Select any that apply — Lumina will adapt to you automatically</p>
+        <p style="color:var(--muted);font-size:.8rem;margin-bottom:1.5rem">Select any that apply — Synaptiq will adapt to you automatically</p>
         <div class="difficulty-grid">
           <div class="diff-card" id="diff-adhd" onclick="toggleDiff('adhd')">
             <div class="diff-icon">⚡</div>
@@ -3066,6 +2910,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
             <div class="diff-desc">Standard experience</div>
           </div>
         </div>
+        <div id="ld-message" style="display:none;background:var(--bg3);border:1px solid var(--gold);border-radius:10px;padding:.75rem 1rem;font-size:.85rem;color:var(--gold);margin-top:1rem"></div>
         <button class="btn-full" style="margin-top:1.5rem" onclick="nextStep(3)">Continue →</button>
         <button class="btn-back" onclick="prevStep(2)">← Back</button>
       </div>
@@ -3095,7 +2940,8 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@email.com"></div>
       <div class="form-group"><label>Password</label><input type="password" id="login-pass" placeholder="Your password"></div>
       <button class="btn-full" onclick="loginUser()">Log In →</button>
-      <p style="text-align:center;margin-top:1rem;font-size:.8rem;color:var(--muted)">Don't have an account? <a onclick="showSignup()" style="color:var(--gold);cursor:pointer">Sign up free</a></p>
+      <p style="text-align:center;margin-top:.75rem;font-size:.8rem"><a onclick="resetPassword()" style="color:var(--gold);cursor:pointer">Forgot your password?</a></p>
+      <p style="text-align:center;margin-top:.5rem;font-size:.8rem;color:var(--muted)">Don't have an account? <a onclick="showSignup()" style="color:var(--gold);cursor:pointer">Sign up free</a></p>
     </div>
   </div>
 </div>
@@ -3114,52 +2960,41 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     <div class="sidebar-xp">
       <div class="xp-header">
         <span class="xp-level" id="xp-level-text">Level 1</span>
-        <span style="color:var(--muted);font-size:.75rem" id="xp-progress-text">0 / 200 XP</span>
+        <span style="color:var(--muted);font-size:.75rem" id="xp-progress-text">0 / 500 XP</span>
       </div>
       <div class="xp-bar"><div class="xp-fill" id="xp-fill" style="width:0%"></div></div>
     </div>
     <div class="sidebar-nav">
-      <div class="sidebar-section-label">Learning</div>
       <div class="sidebar-item active" id="si-home" onclick="showDash('home')"><i class="fas fa-house"></i>Dashboard</div>
+      <div class="sidebar-section-label">LEARN</div>
       <div class="sidebar-item" id="si-tutor" onclick="showDash('tutor')"><i class="fas fa-robot"></i>AI Tutor</div>
-      <div class="sidebar-item" id="si-questions" onclick="showDash('questions')"><i class="fas fa-file-lines"></i>Question Papers</div>
-      <div class="sidebar-item" id="si-repetition" onclick="showDash('repetition')"><i class="fas fa-brain"></i>Spaced Repetition</div>
-      <div class="sidebar-item" id="si-curriculum" onclick="showDash('curriculum')"><i class="fas fa-graduation-cap"></i>Curriculum</div>
-      <div class="sidebar-item" id="si-lessons" onclick="window.location.href='/lessons.html'"><i class="fas fa-chalkboard-teacher"></i>AI Lessons</div>
-      <div class="sidebar-section-label">Progress</div>
-      <div class="sidebar-item" id="si-progress" onclick="showDash('progress')"><i class="fas fa-chart-line"></i>Progress</div>
-      <div class="sidebar-item" id="si-strengths" onclick="showDash('strengths')"><i class="fas fa-bullseye"></i>Strengths</div>
-      <div class="sidebar-section-label">School</div>
-      <div class="sidebar-section-label">REFERENCE</div>
+      <div class="sidebar-item" id="si-questions" onclick="showDash('questions')"><i class="fas fa-file-lines"></i>Practice Questions</div>
+      <div class="sidebar-item" id="si-essay" onclick="showDash('essay')"><i class="fas fa-pen-nib"></i>Essay Marker</div>
+      <div class="sidebar-item" id="si-photo" onclick="showDash('photo')"><i class="fas fa-camera"></i>Photo Question</div>
+      <div class="sidebar-item" id="si-video" onclick="showDash('video')"><i class="fas fa-film"></i>Video Explainer</div>
+      <div class="sidebar-section-label">REVISION</div>
+      <div class="sidebar-item" id="si-flashcards" onclick="showDash('flashcards')"><i class="fas fa-clone"></i>Flashcards</div>
+      <div class="sidebar-item" id="si-exams" onclick="showDash('exams')"><i class="fas fa-calendar"></i>Exam Countdown</div>
+      <div class="sidebar-item" id="si-timetable" onclick="showDash('timetable')"><i class="fas fa-table"></i>Revision Timetable</div>
+      <div class="sidebar-item" id="si-papers" onclick="showDash('papers')"><i class="fas fa-file-alt"></i>Past Papers</div>
+      <div class="sidebar-item" id="si-glossary" onclick="showDash('glossary')"><i class="fas fa-book-open"></i>Glossary</div>
+      <div class="sidebar-section-label">TOOLS</div>
       <div class="sidebar-item" id="si-calculator" onclick="showDash('calculator')"><i class="fas fa-calculator"></i>Calculator</div>
       <div class="sidebar-item" id="si-periodic" onclick="showDash('periodic')"><i class="fas fa-atom"></i>Periodic Table</div>
       <div class="sidebar-item" id="si-formulas" onclick="showDash('formulas')"><i class="fas fa-square-root-alt"></i>Formula Sheets</div>
-      <div class="sidebar-item" id="si-bookmarks" onclick="showDash('bookmarks')"><i class="fas fa-bookmark"></i>Bookmarks</div>
-      <div class="sidebar-item" id="si-goals" onclick="showDash('goals')"><i class="fas fa-bullseye"></i>Daily Goals</div>
-      <div class="sidebar-item" id="si-a11y" onclick="showDash('a11y')"><i class="fas fa-universal-access"></i>Accessibility</div>
-      <div class="sidebar-section-label">TOOLS</div>
-      <div class="sidebar-item" id="si-photo" onclick="showDash('photo')"><i class="fas fa-camera"></i>Photo Question</div>
       <div class="sidebar-item" id="si-mindmap" onclick="showDash('mindmap')"><i class="fas fa-project-diagram"></i>Mind Map</div>
       <div class="sidebar-item" id="si-grade" onclick="showDash('grade')"><i class="fas fa-chart-bar"></i>Grade Predictor</div>
-      <div class="sidebar-item" id="si-compare" onclick="showDash('compare')"><i class="fas fa-balance-scale"></i>Compare</div>
-      <div class="sidebar-item" id="si-examples" onclick="showDash('examples')"><i class="fas fa-graduation-cap"></i>Worked Examples</div>
-      <div class="sidebar-item" id="si-simplify" onclick="showDash('simplify')"><i class="fas fa-text-height"></i>Simplify</div>
-      <div class="sidebar-item" id="si-mnemonics" onclick="showDash('mnemonics')"><i class="fas fa-brain"></i>Mnemonics</div>
-      <div class="sidebar-item" id="si-mistakes" onclick="showDash('mistakes')"><i class="fas fa-exclamation-triangle"></i>Mistakes</div>
+      <div class="sidebar-section-label">TRACK</div>
+      <div class="sidebar-item" id="si-progress" onclick="showDash('progress')"><i class="fas fa-chart-line"></i>Progress</div>
+      <div class="sidebar-item" id="si-goals" onclick="showDash('goals')"><i class="fas fa-bullseye"></i>Daily Goals</div>
+      <div class="sidebar-item" id="si-notes" onclick="showDash('notes')"><i class="fas fa-book"></i>My Notes</div>
+      <div class="sidebar-item" id="si-bookmarks" onclick="showDash('bookmarks')"><i class="fas fa-bookmark"></i>Bookmarks</div>
+      <div class="sidebar-item" id="si-mistakes" onclick="showDash('mistakes')"><i class="fas fa-exclamation-triangle"></i>Mistakes Tracker</div>
+      <div class="sidebar-section-label">WELLBEING</div>
       <div class="sidebar-item" id="si-mood" onclick="showDash('mood')"><i class="fas fa-smile"></i>Mood Check-in</div>
       <div class="sidebar-item" id="si-music" onclick="showDash('music')"><i class="fas fa-music"></i>Study Music</div>
-      <div class="sidebar-section-label">SCHOOL</div>
-      <div class="sidebar-item" id="si-essay" onclick="showDash('essay')"><i class="fas fa-pen-nib"></i>Essay Marker</div>
-      <div class="sidebar-item" id="si-exams" onclick="showDash('exams')"><i class="fas fa-calendar"></i>Exam Countdown</div>
-      <div class="sidebar-item" id="si-video" onclick="showDash('video')"><i class="fas fa-film"></i>Video Explainer</div>
-      <div class="sidebar-item" id="si-papers" onclick="showDash('papers')"><i class="fas fa-file-alt"></i>Past Papers</div>
-      <div class="sidebar-item" id="si-glossary" onclick="showDash('glossary')"><i class="fas fa-book-open"></i>Glossary</div>
-      <div class="sidebar-item" id="si-history" onclick="showDash('history')"><i class="fas fa-clock"></i>Chat History</div>
-      <div class="sidebar-item" id="si-leaderboard" onclick="showDash('leaderboard')"><i class="fas fa-trophy"></i>Leaderboard</div>
-      <div class="sidebar-item" id="si-notes" onclick="showDash('notes')"><i class="fas fa-book"></i>Notebook</div>
-      <div class="sidebar-item" id="si-assign" onclick="showDash('assignments')"><i class="fas fa-clipboard-list"></i>Assignments<span class="sidebar-badge">2</span></div>
-      <div class="sidebar-section-label">Account</div>
       <div class="sidebar-item" id="si-settings" onclick="showDash('settings')"><i class="fas fa-gear"></i>Settings</div>
+      <div class="sidebar-item" id="si-a11y" onclick="showDash('a11y')"><i class="fas fa-universal-access"></i>Accessibility</div>
     </div>
   </div>
 
@@ -3171,10 +3006,10 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <div class="page-title" id="dash-greeting">Good morning! 👋</div>
       <p class="page-subtitle">Here's your learning overview</p>
       <div class="stats-row">
-        <div class="stat-card"><div class="stat-card-label">Questions Answered</div><div class="stat-card-value" id="stat-q">0</div><div class="stat-card-change" id="stat-q-change">Start learning!</div></div>
-        <div class="stat-card"><div class="stat-card-label">Accuracy Rate</div><div class="stat-card-value" id="stat-acc">—</div><div class="stat-card-change" id="stat-acc-change">No data yet</div></div>
-        <div class="stat-card"><div class="stat-card-label">Study Streak</div><div class="stat-card-value" id="stat-streak">0 🔥</div><div class="stat-card-change">days in a row</div></div>
-        <div class="stat-card"><div class="stat-card-label">Topics Mastered</div><div class="stat-card-value" id="stat-topics">0</div><div class="stat-card-change">of 60 total</div></div>
+        <div class="stat-card"><div class="stat-card-label">Questions Answered</div><div class="stat-card-value" id="stat-q">0</div><div class="stat-card-change" id="stat-q-sub">Start practising!</div></div>
+        <div class="stat-card"><div class="stat-card-label">Accuracy Rate</div><div class="stat-card-value" id="stat-acc">—</div><div class="stat-card-change" id="stat-acc-sub">Answer questions to track</div></div>
+        <div class="stat-card"><div class="stat-card-label">Study Streak</div><div class="stat-card-value" id="stat-streak">0</div><div class="stat-card-change">days in a row</div></div>
+        <div class="stat-card"><div class="stat-card-label">XP Level</div><div class="stat-card-value" id="stat-level">1</div><div class="stat-card-change" id="stat-xp-sub">0 XP earned</div></div>
       </div>
       <div class="dash-grid">
         <div>
@@ -3347,10 +3182,16 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
               <select id="q-grade"><option>Grade 4-5</option><option>Grade 6-7</option><option selected>Grade 7-8</option><option>Grade 8-9</option></select>
             </div>
           </div>
-          <div class="form-group"><label>Specific Topics (optional)</label>
-            <input type="text" id="q-topics" placeholder="e.g. Quadratics, Pythagoras, Trigonometry">
+          <div class="form-row">
+            <div class="form-group"><label>Specific Topics (optional)</label>
+              <input type="text" id="q-topics" placeholder="e.g. Quadratics, Pythagoras, Trigonometry">
+            </div>
+            <div class="form-group"><label>Cognitive Level</label>
+              <select id="q-bloom"><option selected>Mixed</option><option>Remember & Understand</option><option>Apply & Analyse</option><option>Evaluate & Create</option></select>
+            </div>
           </div>
-          <button class="btn btn-gold" style="width:100%;padding:1rem;font-size:1rem" onclick="generateQuestions()">✦ Generate with Lumina AI</button>
+          <div id="adaptive-suggestion" style="display:none;background:rgba(196,168,76,0.1);border:1px solid var(--gold);border-radius:10px;padding:.75rem 1rem;font-size:.85rem;color:var(--gold);margin-bottom:1rem"></div>
+          <button class="btn btn-gold" style="width:100%;padding:1rem;font-size:1rem" onclick="generateQuestions()">✦ Generate with Synaptiq</button>
         </div>
         <div class="gen-output" id="q-output">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
@@ -3439,10 +3280,10 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <div class="page-title">📊 Your Progress</div>
       <p class="page-subtitle">Track your improvement over time</p>
       <div class="stats-row">
-        <div class="stat-card"><div class="stat-card-label">Total Questions</div><div class="stat-card-value" id="prog-stat-q">0</div><div class="stat-card-change">Complete questions to track</div></div>
-        <div class="stat-card"><div class="stat-card-label">Accuracy</div><div class="stat-card-value" id="prog-stat-acc">—</div><div class="stat-card-change">No data yet</div></div>
-        <div class="stat-card"><div class="stat-card-label">Study Streak</div><div class="stat-card-value" id="prog-stat-streak">0 🔥</div></div>
-        <div class="stat-card"><div class="stat-card-label">Topics Mastered</div><div class="stat-card-value" id="prog-stat-topics">0</div></div>
+        <div class="stat-card"><div class="stat-card-label">Total Questions</div><div class="stat-card-value" id="prog-stat-q">0</div></div>
+        <div class="stat-card"><div class="stat-card-label">Accuracy</div><div class="stat-card-value" id="prog-stat-acc">—</div></div>
+        <div class="stat-card"><div class="stat-card-label">Study Streak</div><div class="stat-card-value" id="prog-stat-streak">0</div></div>
+        <div class="stat-card"><div class="stat-card-label">XP Level</div><div class="stat-card-value" id="prog-stat-level">1</div></div>
       </div>
       <div class="dash-grid">
         <div>
@@ -3492,7 +3333,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <div class="page-title">🎯 Strengths & Weaknesses</div>
       <p class="page-subtitle">Know exactly what to focus on</p>
       <div style="margin-bottom:1.5rem">
-        <button class="btn btn-gold" onclick="analyseStrengths()">✦ Run AI Analysis with Lumina AI</button>
+        <button class="btn btn-gold" onclick="analyseStrengths()">✦ Run AI Analysis with Synaptiq</button>
       </div>
       <div class="strengths-grid">
         <div class="card">
@@ -3676,7 +3517,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         <!-- Revision timetable generator -->
         <div style="background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-top:2rem">
           <div style="font-weight:700;margin-bottom:.5rem">📆 Generate Revision Timetable</div>
-          <div style="font-size:.875rem;color:var(--muted);margin-bottom:1rem">Lumina AI builds a personalised weekly revision schedule based on your exams</div>
+          <div style="font-size:.875rem;color:var(--muted);margin-bottom:1rem">Synaptiq builds a personalised weekly revision schedule based on your exams</div>
           <div class="form-row" style="grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
             <div class="form-group">
               <label class="form-label">Study hours per day</label>
@@ -3736,7 +3577,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
           <div style="text-align:center;padding:3rem;color:var(--muted)">
             <div style="font-size:3rem;margin-bottom:1rem">📖</div>
             <div style="font-weight:700;margin-bottom:.5rem">Search for a term or select a subject</div>
-            <div style="font-size:.875rem">Lumina AI will generate clear definitions with examples</div>
+            <div style="font-size:.875rem">Synaptiq will generate clear definitions with examples</div>
           </div>
         </div>
         <button class="btn-gold" onclick="lookupTerm()" style="margin-top:1rem" id="glossary-lookup-btn" style="display:none">✦ Look Up with AI</button>
@@ -3833,7 +3674,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     <!-- ═══ LEADERBOARD ═══ -->
     <div class="subpage" id="sp-leaderboard">
       <div class="page-title">🏆 Leaderboard</div>
-      <p class="page-subtitle">See how you rank against other Lumina learners this week</p>
+      <p class="page-subtitle">See how you rank against other Synaptiq learners this week</p>
       <div style="max-width:640px">
         <div style="display:flex;gap:.5rem;margin-bottom:1.5rem">
           <button class="note-tag-btn selected" onclick="switchLBTab('weekly',this)">This Week</button>
@@ -3849,7 +3690,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     <!-- ═══ PHOTO QUESTION ═══ -->
     <div class="subpage" id="sp-photo">
       <div class="page-title">📷 Photo a Question</div>
-      <p class="page-subtitle">Point your camera at any textbook, worksheet, or past paper — Lumina AI solves it instantly</p>
+      <p class="page-subtitle">Point your camera at any textbook, worksheet, or past paper — Synaptiq solves it instantly</p>
       <div style="max-width:700px">
         <div class="form-row" style="grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
           <div class="form-group">
@@ -3951,7 +3792,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         <div style="background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:1.5rem">
           <div style="font-weight:700;margin-bottom:1rem">📊 How this is calculated</div>
           <div style="font-size:.875rem;color:var(--muted);line-height:1.8">
-            Lumina AI analyses your accuracy across topics, how recently you practised, the difficulty of questions you've answered, and typical grade boundary data for your exam board. The more you practise, the more accurate the prediction.
+            Synaptiq analyses your accuracy across topics, how recently you practised, the difficulty of questions you've answered, and typical grade boundary data for your exam board. The more you practise, the more accurate the prediction.
           </div>
         </div>
         <button class="btn-gold" onclick="runGradePredictor()" style="margin-top:1.5rem;width:100%;padding:1rem">✦ Analyse My Performance</button>
@@ -3962,17 +3803,17 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     <!-- ═══ MOOD CHECK-IN ═══ -->
     <div class="subpage" id="sp-mood">
       <div class="page-title">😊 Mood Check-In</div>
-      <p class="page-subtitle">How you feel affects how you learn — let Lumina adapt your session</p>
+      <p class="page-subtitle">How you feel affects how you learn — let Synaptiq adapt your session</p>
       <div style="max-width:600px;text-align:center">
         <div style="font-size:1.1rem;font-weight:600;margin-bottom:.5rem">How are you feeling right now?</div>
-        <div style="color:var(--muted);font-size:.875rem;margin-bottom:1.5rem">Be honest — Lumina will adjust your study session accordingly</div>
+        <div style="color:var(--muted);font-size:.875rem;margin-bottom:1.5rem">Be honest — Synaptiq will adjust your study session accordingly</div>
         <div class="mood-grid" id="mood-grid">
           <button class="mood-btn" data-mood="great" data-score="5" onclick="selectMood(this)"><span style="font-size:2rem">😄</span><span>Great</span></button>
           <button class="mood-btn" data-mood="good" data-score="4" onclick="selectMood(this)"><span style="font-size:2rem">🙂</span><span>Good</span></button>
           <button class="mood-btn" data-mood="okay" data-score="3" onclick="selectMood(this)"><span style="font-size:2rem">😐</span><span>Okay</span></button>
           <button class="mood-btn" data-mood="tired" data-score="2" onclick="selectMood(this)"><span style="font-size:2rem">😴</span><span>Tired</span></button>
           <button class="mood-btn" data-mood="stressed" data-score="1" onclick="selectMood(this)"><span style="font-size:2rem">😰</span><span>Stressed</span></button>
-          <button class="mood-btn" data-mood="unmotivated" data-score="1" onclick="selectMood(this)"><span style="font-size:2rem">😑</span><span>Unmotivated</span></button>
+          <button class="mood-btn" data-mood="low" data-score="1" onclick="selectMood(this)"><span style="font-size:2rem">😢</span><span>Low</span></button>
         </div>
         <div id="mood-response" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-align:left;margin-top:1.5rem">
           <div id="mood-advice" style="line-height:1.8;font-size:.95rem"></div>
@@ -4294,7 +4135,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     <!-- ═══ ACCESSIBILITY SETTINGS ═══ -->
     <div class="subpage" id="sp-a11y">
       <div class="page-title">♿ Accessibility</div>
-      <p class="page-subtitle">Make Lumina work better for you — all settings save automatically</p>
+      <p class="page-subtitle">Make Synaptiq work better for you — all settings save automatically</p>
       <div style="max-width:600px">
         <button class="a11y-btn" id="a11y-dyslexia" onclick="toggleA11y('dyslexia')">
           <span class="a11y-icon">📖</span>
@@ -4380,7 +4221,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
           </div>
           <div class="form-group"><label>Instructions</label><textarea style="width:100%;padding:.875rem;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--white);font-family:var(--font-body);min-height:80px;resize:vertical" id="asgn-instructions" placeholder="What should students do?"></textarea></div>
           <div style="display:flex;gap:.75rem">
-            <button class="btn btn-gold" style="padding:.875rem 1.5rem" onclick="createAssignment()">✦ Generate with Lumina AI</button>
+            <button class="btn btn-gold" style="padding:.875rem 1.5rem" onclick="createAssignment()">✦ Generate with Synaptiq</button>
             <button class="btn btn-outline" style="padding:.875rem 1.5rem" onclick="saveAssignment()">💾 Save & Assign</button>
           </div>
         </div>
@@ -4453,7 +4294,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
           <button onclick="manageSubscription()" style="background:var(--gold);color:var(--black);border:none;border-radius:8px;padding:.5rem 1rem;font-weight:700;cursor:pointer">Manage</button>
         </div>
         <div class="setting-row">
-          <div class="setting-info"><h4>🎁 Refer a Friend</h4><p>Share Lumina and earn 1 month free when they subscribe</p></div>
+          <div class="setting-info"><h4>🎁 Refer a Friend</h4><p>Share Synaptiq and earn 1 month free when they subscribe</p></div>
           <button onclick="generateReferralLink()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.5rem 1rem;color:var(--white);cursor:pointer">Copy Link</button>
         </div>
       </div>
@@ -4474,6 +4315,57 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       </div>
     </div>
 
+    <!-- ── FLASHCARDS ── -->
+    <div class="subpage" id="sp-flashcards">
+      <h2 class="page-title">Flashcards</h2>
+      <p class="page-subtitle">Spaced repetition to help you remember</p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem">
+        <select class="input" id="fc-subject" style="max-width:200px">
+          <option value="">All Subjects</option>
+          <option>Maths</option><option>English</option><option>Physics</option>
+          <option>Chemistry</option><option>Biology</option><option>History</option>
+          <option>Geography</option><option>Computer Science</option><option>Economics</option>
+        </select>
+        <button class="btn-gold btn-sm" onclick="showFcCreate()"><i class="fas fa-plus"></i> New Card</button>
+      </div>
+      <div id="fc-create" style="display:none;margin-bottom:1.5rem" class="card">
+        <label>Front (Question)</label>
+        <input class="input" id="fc-front" placeholder="e.g. What is Pythagoras' theorem?">
+        <label>Back (Answer)</label>
+        <textarea class="input" id="fc-back" rows="3" placeholder="e.g. a² + b² = c²"></textarea>
+        <label>Subject</label>
+        <input class="input" id="fc-tag" placeholder="e.g. Maths">
+        <button class="btn-gold btn-sm" onclick="addFlashcard()" style="margin-top:0.5rem">Save Card</button>
+      </div>
+      <div id="fc-review-area" class="flashcard-area">
+        <div class="fc-progress" id="fc-progress-text">No cards due today</div>
+        <div class="flashcard" id="fc-card" onclick="document.getElementById('fc-card').classList.toggle('flipped')" style="display:none">
+          <div class="flashcard-inner">
+            <div class="flashcard-front" id="fc-front-display">Front</div>
+            <div class="flashcard-back" id="fc-back-display">Back</div>
+          </div>
+        </div>
+        <div class="flashcard-actions" id="fc-actions" style="display:none">
+          <button class="fc-wrong" onclick="fcAnswer(false)"><i class="fas fa-times"></i> Didn't Know</button>
+          <button class="fc-right" onclick="fcAnswer(true)"><i class="fas fa-check"></i> Got It</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── REVISION TIMETABLE ── -->
+    <div class="subpage" id="sp-timetable">
+      <h2 class="page-title">Revision Timetable</h2>
+      <p class="page-subtitle">AI-generated study plan based on your exams</p>
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem;align-items:flex-end">
+        <div>
+          <label>Available hours per day</label>
+          <input class="input" type="number" id="tt-hours" value="3" min="1" max="12" style="width:120px">
+        </div>
+        <button class="btn-gold btn-sm" onclick="generateTimetable()"><i class="fas fa-magic"></i> Generate Timetable</button>
+      </div>
+      <div id="tt-result"></div>
+    </div>
+
   </div><!-- end main-content -->
 </div><!-- end page-dashboard -->
 
@@ -4481,7 +4373,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 <div id="page-privacy" class="page">
   <div class="privacy-body">
     <h1>Privacy Policy</h1>
-    <p>Last updated: January 2025</p>
+    <p>Last updated: March 2026</p>
     <h2>1. Data We Collect</h2>
     <p>We collect your name, email, learning profile (including any learning difficulties you disclose), and learning activity data including questions answered, tutor conversations, and progress metrics.</p>
     <h2>2. How We Use Your Data</h2>
@@ -4489,7 +4381,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     <h2>3. AI Conversations</h2>
     <p>Your conversations with the AI tutor are processed via the Anthropic API. These conversations are used to provide responses and are not stored permanently beyond your active session.</p>
     <h2>4. Your Rights (GDPR)</h2>
-    <p>You have the right to: access your data, correct inaccurate data, delete your data, export your data, and withdraw consent at any time. Contact us at privacy@luminaai.co.uk.</p>
+    <p>You have the right to: access your data, correct inaccurate data, delete your data, export your data, and withdraw consent at any time. Contact us at privacy@synaptiq.co.uk.</p>
     <h2>5. Data for Minors</h2>
     <p>For users under 13, we require parental consent. We collect minimal data and do not use it for any purpose beyond providing the educational service.</p>
     <h2>6. Cookies</h2>
@@ -4534,12 +4426,34 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 <div id="toast"></div>
 <div id="xp-popup">+50 XP ⭐</div>
 
+<!-- ═══════════════════════ UPGRADE MODAL ═══════════════════════ -->
+<div id="upgrade-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:var(--bg2);border:1px solid var(--gold);border-radius:20px;padding:2rem;max-width:460px;width:90%;text-align:center;position:relative">
+    <button onclick="closeUpgradeModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem">✕</button>
+    <div style="font-size:2.5rem;margin-bottom:1rem">🔒</div>
+    <h3 style="font-family:var(--font-head);font-weight:800;font-size:1.3rem;margin-bottom:.5rem">Upgrade to Unlock</h3>
+    <p id="upgrade-reason" style="color:var(--muted);margin-bottom:1.5rem;font-size:.9rem">This feature requires a subscription</p>
+    <div style="display:flex;flex-direction:column;gap:.75rem">
+      <button class="btn-gold" style="width:100%;padding:.875rem" onclick="startCheckoutFlow('student')">
+        Student Plan — £60/mo<br><span style="font-size:.75rem;font-weight:400">Unlimited AI tutoring, all subjects & features</span>
+      </button>
+      <button class="btn-gold" style="width:100%;padding:.875rem;background:transparent;border:1px solid var(--gold);color:var(--gold)" onclick="startCheckoutFlow('homeschool')">
+        Homeschool Plan — £200/mo<br><span style="font-size:.75rem;font-weight:400">Up to 5 profiles + parent dashboard</span>
+      </button>
+    </div>
+    <p style="font-size:.75rem;color:var(--muted);margin-top:1rem">14-day money-back guarantee. Cancel anytime.</p>
+  </div>
+</div>
+<style>
+  #upgrade-modal.show { display:flex !important; }
+</style>
+
 <!-- ═══════════════════════ COOKIE BANNER ═══════════════════════ -->
 <div id="cookie-banner">
   <p class="cookie-text">We use cookies to improve your experience and comply with GDPR. See our <a onclick="nav('privacy')">Privacy Policy</a>.</p>
   <div class="cookie-btns">
-    <button class="btn btn-outline" style="font-size:.8rem" onclick="document.getElementById('cookie-banner').remove()">Reject</button>
-    <button class="btn btn-gold" style="font-size:.8rem" onclick="document.getElementById('cookie-banner').remove()">Accept All</button>
+    <button class="btn btn-outline" style="font-size:.8rem" onclick="localStorage.setItem('synaptiq_cookies_accepted','essential');document.getElementById('cookie-banner').remove()">Reject</button>
+    <button class="btn btn-gold" style="font-size:.8rem" onclick="localStorage.setItem('synaptiq_cookies_accepted','all');document.getElementById('cookie-banner').remove()">Accept All</button>
   </div>
 </div>
 
@@ -4563,8 +4477,131 @@ const state = {
   ttsEnabled: false,
   calcValue: '',
   calcPrev: '',
-  calcOp: ''
+  calcOp: '',
+  dailyQuestionCount: 0
 };
+
+// ═══════════════════════════════════════
+// FREE TRIAL & PAYWALL ENFORCEMENT
+// ═══════════════════════════════════════
+const FREE_DAILY_QUESTION_LIMIT = 5;
+const FREE_TRIAL_DAYS = 7;
+
+function getSubscriptionStatus() {
+  const u = state.user;
+  if (!u) return 'none';
+  if (u.subscription_status === 'active') return 'active';
+  if (u.plan === 'free' || !u.subscription_status || u.subscription_status === 'cancelled') {
+    const trialStart = u.trial_started_at || localStorage.getItem('synaptiq_trial_start');
+    if (trialStart) {
+      const elapsed = (Date.now() - new Date(trialStart).getTime()) / (1000 * 60 * 60 * 24);
+      if (elapsed <= FREE_TRIAL_DAYS) return 'trial';
+      return 'trial_expired';
+    }
+    return 'free';
+  }
+  if (u.subscription_status === 'past_due') return 'past_due';
+  return 'free';
+}
+
+function canAccessPremiumFeature(featureName) {
+  const status = getSubscriptionStatus();
+  if (status === 'active') return true;
+  if (status === 'trial' || status === 'free') {
+    // Trial users get limited access
+    const premiumOnly = ['essay', 'photo', 'video', 'grade-predictor'];
+    if (premiumOnly.includes(featureName)) {
+      showUpgradeModal(featureName);
+      return false;
+    }
+    return true;
+  }
+  if (status === 'trial_expired' || status === 'past_due') {
+    showUpgradeModal(featureName);
+    return false;
+  }
+  showUpgradeModal(featureName);
+  return false;
+}
+
+function canAskQuestion() {
+  const status = getSubscriptionStatus();
+  if (status === 'active') return true;
+  // Load daily count
+  const today = new Date().toISOString().split('T')[0];
+  const stored = localStorage.getItem('synaptiq_daily_q');
+  if (stored) {
+    const parsed = JSON.parse(stored);
+    if (parsed.date === today) {
+      state.dailyQuestionCount = parsed.count;
+    } else {
+      state.dailyQuestionCount = 0;
+      localStorage.setItem('synaptiq_daily_q', JSON.stringify({ date: today, count: 0 }));
+    }
+  }
+  if (state.dailyQuestionCount >= FREE_DAILY_QUESTION_LIMIT) {
+    showUpgradeModal('daily-limit');
+    return false;
+  }
+  return true;
+}
+
+function incrementQuestionCount() {
+  const today = new Date().toISOString().split('T')[0];
+  state.dailyQuestionCount++;
+  localStorage.setItem('synaptiq_daily_q', JSON.stringify({ date: today, count: state.dailyQuestionCount }));
+}
+
+function showUpgradeModal(reason) {
+  const reasons = {
+    'essay': 'Essay Marking is a premium feature',
+    'photo': 'Photo Solver is a premium feature',
+    'video': 'Video Explainer is a premium feature',
+    'grade-predictor': 'Grade Predictor is a premium feature',
+    'daily-limit': `You've used all ${FREE_DAILY_QUESTION_LIMIT} free questions today`,
+    'trial_expired': 'Your free trial has ended',
+    'default': 'This feature requires a subscription'
+  };
+  const msg = reasons[reason] || reasons['default'];
+  const modal = document.getElementById('upgrade-modal');
+  if (modal) {
+    document.getElementById('upgrade-reason').textContent = msg;
+    modal.classList.add('show');
+  } else {
+    // Fallback if modal not in DOM yet
+    showToast(msg + ' — Upgrade to continue!');
+  }
+}
+
+function closeUpgradeModal() {
+  const modal = document.getElementById('upgrade-modal');
+  if (modal) modal.classList.remove('show');
+}
+
+async function startCheckoutFlow(plan) {
+  closeUpgradeModal();
+  const email = state.user?.email;
+  if (!email) { nav('auth'); return; }
+  showToast('Redirecting to checkout...');
+  try {
+    const res = await fetch('/api/stripe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'checkout',
+        plan: plan || 'student',
+        email,
+        successUrl: window.location.origin + '?payment=success',
+        cancelUrl: window.location.origin + '?payment=cancelled'
+      })
+    });
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+    else showToast('Could not start checkout. Please try again.');
+  } catch(e) {
+    showToast('Checkout error — please try again.');
+  }
+}
 
 // ═══════════════════════════════════════
 // NAVIGATION
@@ -4608,9 +4645,10 @@ function showDash(sub) {
   state.currentSubpage = sub;
 
   if (sub === 'progress') buildHeatmap();
+  if (sub === 'flashcards') loadFcDue();
   if (sub === 'home') {
     updateGreeting();
-    if (state.dashHistory.length === 0) addDashMsg('bot', "Hello! I'm your Lumina AI tutor. What would you like to learn today? 🎓");
+    if (state.dashHistory.length === 0) addDashMsg('bot', "Hello! I'm your Synaptiq tutor. What would you like to learn today? 🎓");
   }
   if (sub === 'tutor') {
     if (state.tutorHistory.length === 0) addTutorMsg('bot', `Hello! I'm your ${state.subject} tutor, here to help. I can explain concepts step-by-step, create practice questions, or help with exam technique.\n\nWhat would you like to work on today? ✦`);
@@ -4627,10 +4665,17 @@ function selectPlan(p) {
 }
 
 function toggleDiff(d) {
+  const ldMessages = {
+    adhd: "We'll enable focus mode and shorter sessions",
+    dyslexia: "We'll activate our dyslexia-friendly font by default",
+    dyscalculia: "We'll provide extra visual aids for maths"
+  };
   if (d === 'none') {
     state.selectedDiffs = [];
     document.querySelectorAll('.diff-card').forEach(c => c.classList.remove('selected'));
     document.getElementById('diff-none').classList.add('selected');
+    const msgEl = document.getElementById('ld-message');
+    if (msgEl) { msgEl.style.display = 'none'; }
     return;
   }
   document.getElementById('diff-none').classList.remove('selected');
@@ -4641,6 +4686,17 @@ function toggleDiff(d) {
   } else {
     state.selectedDiffs.push(d);
     el.classList.add('selected');
+  }
+  // Show relevant LD message
+  const msgEl = document.getElementById('ld-message');
+  if (msgEl) {
+    const msgs = state.selectedDiffs.map(x => ldMessages[x]).filter(Boolean);
+    if (msgs.length > 0) {
+      msgEl.textContent = msgs.join('. ') + '.';
+      msgEl.style.display = 'block';
+    } else {
+      msgEl.style.display = 'none';
+    }
   }
 }
 
@@ -4663,7 +4719,7 @@ function nextStep(from) {
     document.getElementById('profile-summary').innerHTML = `
       <strong>Plan:</strong> ${state.selectedPlan === 'student' ? 'Student (£60/mo)' : 'Homeschool (£200/mo)'}<br>
       <strong>Year:</strong> ${document.getElementById('reg-year').value}<br>
-      <strong>Subject:</strong> ${document.getElementById('reg-subject').value}<br>
+      <strong>Subjects:</strong> ${Array.from(document.querySelectorAll('#reg-subjects-grid .subject-chip.selected')).map(c => c.textContent).join(', ') || 'None selected'}<br>
       <strong>Learning needs:</strong> ${diffs}
     `;
   }
@@ -4677,50 +4733,123 @@ function prevStep(to) {
   }
 }
 
-function createAccount() {
+async function createAccount() {
   if (!document.getElementById('gdpr-check').checked) {
     showToast('Please accept the privacy policy to continue'); return;
   }
   const name = document.getElementById('reg-name').value;
   const email = document.getElementById('reg-email').value;
-  state.user = {
-    name, email,
-    plan: state.selectedPlan,
-    year: document.getElementById('reg-year').value,
-    subject: document.getElementById('reg-subject').value,
-    board: document.getElementById('reg-board').value,
-    diffs: state.selectedDiffs
-  };
-  try { localStorage.setItem('lumina_user', JSON.stringify(state.user)); } catch(e) {}
-  applyLearningProfile();
-  enterDashboard();
-  addXP(100, '🎉 Welcome bonus!');
+  const password = document.getElementById('reg-pass').value;
+  const subjects = Array.from(document.querySelectorAll('#reg-subjects-grid .subject-chip.selected')).map(c => c.textContent);
+  const year_group = document.getElementById('reg-year').value;
+  const learning_difficulty = state.selectedDiffs.length ? state.selectedDiffs.join(',') : 'none';
+
+  const btn = document.querySelector('#step4 .btn-full');
+  if (btn) { btn.disabled = true; btn.textContent = 'Creating account...'; }
+
+  try {
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'signup', email, password, name, learning_difficulty, year_group, subjects })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Signup failed');
+
+    const trialStart = new Date().toISOString();
+    state.user = {
+      id: data.user?.id, name, email,
+      plan: 'free',
+      subscription_status: 'free',
+      trial_started_at: trialStart,
+      year: year_group,
+      subjects,
+      board: document.getElementById('reg-board').value,
+      diffs: state.selectedDiffs,
+      xp: 0, level: 1, streak: 0, questions_answered: 0, accuracy: 0
+    };
+    if (data.token) localStorage.setItem('synaptiq_token', data.token);
+    localStorage.setItem('synaptiq_user', JSON.stringify(state.user));
+    localStorage.setItem('synaptiq_trial_start', trialStart);
+    applyLearningProfile();
+    enterDashboard();
+    addXP(100, 'Welcome bonus!');
+    // Show upgrade prompt if user selected a paid plan
+    if (state.selectedPlan !== 'free') {
+      setTimeout(() => {
+        showToast('Your 7-day free trial has started! Upgrade anytime for unlimited access.');
+      }, 2000);
+    }
+  } catch(e) {
+    showToast(e.message === 'Failed to fetch' ? 'Network error — please check your connection and try again.' : e.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Start Learning Free'; }
+  }
 }
 
-function loginUser() {
+async function loginUser() {
   const email = document.getElementById('login-email').value;
   const pass = document.getElementById('login-pass').value;
   if (!email || !pass) { showToast('Please enter your email and password'); return; }
-  // In a real app this would verify with a backend
-  // For demo, restore from localStorage or create demo user
+
+  const btn = document.querySelector('#login-form .btn-full');
+  if (btn) { btn.disabled = true; btn.textContent = 'Logging in...'; }
+
   try {
-    const saved = localStorage.getItem('lumina_user');
-    if (saved) { state.user = JSON.parse(saved); }
-    else {
-      state.user = { name: email.split('@')[0], email, plan: 'student', diffs: [] };
-    }
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'login', email, password: pass })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Login failed');
+
+    state.user = {
+      id: data.user?.id,
+      name: data.user?.name || data.user?.user_metadata?.name || email.split('@')[0],
+      email,
+      plan: data.user?.plan || data.user?.subscription_status || 'student',
+      year: data.user?.year_group || '',
+      subjects: data.user?.subjects || [],
+      board: data.user?.exam_board || 'AQA',
+      diffs: (data.user?.learning_difficulty || '').split(',').filter(Boolean),
+      xp: data.user?.xp || 0,
+      level: data.user?.level || 1,
+      streak: data.user?.streak || 0,
+      questions_answered: data.user?.questions_answered || 0,
+      accuracy: data.user?.accuracy || 0
+    };
+    if (data.token) localStorage.setItem('synaptiq_token', data.token);
+    localStorage.setItem('synaptiq_user', JSON.stringify(state.user));
+    applyLearningProfile();
+    enterDashboard();
+    if (state.user.streak > 1) showToast(`${state.user.streak}-day streak! Keep it up!`);
   } catch(e) {
-    state.user = { name: 'Student', email, plan: 'student', diffs: [] };
+    showToast(e.message === 'Failed to fetch' ? 'Network error — please check your connection and try again.' : e.message);
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Log In →'; }
   }
-  applyLearningProfile();
-  enterDashboard();
+}
+
+async function resetPassword() {
+  const email = document.getElementById('login-email').value;
+  if (!email) { showToast('Enter your email address first'); return; }
+  try {
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'reset', email })
+    });
+    if (res.ok) showToast('Password reset email sent! Check your inbox.');
+    else { const d = await res.json(); showToast(d.error || 'Could not send reset email'); }
+  } catch(e) { showToast('Could not send reset email. Try again later.'); }
 }
 
 function logout() {
   state.user = null;
   state.tutorHistory = [];
   state.dashHistory = [];
-  try { localStorage.removeItem('lumina_user'); localStorage.removeItem('lumina_token'); } catch(e) {}
+  try { localStorage.removeItem('synaptiq_user'); localStorage.removeItem('synaptiq_token'); } catch(e) {}
   document.getElementById('app-nav').style.display = 'none';
   document.getElementById('public-nav').style.display = 'flex';
   document.getElementById('auth-buttons').style.display = 'flex';
@@ -4732,14 +4861,18 @@ function logout() {
 }
 
 function enterDashboard() {
-  // Remove auth loading overlay if present
-  try { const ov = document.getElementById('auth-loading-overlay'); if (ov) ov.remove(); } catch(e) {}
-  // Update sidebar
   const u = state.user;
   document.getElementById('sb-name').textContent = u.name;
-  document.getElementById('sb-plan').textContent = u.plan === 'student' ? 'Student Plan' : 'Homeschool Plan';
+  const planLabels = { free: 'Free Trial', student: 'Student Plan', homeschool: 'Homeschool Plan' };
+  const status = getSubscriptionStatus();
+  const planLabel = status === 'active' ? (planLabels[u.plan] || 'Student Plan') :
+    status === 'trial' ? 'Free Trial' :
+    status === 'trial_expired' ? 'Trial Expired' :
+    status === 'past_due' ? 'Payment Due' : 'Free Plan';
+  document.getElementById('sb-plan').textContent = planLabel;
   document.getElementById('sb-avatar').textContent = u.name.charAt(0).toUpperCase();
-  document.getElementById('dash-greeting').textContent = `${getGreeting()}, ${u.name.split(' ')[0]}! 👋`;
+  document.getElementById('dash-greeting').textContent = `${getGreeting()}, ${u.name.split(' ')[0]}!`;
+  document.getElementById('dash-search-wrap').style.display = 'block';
 
   // Swap nav
   document.getElementById('public-nav').style.display = 'none';
@@ -4749,8 +4882,119 @@ function enterDashboard() {
   document.getElementById('a11y-bar').style.display = 'flex';
   document.getElementById('xp-badge').style.display = 'flex';
 
+  // Update dynamic stats
+  updateDashboardStats();
+
+  // Load progress from backend
+  loadProgressFromBackend();
+
   nav('dashboard');
   showDash('home');
+
+  // Trigger onboarding tour for first-time users
+  if (!localStorage.getItem('synaptiq_tour_done')) {
+    setTimeout(() => startTour(), 1500);
+  }
+}
+
+async function loadProgressFromBackend() {
+  const token = localStorage.getItem('synaptiq_token');
+  if (!token) return;
+  try {
+    const res = await fetch('/api/progress', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.profile) {
+      const p = data.profile;
+      if (state.user) {
+        state.user.questions_answered = p.questions_answered || state.user.questions_answered || 0;
+        state.user.accuracy = p.accuracy || state.user.accuracy || 0;
+        state.user.streak = p.streak || state.user.streak || 0;
+        state.user.xp = p.xp || state.user.xp || 0;
+        state.user.level = p.level || state.user.level || 1;
+        state.user.subscription_status = p.subscription_status || state.user.subscription_status;
+        state.user.plan = p.plan || state.user.plan;
+        state.xp = state.user.xp;
+        state.level = state.user.level;
+        localStorage.setItem('synaptiq_user', JSON.stringify(state.user));
+        updateDashboardStats();
+        updateXPDisplay();
+      }
+    }
+    // Update subject progress bars if data available
+    if (data.progress?.length) {
+      updateSubjectProgress(data.progress);
+    }
+    // Update heatmap with real data
+    if (data.activity?.length) {
+      renderRealHeatmap(data.activity);
+    }
+  } catch(e) { /* Offline — use cached data */ }
+}
+
+function updateSubjectProgress(progressData) {
+  const bars = document.querySelectorAll('.subj-bar');
+  const subjects = {};
+  progressData.forEach(p => {
+    if (!subjects[p.subject]) subjects[p.subject] = { total: 0, correct: 0 };
+    subjects[p.subject].total += p.questions_done || 0;
+    subjects[p.subject].correct += Math.round((p.accuracy || 0) / 100 * (p.questions_done || 0));
+  });
+  bars.forEach(bar => {
+    const subj = bar.dataset.subject;
+    if (subj && subjects[subj]) {
+      const pct = subjects[subj].total > 0 ? Math.round(subjects[subj].correct / subjects[subj].total * 100) : 0;
+      const fill = bar.querySelector('.subj-fill');
+      const label = bar.querySelector('.subj-pct');
+      if (fill) fill.style.width = pct + '%';
+      if (label) label.textContent = pct + '%';
+    }
+  });
+}
+
+function renderRealHeatmap(activityData) {
+  const el = document.getElementById('heatmap');
+  if (!el) return;
+  const levels = ['', 'l1', 'l2', 'l3', 'l4'];
+  const activityMap = {};
+  activityData.forEach(a => { activityMap[a.date] = (a.questions_done || 0) + (a.xp_earned || 0) / 50; });
+  let html = '';
+  for (let i = 0; i < 84; i++) {
+    const date = new Date(); date.setDate(date.getDate() - (83 - i));
+    const key = date.toISOString().split('T')[0];
+    const label = date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+    const val = activityMap[key] || 0;
+    const lvl = val === 0 ? 0 : val < 3 ? 1 : val < 6 ? 2 : val < 10 ? 3 : 4;
+    html += `<div class="heat-cell ${levels[lvl]}" data-tip="${label}: ${Math.round(val)} sessions"></div>`;
+  }
+  el.innerHTML = html;
+}
+
+function updateDashboardStats() {
+  const u = state.user || {};
+  const q = u.questions_answered || parseInt(localStorage.getItem('synaptiq_questions') || '0');
+  const acc = u.accuracy || parseInt(localStorage.getItem('synaptiq_accuracy') || '0');
+  const streak = u.streak || parseInt(localStorage.getItem('synaptiq_streak') || '0');
+  const xp = state.xp || u.xp || 0;
+  const level = state.level || u.level || 1;
+
+  // Dashboard home stats
+  const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  setEl('stat-q', q.toLocaleString());
+  setEl('stat-acc', q > 0 ? acc + '%' : '—');
+  setEl('stat-streak', streak > 0 ? streak + ' \uD83D\uDD25' : '0');
+  setEl('stat-level', level);
+  setEl('stat-q-sub', q > 0 ? 'Keep going!' : 'Start practising!');
+  setEl('stat-acc-sub', q > 0 ? 'Keep improving!' : 'Answer questions to track');
+  setEl('stat-xp-sub', xp.toLocaleString() + ' XP earned');
+
+  // Progress page stats
+  setEl('prog-stat-q', q.toLocaleString());
+  setEl('prog-stat-acc', q > 0 ? acc + '%' : '—');
+  setEl('prog-stat-streak', streak > 0 ? streak + ' \uD83D\uDD25' : '0');
+  setEl('prog-stat-level', level);
 }
 
 function showSignup() {
@@ -4771,14 +5015,53 @@ document.addEventListener('DOMContentLoaded', () => {
       else showLogin();
     });
   });
-  // Check for saved session
-  try {
-    const saved = localStorage.getItem('lumina_user');
-    if (saved) {
-      state.user = JSON.parse(saved);
-      applyLearningProfile();
+  // Check for saved session — verify with backend if token exists
+  (async () => {
+    try {
+      const token = localStorage.getItem('synaptiq_token');
+      const saved = localStorage.getItem('synaptiq_user');
+      if (token) {
+        const res = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ action: 'verify' })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          state.user = {
+            id: data.user?.id,
+            name: data.user?.name || data.user?.user_metadata?.name || 'Student',
+            email: data.user?.email || '',
+            plan: data.user?.plan || data.user?.subscription_status || 'student',
+            year: data.user?.year_group || '',
+            subjects: data.user?.subjects || [],
+            diffs: (data.user?.learning_difficulty || '').split(',').filter(Boolean),
+            xp: data.user?.xp || 0,
+            level: data.user?.level || 1,
+            streak: data.user?.streak || 0,
+            questions_answered: data.user?.questions_answered || 0,
+            accuracy: data.user?.accuracy || 0
+          };
+          localStorage.setItem('synaptiq_user', JSON.stringify(state.user));
+          applyLearningProfile();
+          enterDashboard();
+        } else {
+          // Token expired — clean up but don't enter dashboard
+          localStorage.removeItem('synaptiq_token');
+          if (saved) { state.user = JSON.parse(saved); applyLearningProfile(); }
+        }
+      } else if (saved) {
+        state.user = JSON.parse(saved);
+        applyLearningProfile();
+      }
+    } catch(e) {
+      // Offline — use cached user data
+      try {
+        const saved = localStorage.getItem('synaptiq_user');
+        if (saved) { state.user = JSON.parse(saved); applyLearningProfile(); }
+      } catch(e2) {}
     }
-  } catch(e) {}
+  })();
   buildNumberLine(0);
 
   // ── Scroll-reveal observer ──
@@ -4924,31 +5207,40 @@ function buildNumberLine(highlight) {
 // ═══════════════════════════════════════
 // CLAUDE API
 // ═══════════════════════════════════════
+let _claudePending = false;
 async function callClaude(messages, system) {
-  const body = {
-    model: 'claude-sonnet-4-6',
-    max_tokens: 1024,
-    messages
-  };
-  if (system) body.system = system;
-  let r;
+  if (_claudePending) throw new Error('Please wait — your previous request is still processing.');
+  _claudePending = true;
   try {
-    const authHeaders = { 'Content-Type': 'application/json' };
-    if (state.user?.token) authHeaders['Authorization'] = 'Bearer ' + state.user.token;
-    r = await fetch('/api/chat', {
-      method: 'POST',
-      headers: authHeaders,
-      body: JSON.stringify(body)
-    });
-  } catch (netErr) {
-    throw new Error('Network error — check /api/chat is deployed: ' + netErr.message);
+    const body = {
+      model: 'claude-sonnet-4-6',
+      max_tokens: 1500,
+      messages
+    };
+    if (system) body.system = system;
+    let r;
+    try {
+      r = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+    } catch (netErr) {
+      throw new Error('Connection error. Please check your internet and try again.');
+    }
+    const text = await r.text();
+    let data;
+    try { data = JSON.parse(text); } catch (e) { throw new Error('Unexpected response from server. Please try again.'); }
+    if (!r.ok) {
+      if (r.status === 429) throw new Error('Too many requests. Please wait a moment and try again.');
+      if (r.status === 500) throw new Error('Server error. The API may be temporarily unavailable.');
+      throw new Error(data.error?.message || data.error || 'Something went wrong. Please try again.');
+    }
+    if (data.error) throw new Error(data.error.message || 'AI service error. Please try again.');
+    return data;
+  } finally {
+    _claudePending = false;
   }
-  const text = await r.text();
-  let data;
-  try { data = JSON.parse(text); } catch (e) { throw new Error('Bad API response (' + r.status + '): ' + text.slice(0, 200)); }
-  if (!r.ok) throw new Error('API error ' + r.status + ': ' + JSON.stringify(data));
-  if (data.error) throw new Error('Anthropic error: ' + JSON.stringify(data.error));
-  return data;
 }
 
 function getReply(data) {
@@ -4966,15 +5258,30 @@ function getA11yInstructions() {
   return parts.join('\n\n');
 }
 
+function getSafeguardingPrompt() {
+  return `\n\nSAFEGUARDING (MANDATORY): You are speaking to a school-age student (14-18 years old). Follow these rules absolutely:
+1. NEVER generate violent, sexual, discriminatory, or age-inappropriate content.
+2. Keep ALL responses educational and age-appropriate.
+3. If a student expresses distress, self-harm ideation, bullying, or mentions abuse, respond with empathy and provide:
+   - Childline: 0800 1111 (free, confidential, 24/7)
+   - Shout Crisis Text Line: text "SHOUT" to 85258
+   - Their school safeguarding lead or trusted adult
+   Do NOT attempt to counsel — direct them to professional support.
+4. If asked to help with anything unethical, illegal, or harmful, firmly but kindly decline and redirect to the learning topic.
+5. Encourage healthy study habits — remind students to take breaks, sleep well, and not over-stress about exams.`;
+}
+
 function getTutorSystem() {
   const user = state.user;
   const year = user?.year || 'Year 11';
   const board = user?.board || 'AQA';
-  let sys = `You are an expert ${state.subject} tutor for UK students, specialising in ${board} ${year}. 
-Your name is Lumina. You are encouraging, patient, and brilliant at explaining complex ideas simply.
+  let sys = `You are an expert ${state.subject} tutor for UK students, specialising in ${board} ${year}.
+Your name is Synaptiq. You are encouraging, patient, and brilliant at explaining complex ideas simply.
 Always tailor your explanations to the student's level. Use UK terminology and exam board conventions.
 When giving examples, use real-world scenarios. If the student seems stuck, break it down further.
-For maths and science, always show your working step by step.`;
+For maths and science, always show your working step by step.
+When a student asks a question, first ask them what they think the answer might be before explaining. Use scaffolded questioning (Socratic method) to guide understanding rather than simply telling. Identify common misconceptions and address them directly.`;
+  sys += getSafeguardingPrompt();
   const a11y = getA11yInstructions();
   if (a11y) sys += '\n\n' + a11y;
   return sys;
@@ -5035,7 +5342,12 @@ function addTutorMsg(role, text) {
   const el = document.createElement('div');
   el.className = 'msg ' + role;
   if (role === 'bot') {
-    el.innerHTML = formatChatText(text, state.modes.adhd);
+    // Sanitize AI response and render with formatting
+    if (state.modes.adhd) {
+      el.innerHTML = formatADHD(text);
+    } else {
+      el.innerHTML = renderAIResponse(text);
+    }
   } else {
     el.textContent = text;
   }
@@ -5047,10 +5359,13 @@ function addTutorMsg(role, text) {
 }
 
 function formatADHD(text) {
-  return formatChatText(text, true);
+  // Sanitize first, then add visual step breaks
+  let safe = renderAIResponse(text);
+  return safe.replace(/(\d+\.) /g, '<span class="step-badge" style="display:inline-block">$1</span> ');
 }
 
 async function tutorSend() {
+  if (!canAskQuestion()) return;
   const input = document.getElementById('tutor-input');
   const text = input.value.trim();
   if (!text) return;
@@ -5076,6 +5391,7 @@ async function tutorSend() {
     state.tutorHistory.push({ role: 'assistant', content: reply });
     addTutorMsg('bot', reply);
     addXP(10);
+    incrementQuestionCount();
   } catch (e) {
     typingRow.remove();
     addTutorMsg('bot', '⚠️ ' + e.message);
@@ -5110,14 +5426,12 @@ function addDashMsg(role, text) {
   const el = document.createElement('div');
   el.className = 'msg ' + role;
   if (role === 'bot') {
-    el.innerHTML = formatChatText(text, false);
+    el.innerHTML = renderAIResponse(text);
   } else {
     el.textContent = text;
   }
-  row.appendChild(avatar);
-  row.appendChild(el);
-  container.appendChild(row);
-  container.scrollTop = 99999;
+  document.getElementById('dash-chat').appendChild(el);
+  document.getElementById('dash-chat').scrollTop = 99999;
 }
 
 async function dashSend() {
@@ -5139,7 +5453,7 @@ async function dashSend() {
   dashTypingRow.appendChild(typing);
   document.getElementById('dash-chat').appendChild(dashTypingRow);
   document.getElementById('dash-chat').scrollTop = 99999;
-  const sys = 'You are Lumina, a helpful AI tutor. Answer questions concisely and helpfully for UK students. Keep answers short (2-3 paragraphs max) for the dashboard widget. ' + getA11yInstructions();
+  const sys = 'You are Synaptiq, a helpful AI tutor. Answer questions concisely and helpfully for UK students. Keep answers short (2-3 paragraphs max) for the dashboard widget. ' + getA11yInstructions() + getSafeguardingPrompt();
   try {
     const data = await callClaude(state.dashHistory, sys);
     const reply = getReply(data);
@@ -5161,6 +5475,7 @@ function dashKey(e) {
 // QUESTION GENERATOR
 // ═══════════════════════════════════════
 async function generateQuestions() {
+  if (!canAskQuestion()) return;
   const sub = document.getElementById('q-subject').value;
   const board = document.getElementById('q-board').value;
   const level = document.getElementById('q-level').value;
@@ -5168,20 +5483,38 @@ async function generateQuestions() {
   const type = document.getElementById('q-type').value;
   const grade = document.getElementById('q-grade').value;
   const topics = document.getElementById('q-topics').value;
+  const bloom = document.getElementById('q-bloom')?.value || 'Mixed';
   const output = document.getElementById('q-output');
   const qContainer = document.getElementById('q-questions');
   output.classList.add('show');
   document.getElementById('q-output-title').textContent = `${sub} Practice Paper`;
   document.getElementById('q-output-sub').textContent = `${num} questions · ${board} ${level} · ${grade}`;
-  qContainer.innerHTML = '<div class="msg bot" style="max-width:100%">✦ Generating your questions with Lumina AI...</div>';
+  qContainer.innerHTML = '<div class="msg bot" style="max-width:100%">✦ Generating your questions with Synaptiq...</div>';
   const a11y = getA11yInstructions();
+  // Bloom's taxonomy mapping
+  const bloomInstructions = {
+    'Mixed': 'Include a mix of cognitive levels: some recall, some application, and some evaluation/analysis questions.',
+    'Remember & Understand': 'Focus on RECALL and COMPREHENSION: definitions, key facts, describe, explain, list, identify.',
+    'Apply & Analyse': 'Focus on APPLICATION and ANALYSIS: calculate, solve, compare, contrast, examine, investigate.',
+    'Evaluate & Create': 'Focus on EVALUATION and SYNTHESIS: evaluate, justify, assess, design, construct, argue.'
+  };
+  // Board-specific marking conventions
+  const boardStyle = {
+    'AQA': 'Use AQA command words (state, describe, explain, evaluate, compare). Include AO1/AO2/AO3 skills.',
+    'Edexcel': 'Use Edexcel/Pearson question phrasing. Reference specification content areas.',
+    'OCR': 'Use OCR-style command terms and synoptic question approaches.',
+    'WJEC': 'Use WJEC/Eduqas question formatting conventions.'
+  };
   let sys = `You are an expert UK exam question writer specialising in ${board} ${level} ${sub}.
 Generate exactly ${num} exam-style questions for ${grade} target.
 Question types: ${type}. ${topics ? 'Focus on: ' + topics : 'Cover key topics.'}
+${bloomInstructions[bloom] || bloomInstructions['Mixed']}
+${boardStyle[board] || ''}
 Format STRICTLY as JSON array with this structure:
-[{"question":"...","marks":3,"type":"short answer","hint":"..."}]
-Each question must be exam-quality, use UK spelling, follow ${board} style.
+[{"question":"...","marks":3,"type":"short answer","hint":"...","bloom":"remember|understand|apply|analyse|evaluate|create"}]
+Each question must be exam-quality, use UK spelling, follow ${board} style and mark scheme conventions.
 ONLY return the JSON array, nothing else.${a11y ? '\n\nIMPORTANT accessibility notes: ' + a11y : ''}`;
+  sys += getSafeguardingPrompt();
   try {
     const data = await callClaude([{ role: 'user', content: `Generate ${num} ${sub} questions for ${board} ${level}, ${grade} target. ${topics ? 'Topics: ' + topics : ''}` }], sys);
     const reply = getReply(data);
@@ -5203,10 +5536,126 @@ ONLY return the JSON array, nothing else.${a11y ? '\n\nIMPORTANT accessibility n
           <div class="answer-space" contenteditable="true" spellcheck="true" style="outline:none">Click here to write your answer...</div>
         </div>`;
     });
+    // Add "Check My Answers" button
+    qContainer.innerHTML += `<button class="btn-gold" style="width:100%;margin-top:1rem" onclick="checkAnswers()">Check My Answers ✦</button>`;
+    // Store generated questions for marking
+    state.currentQuestions = questions;
+    state.currentQSubject = sub;
+    state.currentQBoard = board;
     addXP(20);
+    incrementQuestionCount();
     showToast('✦ Questions generated!');
   } catch (e) {
     qContainer.innerHTML = `<div class="msg bot" style="max-width:100%">⚠️ Error: ${e.message}</div>`;
+  }
+}
+
+async function checkAnswers() {
+  if (!state.currentQuestions) return;
+  const answerSpaces = document.querySelectorAll('#q-questions .answer-space');
+  const answers = Array.from(answerSpaces).map(el => el.textContent.trim());
+  const hasAnswers = answers.some(a => a && a !== 'Click here to write your answer...');
+  if (!hasAnswers) { showToast('Write your answers first!'); return; }
+
+  const pairs = state.currentQuestions.map((q, i) => ({
+    question: q.question,
+    marks: q.marks || 3,
+    studentAnswer: answers[i] || '(no answer)'
+  }));
+
+  const sub = state.currentQSubject;
+  const board = state.currentQBoard;
+  const sys = `You are an expert ${board} ${sub} examiner. Mark the student's answers strictly but fairly.
+Return ONLY valid JSON array: [{"questionNum":1,"marksAwarded":2,"marksTotal":3,"correct":true,"feedback":"Brief feedback"}]
+Use UK marking conventions. Award partial marks where appropriate.`;
+
+  showToast('✦ Marking your answers...');
+  try {
+    const data = await callClaude([{ role: 'user', content: JSON.stringify(pairs) }], sys);
+    const reply = getReply(data);
+    const clean = reply.replace(/```json|```/g, '').trim();
+    const results = JSON.parse(clean);
+
+    let totalMarks = 0, totalPossible = 0, correct = 0;
+    results.forEach(r => {
+      totalMarks += r.marksAwarded || 0;
+      totalPossible += r.marksTotal || 3;
+      if (r.correct) correct++;
+      const block = document.querySelectorAll('#q-questions .question-block')[r.questionNum - 1];
+      if (block) {
+        const existing = block.querySelector('.answer-feedback');
+        if (existing) existing.remove();
+        const fb = document.createElement('div');
+        fb.className = 'answer-feedback';
+        fb.style.cssText = `margin-top:.5rem;padding:.75rem;border-radius:8px;font-size:.85rem;background:${r.correct ? 'rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3)' : 'rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3)'}`;
+        fb.innerHTML = `<strong>${r.correct ? '✅' : '❌'} ${r.marksAwarded}/${r.marksTotal} marks</strong><br>${r.feedback || ''}`;
+        block.appendChild(fb);
+      }
+    });
+
+    const pct = totalPossible > 0 ? Math.round(correct / results.length * 100) : 0;
+    addXP(correct * 5, `+${correct * 5} XP for ${correct}/${results.length} correct`);
+    showToast(`${totalMarks}/${totalPossible} marks — ${pct}% correct`);
+
+    // Save progress to backend
+    const token = localStorage.getItem('synaptiq_token');
+    if (token && state.user?.id) {
+      saveProgressDB(sub, 'practice', correct, results.length, correct * 5);
+    }
+    // Update local stats
+    if (state.user) {
+      state.user.questions_answered = (state.user.questions_answered || 0) + results.length;
+      const oldTotal = (state.user.questions_answered - results.length) || 0;
+      state.user.accuracy = oldTotal > 0
+        ? Math.round(((state.user.accuracy || 0) * oldTotal + pct) / state.user.questions_answered)
+        : pct;
+      localStorage.setItem('synaptiq_user', JSON.stringify(state.user));
+      updateDashboardStats();
+    }
+    // Adaptive difficulty suggestion
+    showAdaptiveSuggestion(pct, grade);
+  } catch(e) {
+    showToast('⚠️ Could not mark answers: ' + e.message);
+  }
+}
+
+function showAdaptiveSuggestion(accuracy, currentGrade) {
+  const suggestion = document.getElementById('adaptive-suggestion');
+  if (!suggestion) return;
+  const grades = ['Grade 4-5', 'Grade 6-7', 'Grade 7-8', 'Grade 8-9'];
+  const idx = grades.indexOf(currentGrade);
+  if (accuracy >= 85 && idx < grades.length - 1) {
+    suggestion.textContent = `🚀 Great work! You scored ${accuracy}% — try ${grades[idx + 1]} next to push yourself further!`;
+    suggestion.style.display = 'block';
+    // Auto-suggest higher grade
+    const gradeSelect = document.getElementById('q-grade');
+    if (gradeSelect) gradeSelect.value = grades[idx + 1];
+  } else if (accuracy < 50 && idx > 0) {
+    suggestion.textContent = `💪 ${accuracy}% — consider practising at ${grades[idx - 1]} to build confidence, then work back up.`;
+    suggestion.style.display = 'block';
+    const gradeSelect = document.getElementById('q-grade');
+    if (gradeSelect) gradeSelect.value = grades[idx - 1];
+  } else {
+    suggestion.style.display = 'none';
+  }
+  // Track mastery
+  trackMastery(state.currentQSubject, accuracy);
+}
+
+function trackMastery(subject, accuracy) {
+  const key = 'synaptiq_mastery';
+  let mastery = {};
+  try { mastery = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e) {}
+  if (!mastery[subject]) mastery[subject] = { attempts: 0, totalAccuracy: 0 };
+  mastery[subject].attempts++;
+  mastery[subject].totalAccuracy += accuracy;
+  const avg = Math.round(mastery[subject].totalAccuracy / mastery[subject].attempts);
+  mastery[subject].averageAccuracy = avg;
+  mastery[subject].mastered = avg >= 85 && mastery[subject].attempts >= 3;
+  localStorage.setItem(key, JSON.stringify(mastery));
+  if (mastery[subject].mastered && mastery[subject].attempts === 3) {
+    showToast(`🏆 ${subject} mastered! Average accuracy: ${avg}%`);
+    addXP(50, `🏆 ${subject} mastery bonus!`);
   }
 }
 
@@ -5217,7 +5666,7 @@ async function analyseStrengths() {
   const recs = document.getElementById('ai-recs');
   const body = document.getElementById('ai-recs-body');
   recs.style.display = 'block';
-  body.innerHTML = '<div class="msg bot" style="max-width:100%">⏳ Lumina AI is analysing your performance...</div>';
+  body.innerHTML = '<div class="msg bot" style="max-width:100%">⏳ Synaptiq is analysing your performance...</div>';
   const sys = `You are an expert educational analyst. Given a student's strengths and weaknesses, provide specific, actionable recommendations.
 Format response as HTML with: <div class="weakness-item"><span class="sw-topic">Action</span><span class="sw-pct bad">Priority</span></div>
 Provide 5 specific study recommendations. Use Priority: HIGH, MEDIUM, or LOW.
@@ -5261,7 +5710,7 @@ async function createAssignment() {
   const subject = document.getElementById('asgn-subject').value;
   const year = document.getElementById('asgn-year').value;
   if (!title) { showToast('Please enter a title first'); return; }
-  showToast('✦ Generating assignment with Lumina AI...');
+  showToast('✦ Generating assignment with Synaptiq...');
   const sys = `You are an experienced UK teacher creating a homework assignment. Write clear, engaging instructions appropriate for the level. Follow UK curriculum standards.`;
   try {
     const data = await callClaude([{ role: 'user', content: `Create a detailed homework assignment for ${year} ${subject} titled "${title}". Include learning objectives, instructions, mark scheme hints, and 3-5 specific tasks.` }], sys);
@@ -5349,11 +5798,11 @@ function openAssignment(id) { showToast('Opening assignment...'); showDash('tuto
 // VIDEO PLAYER (Interactive)
 // ═══════════════════════════════════════
 const videoChapters = [
-  { title: 'Welcome to Lumina AI', desc: 'Learn how the platform transforms your studying', q: null },
-  { title: 'AI Tutor', desc: 'Ask Lumina AI anything — step by step explanations', q: { text: 'What makes Lumina\'s AI tutor different from Google?', opts: ['It uses Lumina AI, the most advanced AI model', 'It has better images', 'It plays videos', 'It\'s cheaper'], correct: 0 } },
-  { title: 'Question Generator', desc: 'Create real exam-style questions for any topic', q: { text: 'Which exam boards does Lumina support?', opts: ['Only AQA', 'AQA, Edexcel, OCR, and WJEC', 'Only Edexcel', 'No specific board'], correct: 1 } },
+  { title: 'Welcome to Synaptiq', desc: 'Learn how the platform transforms your studying', q: null },
+  { title: 'AI Tutor', desc: 'Ask Synaptiq anything — step by step explanations', q: { text: 'What makes Synaptiq\'s AI tutor different from Google?', opts: ['It uses Synaptiq, the most advanced AI model', 'It has better images', 'It plays videos', 'It\'s cheaper'], correct: 0 } },
+  { title: 'Question Generator', desc: 'Create real exam-style questions for any topic', q: { text: 'Which exam boards does Synaptiq support?', opts: ['Only AQA', 'AQA, Edexcel, OCR, and WJEC', 'Only Edexcel', 'No specific board'], correct: 1 } },
   { title: 'Progress Tracking', desc: 'See exactly how you\'re improving over time', q: null },
-  { title: 'Accessibility Features', desc: 'ADHD, Dyslexia, and Dyscalculia support', q: { text: 'Which accessibility modes does Lumina offer?', opts: ['Only ADHD', 'Only dyslexia fonts', 'ADHD, Dyslexia AND Dyscalculia — separately', 'Colour blindness only'], correct: 2 } }
+  { title: 'Accessibility Features', desc: 'ADHD, Dyslexia, and Dyscalculia support', q: { text: 'Which accessibility modes does Synaptiq offer?', opts: ['Only ADHD', 'Only dyslexia fonts', 'ADHD, Dyslexia AND Dyscalculia — separately', 'Colour blindness only'], correct: 2 } }
 ];
 let currentChapter = 0;
 
@@ -5552,7 +6001,7 @@ function toggleVoiceMode() {
 // ═══════════════════════════════════════
 function addXP(amount, msg) {
   state.xp += amount;
-  const newLevel = Math.floor(state.xp / 200) + 1;
+  const newLevel = Math.floor(state.xp / 500) + 1;
   if (newLevel > state.level) {
     state.level = newLevel;
     showToast(`🎉 Level Up! You're now Level ${newLevel}!`);
@@ -5565,11 +6014,11 @@ function addXP(amount, msg) {
 }
 
 function updateXPDisplay() {
-  const xpInLevel = state.xp % 200;
+  const xpInLevel = state.xp % 500;
   document.getElementById('xp-display').textContent = state.xp + ' XP';
   document.getElementById('xp-level-text').textContent = 'Level ' + state.level;
-  document.getElementById('xp-progress-text').textContent = xpInLevel + ' / 200 XP';
-  document.getElementById('xp-fill').style.width = (xpInLevel / 200 * 100) + '%';
+  document.getElementById('xp-progress-text').textContent = xpInLevel + ' / 500 XP';
+  document.getElementById('xp-fill').style.width = (xpInLevel / 500 * 100) + '%';
 }
 
 // ═══════════════════════════════════════
@@ -5597,6 +6046,33 @@ function showToast(msg) {
   t.textContent = msg; t.classList.add('show');
   clearTimeout(window._toastTimer);
   window._toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ═══════════════════════════════════════
+// HTML SANITIZATION (XSS Prevention)
+// ═══════════════════════════════════════
+function sanitizeHTML(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function renderAIResponse(text) {
+  // Sanitize first, then convert safe markdown-like formatting
+  let safe = sanitizeHTML(text);
+  // Convert newlines to <br>
+  safe = safe.replace(/\n/g, '<br>');
+  // Convert **bold** to <strong>
+  safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  // Convert *italic* to <em>
+  safe = safe.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  // Convert `code` to <code>
+  safe = safe.replace(/`([^`]+)`/g, '<code>$1</code>');
+  return safe;
 }
 
 function getGreeting() {
@@ -5663,7 +6139,7 @@ function initTutor() {
   <div class="tour-highlight" id="tour-highlight"></div>
   <div class="tour-box" id="tour-box">
     <div class="tour-step-num" id="tour-step-num">Step 1 of 6</div>
-    <h4 id="tour-title">Welcome to Lumina AI! 🎓</h4>
+    <h4 id="tour-title">Welcome to Synaptiq! 🎓</h4>
     <p id="tour-desc">Let me show you around. This is your personal AI-powered learning platform built for every type of learner.</p>
     <div class="tour-controls">
       <button class="tour-skip" onclick="skipTour()">Skip tour</button>
@@ -5716,7 +6192,7 @@ function initTutor() {
     <p style="color:var(--muted);font-size:.875rem;margin-bottom:1.5rem">Share this question with a classmate</p>
     <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:1rem;font-size:.875rem" id="share-question-preview">No question selected</div>
     <div style="display:flex;gap:.5rem;margin-bottom:1rem">
-      <input type="text" class="form-input" id="share-link" value="https://lumina.ai/q/share/abc123" readonly style="flex:1">
+      <input type="text" class="form-input" id="share-link" value="https://synaptiq.app/q/share/abc123" readonly style="flex:1">
       <button class="btn-gold" onclick="copyShareLink()">Copy</button>
     </div>
     <div style="display:flex;gap:.5rem">
@@ -5753,162 +6229,7 @@ async function startCheckout(plan) {
   }
 }
 
-async function manageSubscription() {
-  const email = state.user?.email;
-  if (!email) return;
-  try {
-    const res = await fetch('/api/stripe', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'portal', email })
-    });
-    const data = await res.json();
-    if (data.url) window.location.href = data.url;
-  } catch(e) { showToast('⚠️ Subscription portal unavailable'); }
-}
-
-// Handle payment return
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('payment') === 'success') {
-  showToast('🎉 Subscription active! Welcome to Lumina AI ✦');
-  history.replaceState({}, '', window.location.pathname);
-}
-
-// ═══════════════════════════════════════
-// ACTIVITY HEATMAP (GitHub-style)
-// ═══════════════════════════════════════
-function renderActivityHeatmap() {
-  const container = document.getElementById('activity-heatmap');
-  if (!container) return;
-
-  // Load activity from localStorage
-  let activity = {};
-  try { const a = localStorage.getItem('lumina_activity'); if(a) activity = JSON.parse(a); } catch(e) {}
-
-  const today = new Date();
-  const days = 84; // 12 weeks
-  let html = '<div style="display:flex;gap:3px;flex-wrap:wrap">';
-  
-  for (let i = days - 1; i >= 0; i--) {
-    const d = new Date(today);
-    d.setDate(d.getDate() - i);
-    const key = d.toISOString().split('T')[0];
-    const val = activity[key] || 0;
-    const intensity = val === 0 ? 0 : val < 20 ? 1 : val < 50 ? 2 : val < 100 ? 3 : 4;
-    const colors = ['#1E2235','#C9A84C33','#C9A84C66','#C9A84C99','#C9A84C'];
-    const title = val > 0 ? `${key}: ${val} XP` : key;
-    html += `<div title="${title}" style="width:10px;height:10px;border-radius:2px;background:${colors[intensity]}"></div>`;
-  }
-  html += '</div>';
-  html += '<div style="font-size:.75rem;color:var(--muted);margin-top:.5rem">Activity over the last 12 weeks</div>';
-  container.innerHTML = html;
-}
-
-// Log activity whenever XP is earned
-function logActivity(xp) {
-  const key = new Date().toISOString().split('T')[0];
-  try {
-    let activity = {};
-    const a = localStorage.getItem('lumina_activity');
-    if (a) activity = JSON.parse(a);
-    activity[key] = (activity[key] || 0) + xp;
-    localStorage.setItem('lumina_activity', JSON.stringify(activity));
-    renderActivityHeatmap();
-  } catch(e) {}
-}
-
-// Patch addXP to log activity
-const _heatmapOrigXP = window.addXP;
-if (_heatmapOrigXP && !window._heatmapXPPatched) {
-  window._heatmapXPPatched = true;
-  window.addXP = function(amount, msg) {
-    _heatmapOrigXP(amount, msg);
-    logActivity(amount);
-  };
-}
-
-// ═══════════════════════════════════════
-// WEEKLY PROGRESS EMAIL (Sunday trigger)
-// ═══════════════════════════════════════
-function checkWeeklyEmail() {
-  const now = new Date();
-  if (now.getDay() !== 0) return; // Only Sunday
-  const lastEmail = localStorage.getItem('lumina_last_weekly_email');
-  if (lastEmail === now.toDateString()) return; // Already sent today
-
-  if (!state.user?.email) return;
-  const stats = {
-    questions: state.user.questions_answered || 0,
-    accuracy: state.user.accuracy || 0,
-    xp: state.user.xp || 0,
-    streak: state.user.streak || 0
-  };
-
-  fetch('/api/email', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: 'weekly', email: state.user.email, name: state.user.name, stats })
-  }).then(() => {
-    localStorage.setItem('lumina_last_weekly_email', now.toDateString());
-  }).catch(() => {});
-}
-
-// ═══════════════════════════════════════
-// REFERRAL SYSTEM
-// ═══════════════════════════════════════
-function generateReferralLink() {
-  const userId = state.user?.id || Math.random().toString(36).slice(2,8);
-  const link = `${window.location.origin}?ref=${userId}`;
-  navigator.clipboard.writeText(link).then(() => showToast('🔗 Referral link copied! Share it to earn 1 month free'));
-  return link;
-}
-
-// Check for referral on load
-const refCode = urlParams.get('ref');
-if (refCode) {
-  try { localStorage.setItem('lumina_referral', refCode); } catch(e) {}
-  showToast('🎁 You were referred! Sign up to get started');
-}
-
-// ═══════════════════════════════════════
-// NOTIFICATIONS / REMINDERS
-// ═══════════════════════════════════════
-function setupStudyReminders() {
-  if (!('Notification' in window)) return;
-  Notification.requestPermission().then(perm => {
-    if (perm === 'granted') {
-      // Check for upcoming exams and notify
-      const exams = JSON.parse(localStorage.getItem('lumina_exams') || '[]');
-      exams.forEach(exam => {
-        const daysLeft = Math.ceil((new Date(exam.date) - new Date()) / (1000*60*60*24));
-        if (daysLeft === 3 || daysLeft === 7) {
-          new Notification('📅 Lumina AI — Exam coming up!', {
-            body: `${exam.subject} is in ${daysLeft} days. Time to revise!`,
-            icon: '/favicon.ico'
-          });
-        }
-      });
-      showToast('🔔 Study reminders enabled!');
-    }
-  });
-}
-
-// ═══════════════════════════════════════
-// PATCH enterDashboard — init all new things
-// ═══════════════════════════════════════
-const _v10FinalEnter = window.enterDashboard;
-window.enterDashboard = function() {
-  if (_v10FinalEnter) _v10FinalEnter();
-  setTimeout(() => {
-    renderActivityHeatmap();
-    checkWeeklyEmail();
-  }, 1000);
-};
-
-console.log('✦ Lumina AI v10 FINAL — Stripe + Supabase + All Features');
-</script>
-
-</body>
-</html>
+// Subscription, heatmap, referral, reminders — see v10 Final section below
 
 <!-- ═══════════════════ GEOMETRY PANEL ═══════════════════ -->
 <div id="geo-panel">
@@ -6384,13 +6705,36 @@ function revealSR() {
 function rateSR(difficulty) {
   const xpMap = { easy:5, ok:10, hard:15 };
   addXP(xpMap[difficulty], difficulty==='hard'?'💪 Kept at it +15 XP':'⭐ +' + xpMap[difficulty]+' XP');
+  // Leitner spaced repetition scheduling
+  const card = srCards[srIndex % srCards.length];
+  if (card) {
+    const intervals = { easy: 7, ok: 3, hard: 1 }; // days until next review
+    const now = new Date();
+    card.lastReviewed = now.toISOString();
+    card.nextReview = new Date(now.getTime() + intervals[difficulty] * 24 * 60 * 60 * 1000).toISOString();
+    card.box = difficulty === 'easy' ? Math.min((card.box || 1) + 1, 5) : difficulty === 'hard' ? 1 : (card.box || 1);
+    card.reviewCount = (card.reviewCount || 0) + 1;
+    saveSRCards();
+  }
   srIndex++;
-  if (srIndex >= srCards.length) {
+  // Filter to only due cards
+  const dueCards = srCards.filter(c => !c.nextReview || new Date(c.nextReview) <= new Date());
+  if (srIndex >= srCards.length || dueCards.length === 0) {
     closeSR();
-    showToast('🎉 All cards reviewed! Come back tomorrow for more.');
+    const nextDue = srCards.filter(c => c.nextReview).sort((a,b) => new Date(a.nextReview) - new Date(b.nextReview))[0];
+    if (nextDue) {
+      const daysUntil = Math.ceil((new Date(nextDue.nextReview) - new Date()) / (1000*60*60*24));
+      showToast(`🎉 All cards reviewed! Next review in ${daysUntil} day${daysUntil !== 1 ? 's' : ''}.`);
+    } else {
+      showToast('🎉 All cards reviewed! Generate more cards to keep learning.');
+    }
     return;
   }
   loadSRCard();
+}
+
+function saveSRCards() {
+  try { localStorage.setItem('synaptiq_flashcards', JSON.stringify(srCards)); } catch(e) {}
 }
 
 async function generateSRCard() {
@@ -6604,7 +6948,7 @@ function pomPhaseEnd() {
     pom.isBreak = true;
     showToast('✅ Focus session done! Take a break.');
     if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification('Lumina AI — Break time!', { body: 'Great focus session! Time for a break 🎉', icon: '/favicon.ico' });
+      new Notification('Synaptiq — Break time!', { body: 'Great focus session! Time for a break 🎉', icon: '/favicon.ico' });
     }
   } else {
     pom.timeLeft = pom.duration;
@@ -6662,7 +7006,7 @@ function selectNoteTag(btn) {
   selectedNoteTag = btn.dataset.tag;
 }
 
-function saveNote() {
+async function saveNote() {
   const text = document.getElementById('note-text-input').value.trim();
   if (!text) { showToast('Please write something first!'); return; }
   const note = {
@@ -6678,6 +7022,21 @@ function saveNote() {
   renderNotes();
   addXP(5, '📓 Note saved +5 XP');
   showToast('✅ Note saved to your notebook!');
+  // Sync to backend
+  const token = localStorage.getItem('synaptiq_token');
+  if (token) {
+    try {
+      const res = await fetch('/api/notes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ text, subject: selectedNoteTag, tag: selectedNoteTag })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.note?.id) { note.backendId = data.note.id; saveNotesToStorage(); }
+      }
+    } catch(e) { /* Offline — local save is fine */ }
+  }
 }
 
 function saveLastMsgToNotes() {
@@ -6705,11 +7064,23 @@ async function aiSummariseNote() {
   }
 }
 
-function deleteNote(id) {
+async function deleteNote(id) {
+  const note = notes.find(n => n.id === id);
   notes = notes.filter(n => n.id !== id);
   saveNotesToStorage();
   renderNotes();
   showToast('🗑️ Note deleted');
+  // Sync to backend
+  const token = localStorage.getItem('synaptiq_token');
+  if (token && note?.backendId) {
+    try {
+      await fetch('/api/notes', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ id: note.backendId })
+      });
+    } catch(e) { /* Offline — local delete is fine */ }
+  }
 }
 
 function filterNotes(filter, btn) {
@@ -6744,22 +7115,52 @@ function renderNotes() {
 }
 
 function saveNotesToStorage() {
-  try { localStorage.setItem('lumina_notes', JSON.stringify(notes)); } catch(e) {}
+  try { localStorage.setItem('synaptiq_notes', JSON.stringify(notes)); } catch(e) {}
 }
 
-function loadNotesFromStorage() {
+async function loadNotesFromStorage() {
   try {
-    const saved = localStorage.getItem('lumina_notes');
+    const saved = localStorage.getItem('synaptiq_notes');
     if (saved) { notes = JSON.parse(saved); renderNotes(); }
   } catch(e) {}
+  // Try to load from backend
+  const token = localStorage.getItem('synaptiq_token');
+  if (token) {
+    try {
+      const res = await fetch('/api/notes', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.notes?.length) {
+          // Merge backend notes with local notes (avoid duplicates)
+          const localIds = new Set(notes.map(n => n.backendId).filter(Boolean));
+          data.notes.forEach(bn => {
+            if (!localIds.has(bn.id)) {
+              notes.push({
+                id: bn.id,
+                backendId: bn.id,
+                text: bn.text,
+                subject: bn.subject || bn.tag || 'General',
+                date: new Date(bn.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+                time: new Date(bn.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+              });
+            }
+          });
+          saveNotesToStorage();
+          renderNotes();
+        }
+      }
+    } catch(e) { /* Offline — use local notes */ }
+  }
 }
 
 // ═══════════════════════════════════════
 // ONBOARDING TOUR
 // ═══════════════════════════════════════
 const tourSteps = [
-  { title: 'Welcome to Lumina AI! 🎓', desc: "You're about to experience AI-powered learning built for every type of learner. Let me show you the 6 key features in 60 seconds.", target: null },
-  { title: 'AI Tutor 🤖', desc: 'This is your personal Lumina AI tutor. Ask anything — it explains step by step, adapts to your level, and remembers the subject you\'re studying.', target: 'si-tutor' },
+  { title: 'Welcome to Synaptiq! 🎓', desc: "You're about to experience AI-powered learning built for every type of learner. Let me show you the 6 key features in 60 seconds.", target: null },
+  { title: 'AI Tutor 🤖', desc: 'This is your personal Synaptiq tutor. Ask anything — it explains step by step, adapts to your level, and remembers the subject you\'re studying.', target: 'si-tutor' },
   { title: 'Question Generator 📝', desc: 'Generate real exam-style questions for any subject, board, or topic. Get instant AI feedback on your answers.', target: 'si-questions' },
   { title: 'Your Notebook 📓', desc: 'Save important AI explanations and formulas here. Use the Save to Notes button after any tutor response.', target: 'si-notes' },
   { title: 'Accessibility Modes ♿', desc: 'Three independent modes — ADHD, Dyslexia, and Dyscalculia. Each adapts the whole platform to how you learn best. Toggle them anytime.', target: 'a11y-bar' },
@@ -6818,7 +7219,7 @@ function tourNext() {
 
 function skipTour() {
   document.getElementById('tour-overlay').classList.remove('show');
-  try { localStorage.setItem('lumina_tour_done', '1'); } catch(e) {}
+  try { localStorage.setItem('synaptiq_tour_done', '1'); } catch(e) {}
 }
 
 // ═══════════════════════════════════════
@@ -6828,7 +7229,7 @@ function toggleLightMode() {
   document.body.classList.toggle('light-mode');
   const tog = document.getElementById('tog-light');
   if (tog) tog.classList.toggle('on', document.body.classList.contains('light-mode'));
-  try { localStorage.setItem('lumina_light', document.body.classList.contains('light-mode') ? '1' : '0'); } catch(e) {}
+  try { localStorage.setItem('synaptiq_light', document.body.classList.contains('light-mode') ? '1' : '0'); } catch(e) {}
 }
 
 // ═══════════════════════════════════════
@@ -6996,7 +7397,7 @@ window.enterDashboard = function() {
 
   // Load light mode preference
   try {
-    if (localStorage.getItem('lumina_light') === '1') {
+    if (localStorage.getItem('synaptiq_light') === '1') {
       document.body.classList.add('light-mode');
       const tog = document.getElementById('tog-light');
       if (tog) tog.classList.add('on');
@@ -7028,7 +7429,7 @@ window.enterDashboard = function() {
 
   // Show tour for first-time users
   try {
-    if (!localStorage.getItem('lumina_tour_done')) {
+    if (!localStorage.getItem('synaptiq_tour_done')) {
       setTimeout(startTour, 1000);
     }
   } catch(e) {}
@@ -7057,7 +7458,7 @@ window.showDash = function(sub) {
 // ═══════════════════════════════════════
 const featureChecklist = {
   'Core Platform': [
-    { name: 'AI Tutor (Lumina AI)', done: true },
+    { name: 'AI Tutor (Synaptiq)', done: true },
     { name: 'Question Paper Generator', done: true },
     { name: 'Real Authentication (backend)', done: false, note: 'Using localStorage session' },
     { name: 'Search Bar', done: true },
@@ -7107,10 +7508,7 @@ const featureChecklist = {
   ]
 };
 
-console.log('Lumina AI v8 Feature Checklist:');
 Object.entries(featureChecklist).forEach(([cat, items]) => {
-  console.log('\n' + cat.toUpperCase());
-  items.forEach(i => console.log((i.done ? '✅' : '⬜') + ' ' + i.name + (i.note ? ' (' + i.note + ')' : '')));
 });
 </script>
 <script>
@@ -7133,6 +7531,7 @@ function handleEssayImage(e) {
 }
 
 async function markEssay() {
+  if (!canAccessPremiumFeature('essay')) return;
   const subject = document.getElementById('essay-subject').value;
   const board = document.getElementById('essay-board').value;
   const question = document.getElementById('essay-question').value;
@@ -7144,14 +7543,33 @@ async function markEssay() {
   btn.disabled = true;
   document.getElementById('essay-results').style.display = 'none';
 
-  const sys = `You are an experienced UK ${subject} examiner for ${board}. Mark the student's essay strictly. Return ONLY valid JSON with NO markdown:
+  // Board-specific Assessment Objectives
+  const boardRubrics = {
+    'English': {
+      'AQA': [{ name: 'AO1: Response to text & textual references', weight: 30 }, { name: 'AO2: Language, form & structure analysis', weight: 30 }, { name: 'AO3: Context & setting', weight: 20 }, { name: 'AO4: Spelling, punctuation & grammar', weight: 20 }],
+      'Edexcel': [{ name: 'AO1: Critical reading & textual reference', weight: 25 }, { name: 'AO2: Effects of language & structure', weight: 30 }, { name: 'AO3: Relationship between text & context', weight: 25 }, { name: 'AO4: Technical accuracy', weight: 20 }],
+      'default': [{ name: 'AO1: Knowledge & Understanding', weight: 25 }, { name: 'AO2: Analysis of language & structure', weight: 30 }, { name: 'AO3: Contexts', weight: 25 }, { name: 'AO4: Written accuracy', weight: 20 }]
+    },
+    'History': {
+      'AQA': [{ name: 'AO1: Historical knowledge & understanding', weight: 40 }, { name: 'AO2: Analysis & evaluation of sources', weight: 35 }, { name: 'AO3: Historical interpretation', weight: 25 }],
+      'default': [{ name: 'AO1: Knowledge & understanding', weight: 35 }, { name: 'AO2: Source analysis', weight: 35 }, { name: 'AO3: Interpretation', weight: 30 }]
+    },
+    'default': [{ name: 'AO1: Knowledge & Understanding', weight: 30 }, { name: 'AO2: Application & Analysis', weight: 30 }, { name: 'AO3: Evaluation & Judgement', weight: 25 }, { name: 'AO4: Communication & Quality', weight: 15 }]
+  };
+  const subjectRubrics = boardRubrics[subject] || {};
+  const rubric = subjectRubrics[board] || subjectRubrics['default'] || boardRubrics['default'];
+  const rubricStr = rubric.map(r => `{"name":"${r.name}","score":0}`).join(',');
+
+  let sys = `You are an experienced UK ${subject} examiner for ${board}. Mark the student's essay strictly using the ${board} mark scheme conventions. Return ONLY valid JSON with NO markdown:
 {
-  "grade": "A*|A|B|C|D|E",
+  "grade": "A*|A|B|C|D|E" (or 9-1 for GCSE),
   "marks": "e.g. 28/30",
-  "criteria": [{"name":"AO1 Knowledge","score":85},{"name":"AO2 Analysis","score":72},{"name":"AO3 Context","score":68},{"name":"AO4 Expression","score":90}],
-  "feedback": "Detailed paragraph feedback",
-  "improve": "Specific bullet points on how to improve"
-}`;
+  "criteria": [${rubricStr}],
+  "feedback": "Detailed paragraph feedback referencing specific ${board} mark scheme descriptors",
+  "improve": "Specific bullet points referencing ${board} assessment criteria on how to improve"
+}
+Score each criterion 0-100 based on the ${board} mark scheme band descriptors. Be specific about which band the student is working at.`;
+  sys += getSafeguardingPrompt();
 
   const msgs = [{ role: 'user', content: `Question: ${question || 'General essay'}\n\nEssay:\n${text}` }];
 
@@ -7177,7 +7595,7 @@ async function markEssay() {
         <div class="essay-criteria-score">${c.score}%</div>
       </div>`).join('');
 
-    document.getElementById('essay-feedback-text').innerHTML = (result.feedback || '').replace(/\n/g,'<br>');
+    document.getElementById('essay-feedback-text').innerHTML = renderAIResponse(result.feedback || '');
     document.getElementById('essay-improve-text').innerHTML = (result.improve || '').replace(/\n/g,'<br>');
     document.getElementById('essay-results').style.display = 'block';
     addXP(30, '✍️ Essay marked +30 XP');
@@ -7199,7 +7617,7 @@ function exportEssayFeedback() {
   const content = `LUMINA AI — ESSAY FEEDBACK\n${'='.repeat(40)}\n${grade} | ${marks}\n\nFEEDBACK:\n${feedback}\n\nHOW TO IMPROVE:\n${improve}`;
   const blob = new Blob([content], { type: 'text/plain' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = 'lumina-essay-feedback.txt'; a.click();
+  a.download = 'synaptiq-essay-feedback.txt'; a.click();
 }
 
 // ─── IMAGE UPLOAD TO TUTOR ───────────────────────────
@@ -7270,7 +7688,7 @@ window.callTutor = async function(userText) {
 };
 
 function buildTutorSystem() {
-  let sys = `You are Lumina, a friendly and expert UK tutor for ${state.subject || 'all subjects'}. Explain clearly, use examples, and adapt to the student's level. Use UK English and follow UK curriculum standards. If an image is provided, analyse it thoroughly.`;
+  let sys = `You are Synaptiq, a friendly and expert UK tutor for ${state.subject || 'all subjects'}. Explain clearly, use examples, and adapt to the student's level. Use UK English and follow UK curriculum standards. If an image is provided, analyse it thoroughly.`;
   if (state.modes?.adhd) sys += '\nADHD MODE: Use numbered steps, short sentences, clear structure.';
   if (state.modes?.dyslexia) sys += '\nDYSLEXIA MODE: Short sentences, bullet points, simple vocabulary.';
   if (state.modes?.dyscalculia) sys += '\nDYSCALCULIA MODE: Explain maths visually, step by step, words first then numbers.';
@@ -7339,8 +7757,8 @@ function renderExams() {
   }).join('');
 }
 
-function saveExams() { try { localStorage.setItem('lumina_exams', JSON.stringify(exams)); } catch(e) {} }
-function loadExams() { try { const s = localStorage.getItem('lumina_exams'); if (s) { exams = JSON.parse(s); renderExams(); } } catch(e) {} }
+function saveExams() { try { localStorage.setItem('synaptiq_exams', JSON.stringify(exams)); } catch(e) {} }
+function loadExams() { try { const s = localStorage.getItem('synaptiq_exams'); if (s) { exams = JSON.parse(s); renderExams(); } } catch(e) {} }
 
 // ─── REVISION TIMETABLE ──────────────────────────────
 async function generateTimetable() {
@@ -7386,7 +7804,7 @@ Each day should have ${hours} hours of study split into 45-60 min sessions. Rest
 }
 
 function saveRevisionToNotes() {
-  document.getElementById('note-text-input').value = 'REVISION TIMETABLE — Generated by Lumina AI\n\nSee Exam Countdown page for full timetable.';
+  document.getElementById('note-text-input').value = 'REVISION TIMETABLE — Generated by Synaptiq\n\nSee Exam Countdown page for full timetable.';
   selectedNoteTag = 'General';
   showDash('notes');
   showToast('📓 Timetable reference saved to Notes');
@@ -7402,11 +7820,11 @@ function saveChatToHistory(subject, question, preview) {
     time: new Date().toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'})
   });
   if (chatHistory.length > 100) chatHistory = chatHistory.slice(0, 100);
-  try { localStorage.setItem('lumina_history', JSON.stringify(chatHistory)); } catch(e) {}
+  try { localStorage.setItem('synaptiq_history', JSON.stringify(chatHistory)); } catch(e) {}
 }
 
 function loadChatHistory() {
-  try { const s = localStorage.getItem('lumina_history'); if (s) chatHistory = JSON.parse(s); } catch(e) {}
+  try { const s = localStorage.getItem('synaptiq_history'); if (s) chatHistory = JSON.parse(s); } catch(e) {}
   renderHistory();
 }
 
@@ -7434,7 +7852,7 @@ function renderHistory(filter='') {
 }
 
 function filterHistory(q) { renderHistory(q.toLowerCase()); }
-function clearHistory() { chatHistory = []; try { localStorage.removeItem('lumina_history'); } catch(e) {} renderHistory(); showToast('🗑️ Chat history cleared'); }
+function clearHistory() { chatHistory = []; try { localStorage.removeItem('synaptiq_history'); } catch(e) {} renderHistory(); showToast('🗑️ Chat history cleared'); }
 function replayChat(id) { showDash('tutor'); showToast('💬 Conversation loaded in Tutor'); }
 
 // ─── GLOSSARY ────────────────────────────────────────
@@ -7494,7 +7912,7 @@ function renderGlossary() {
   if (!container) return;
   const letters = Object.keys(glossaryTerms).sort();
   if (!letters.length) {
-    container.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--muted)"><div style="font-size:3rem;margin-bottom:1rem">📖</div><div style="font-weight:700;margin-bottom:.5rem">Search for a term to get started</div><div style="font-size:.875rem">Type any word or concept above and Lumina AI will define it</div></div>';
+    container.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--muted)"><div style="font-size:3rem;margin-bottom:1rem">📖</div><div style="font-weight:700;margin-bottom:.5rem">Search for a term to get started</div><div style="font-size:.875rem">Type any word or concept above and Synaptiq will define it</div></div>';
     return;
   }
   container.innerHTML = letters.map(l =>
@@ -7527,7 +7945,7 @@ async function generatePastPaper() {
     const questions = JSON.parse(raw);
     const paper = { id: Date.now(), subject, board, diff, questions, date: new Date().toLocaleDateString('en-GB') };
     savedPapers.unshift(paper);
-    try { localStorage.setItem('lumina_papers', JSON.stringify(savedPapers.slice(0,20))); } catch(e) {}
+    try { localStorage.setItem('synaptiq_papers', JSON.stringify(savedPapers.slice(0,20))); } catch(e) {}
     renderPapers();
     addXP(20, '📄 Paper generated +20 XP');
   } catch(e) { showToast('⚠️ Could not generate paper'); document.getElementById('papers-list').innerHTML = ''; }
@@ -7557,7 +7975,7 @@ function openPaper(id) {
   showToast('📄 Paper loaded — check Questions tab');
 }
 
-function loadPapers() { try { const s = localStorage.getItem('lumina_papers'); if (s) { savedPapers = JSON.parse(s); renderPapers(); } } catch(e) {} }
+function loadPapers() { try { const s = localStorage.getItem('synaptiq_papers'); if (s) { savedPapers = JSON.parse(s); renderPapers(); } } catch(e) {} }
 
 // ─── VIDEO GENERATOR ─────────────────────────────────
 let vidScenes = []; let vidIdx = 0; let vidPlaying = false; let vidInterval = null;
@@ -7570,6 +7988,7 @@ function selectVidStyle(btn) {
 }
 
 async function generateVideo() {
+  if (!canAccessPremiumFeature('video')) return;
   const topic = document.getElementById('vid-topic').value.trim();
   const subject = document.getElementById('vid-subject').value;
   const level = document.getElementById('vid-level').value;
@@ -7712,7 +8131,7 @@ function changeFontSize(dir) {
   fontSize = Math.max(80, Math.min(130, fontSize + dir * 5));
   document.documentElement.style.fontSize = fontSize + '%';
   document.getElementById('fs-display').textContent = fontSize + '%';
-  try { localStorage.setItem('lumina_fontsize', fontSize); } catch(e) {}
+  try { localStorage.setItem('synaptiq_fontsize', fontSize); } catch(e) {}
 }
 
 // ─── PDF EXPORT ──────────────────────────────────────
@@ -7720,7 +8139,7 @@ function exportQuestionsPDF() {
   const questions = document.getElementById('generated-questions');
   if (!questions || !questions.children.length) { showToast('Generate questions first!'); return; }
   const printWindow = window.open('', '_blank');
-  printWindow.document.write(`<html><head><title>Lumina Questions</title>
+  printWindow.document.write(`<html><head><title>Synaptiq Questions</title>
   <style>body{font-family:Georgia,serif;padding:2rem;max-width:800px;margin:0 auto;color:#111}
   h1{font-size:1.5rem;margin-bottom:.5rem}hr{margin:2rem 0;border-color:#ddd}
   .q{margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid #eee}
@@ -7862,27 +8281,7 @@ function exportQuestionsPDF() {
 .auth-loading { opacity: .5; pointer-events: none; }
 
 
-/* ── COOKIE BANNER ── */
-.cookie-banner {
-  position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
-  background: var(--bg2); border-top: 1px solid var(--border);
-  padding: 1rem 1.5rem; display: flex; align-items: center;
-  gap: 1rem; flex-wrap: wrap; box-shadow: 0 -8px 32px rgba(0,0,0,0.4);
-  transform: translateY(100%); transition: transform .4s ease;
-}
-.cookie-banner.show { transform: translateY(0); }
-.cookie-banner p { flex: 1; font-size: .85rem; color: var(--muted); min-width: 200px; }
-.cookie-btn-accept {
-  background: var(--gold); color: var(--black); border: none;
-  border-radius: 8px; padding: .5rem 1.25rem; font-weight: 700;
-  cursor: pointer; font-family: var(--font-body); font-size: .875rem;
-  white-space: nowrap;
-}
-.cookie-btn-decline {
-  background: transparent; color: var(--muted); border: 1px solid var(--border);
-  border-radius: 8px; padding: .5rem 1.25rem; cursor: pointer;
-  font-family: var(--font-body); font-size: .875rem; white-space: nowrap;
-}
+/* Cookie banner — see #cookie-banner in main CSS */
 /* ── CALCULATOR ── */
 .calc-display {
   background: var(--bg1); border: 1px solid var(--border);
@@ -7985,7 +8384,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 
 </style>
 </head>
-  <body><h1>📝 Lumina AI — Practice Questions</h1><p style="color:#888">Generated ${new Date().toLocaleDateString('en-GB')}</p><hr>
+  <body><h1>📝 Synaptiq — Practice Questions</h1><p style="color:#888">Generated ${new Date().toLocaleDateString('en-GB')}</p><hr>
   ${Array.from(questions.children).map((q,i) => {
     const text = q.querySelector('.question-text')?.textContent || '';
     const marks = q.querySelector('.q-marks')?.textContent || '';
@@ -8036,7 +8435,7 @@ async function manageSubscription() {
 // Handle payment return
 const urlParams = new URLSearchParams(window.location.search);
 if (urlParams.get('payment') === 'success') {
-  showToast('🎉 Subscription active! Welcome to Lumina AI ✦');
+  showToast('🎉 Subscription active! Welcome to Synaptiq ✦');
   history.replaceState({}, '', window.location.pathname);
 }
 
@@ -8049,7 +8448,7 @@ function renderActivityHeatmap() {
 
   // Load activity from localStorage
   let activity = {};
-  try { const a = localStorage.getItem('lumina_activity'); if(a) activity = JSON.parse(a); } catch(e) {}
+  try { const a = localStorage.getItem('synaptiq_activity'); if(a) activity = JSON.parse(a); } catch(e) {}
 
   const today = new Date();
   const days = 84; // 12 weeks
@@ -8075,10 +8474,10 @@ function logActivity(xp) {
   const key = new Date().toISOString().split('T')[0];
   try {
     let activity = {};
-    const a = localStorage.getItem('lumina_activity');
+    const a = localStorage.getItem('synaptiq_activity');
     if (a) activity = JSON.parse(a);
     activity[key] = (activity[key] || 0) + xp;
-    localStorage.setItem('lumina_activity', JSON.stringify(activity));
+    localStorage.setItem('synaptiq_activity', JSON.stringify(activity));
     renderActivityHeatmap();
   } catch(e) {}
 }
@@ -8099,7 +8498,7 @@ if (_heatmapOrigXP && !window._heatmapXPPatched) {
 function checkWeeklyEmail() {
   const now = new Date();
   if (now.getDay() !== 0) return; // Only Sunday
-  const lastEmail = localStorage.getItem('lumina_last_weekly_email');
+  const lastEmail = localStorage.getItem('synaptiq_last_weekly_email');
   if (lastEmail === now.toDateString()) return; // Already sent today
 
   if (!state.user?.email) return;
@@ -8115,7 +8514,7 @@ function checkWeeklyEmail() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: 'weekly', email: state.user.email, name: state.user.name, stats })
   }).then(() => {
-    localStorage.setItem('lumina_last_weekly_email', now.toDateString());
+    localStorage.setItem('synaptiq_last_weekly_email', now.toDateString());
   }).catch(() => {});
 }
 
@@ -8129,7 +8528,12 @@ function generateReferralLink() {
   return link;
 }
 
-
+// Check for referral on load
+const refCode = urlParams.get('ref');
+if (refCode) {
+  try { localStorage.setItem('synaptiq_referral', refCode); } catch(e) {}
+  showToast('🎁 You were referred! Sign up to get started');
+}
 
 // ═══════════════════════════════════════
 // NOTIFICATIONS / REMINDERS
@@ -8139,11 +8543,11 @@ function setupStudyReminders() {
   Notification.requestPermission().then(perm => {
     if (perm === 'granted') {
       // Check for upcoming exams and notify
-      const exams = JSON.parse(localStorage.getItem('lumina_exams') || '[]');
+      const exams = JSON.parse(localStorage.getItem('synaptiq_exams') || '[]');
       exams.forEach(exam => {
         const daysLeft = Math.ceil((new Date(exam.date) - new Date()) / (1000*60*60*24));
         if (daysLeft === 3 || daysLeft === 7) {
-          new Notification('📅 Lumina AI — Exam coming up!', {
+          new Notification('📅 Synaptiq — Exam coming up!', {
             body: `${exam.subject} is in ${daysLeft} days. Time to revise!`,
             icon: '/favicon.ico'
           });
@@ -8166,7 +8570,13 @@ window.enterDashboard = function() {
   }, 1000);
 };
 
-console.log('✦ Lumina AI v10 FINAL — Stripe + Supabase + All Features');
+
+</script>
+
+</body></html>`);
+  printWindow.document.close();
+  printWindow.print();
+}
 
 // ─── SHARE QUESTION ──────────────────────────────────
 function shareQuestion() {
@@ -8182,11 +8592,11 @@ function copyShareLink() {
 }
 function shareViaWhatsApp() {
   const text = document.getElementById('share-question-preview').textContent;
-  window.open(`https://wa.me/?text=${encodeURIComponent('Check out this practice question from Lumina AI: ' + text)}`);
+  window.open(`https://wa.me/?text=${encodeURIComponent('Check out this practice question from Synaptiq: ' + text)}`);
 }
 function shareViaEmail() {
   const text = document.getElementById('share-question-preview').textContent;
-  window.open(`mailto:?subject=Practice Question from Lumina AI&body=${encodeURIComponent(text)}`);
+  window.open(`mailto:?subject=Practice Question from Synaptiq&body=${encodeURIComponent(text)}`);
 }
 
 // ─── PASSWORD RESET ───────────────────────────────────
@@ -8233,7 +8643,7 @@ function setLanguage(lang) {
     });
     showToast('🇬🇧 Language set to English');
   }
-  try { localStorage.setItem('lumina_lang', lang); } catch(e) {}
+  try { localStorage.setItem('synaptiq_lang', lang); } catch(e) {}
 }
 
 // ─── KEYBOARD SHORTCUTS ───────────────────────────────
@@ -8262,7 +8672,21 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// Service worker registered below (see OFFLINE MODE block)
+// ─── PWA SERVICE WORKER ───────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    // Register inline service worker for offline capability
+    const swCode = `
+const CACHE = 'synaptiq-v9';
+const ASSETS = ['/'];
+self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS))));
+self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).catch(() => caches.match('/')))));
+    `;
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(swUrl).catch(() => {});
+  });
+}
 
 // ─── PATCH enterDashboard ─────────────────────────────
 const _v9PrevEnter = window.enterDashboard;
@@ -8274,11 +8698,11 @@ window.enterDashboard = function() {
   renderLeaderboard();
   // Restore font size
   try {
-    const fs = localStorage.getItem('lumina_fontsize');
+    const fs = localStorage.getItem('synaptiq_fontsize');
     if (fs) { fontSize = parseInt(fs); document.documentElement.style.fontSize = fs + '%'; const el = document.getElementById('fs-display'); if(el) el.textContent = fs + '%'; }
   } catch(e) {}
   // Restore language
-  try { const l = localStorage.getItem('lumina_lang'); if(l==='cy') setLanguage('cy'); } catch(e) {}
+  try { const l = localStorage.getItem('synaptiq_lang'); if(l==='cy') setLanguage('cy'); } catch(e) {}
 };
 
 // ─── PATCH showDash ───────────────────────────────────
@@ -8317,11 +8741,11 @@ window.handleLogin = function() {
   const u = state.user;
   if (u && (u.questions === undefined || u.questions === 847)) {
     u.questions = 0; u.accuracy = 0; u.streak = 0; u.topics = 0; u.xp = 0; u.level = 1;
-    try { localStorage.setItem('lumina_user', JSON.stringify(u)); } catch(e) {}
+    try { localStorage.setItem('synaptiq_user', JSON.stringify(u)); } catch(e) {}
   }
 };
 
-console.log('✦ Lumina AI v9 loaded — all features active');
+
 </script>
 <script>
 // ════════════════════════════════════════════════════
@@ -8336,7 +8760,7 @@ let supabaseClient = null;
 function initSupabase() {
   if (SUPABASE_URL && SUPABASE_ANON && window.supabase) {
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-    console.log('✦ Supabase connected');
+    
     checkExistingSession();
   }
 }
@@ -8375,14 +8799,14 @@ async function realLogin(email, password) {
   const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', data.user.id).single();
   state.user = { ...data.user, ...profile, token: data.session.access_token };
   state.user.name = profile?.name || email.split('@')[0];
-  try { localStorage.setItem('lumina_token', data.session.access_token); } catch(e) {}
+  try { localStorage.setItem('synaptiq_token', data.session.access_token); } catch(e) {}
   showAuthLoading(false);
   enterDashboard();
 }
 
 async function realLogout() {
   if (supabaseClient) await supabaseClient.auth.signOut();
-  try { localStorage.removeItem('lumina_token'); } catch(e) {}
+  try { localStorage.removeItem('synaptiq_token'); } catch(e) {}
   state.user = null;
   location.reload();
 }
@@ -8397,11 +8821,11 @@ async function realResetPassword(email) {
 // Fallback (localStorage) when Supabase not configured
 function fallbackSignup(name, email, plan) {
   state.user = { name, email, plan:plan||'student', xp:0, level:1, streak:0, questions_answered:0 };
-  try { localStorage.setItem('lumina_user', JSON.stringify(state.user)); } catch(e) {}
+  try { localStorage.setItem('synaptiq_user', JSON.stringify(state.user)); } catch(e) {}
   enterDashboard();
 }
 function fallbackLogin(email) {
-  try { const u = localStorage.getItem('lumina_user'); if(u) { state.user = JSON.parse(u); enterDashboard(); return; } } catch(e) {}
+  try { const u = localStorage.getItem('synaptiq_user'); if(u) { state.user = JSON.parse(u); enterDashboard(); return; } } catch(e) {}
   state.user = { name: email.split('@')[0], email, xp:0, level:1, streak:0 };
   enterDashboard();
 }
@@ -8477,6 +8901,7 @@ function handlePhotoQuestion(e) {
 }
 
 async function solvePhoto() {
+  if (!canAccessPremiumFeature('photo')) return;
   if (!photoImageData) return;
   const subject = document.getElementById('photo-subject').value;
   const mode = document.getElementById('photo-mode').value;
@@ -8490,13 +8915,14 @@ async function solvePhoto() {
     hint: 'Give me just a hint — one or two sentences pointing me in the right direction. Do not solve it.'
   };
 
-  const sys = `You are an expert UK ${subject} tutor. A student has photographed a question. ${modeInstructions[mode]} Use UK curriculum standards and clear formatting.`;
+  let sys = `You are an expert UK ${subject} tutor. A student has photographed a question. ${modeInstructions[mode]} Use UK curriculum standards and clear formatting.`;
+  sys += getSafeguardingPrompt();
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        model: 'claude-opus-4-6', max_tokens: 1500,
+        model: 'claude-sonnet-4-6', max_tokens: 1500,
         system: sys,
         messages: [{ role: 'user', content: [
           { type: 'image', source: { type: 'base64', media_type: photoImageData.type, data: photoImageData.data } },
@@ -8506,7 +8932,7 @@ async function solvePhoto() {
     });
     const data = await res.json();
     const answer = data.content?.[0]?.text || 'Could not analyse image';
-    document.getElementById('photo-answer-text').innerHTML = answer.replace(/\n/g,'<br>');
+    document.getElementById('photo-answer-text').innerHTML = renderAIResponse(answer);
     document.getElementById('photo-answer').style.display = 'block';
     if (window.MathJax) MathJax.typesetPromise([document.getElementById('photo-answer-text')]).catch(()=>{});
     addXP(15, '📷 Photo question solved +15 XP');
@@ -8612,7 +9038,7 @@ function downloadMindMap() {
 
 function saveMindMapToNotes() {
   const topic = document.getElementById('mindmap-topic').value;
-  document.getElementById('note-text-input').value = `MIND MAP: ${topic}\n\nMind map generated by Lumina AI — view it in the Mind Map section.`;
+  document.getElementById('note-text-input').value = `MIND MAP: ${topic}\n\nMind map generated by Synaptiq — view it in the Mind Map section.`;
   showDash('notes'); showToast('📓 Mind map reference saved');
 }
 
@@ -8685,8 +9111,8 @@ const moodResponses = {
   good: { title: "Good mindset for learning 👍", advice: "You're ready to study effectively. Mix some new learning with revision practice. Try the question generator to test what you know.", session: 'questions' },
   okay: { title: "That's okay — let's work with it 😊", advice: "When you're feeling okay, shorter focused sessions work better. Try a 25-minute Pomodoro, then a proper break. Start with a subject you enjoy.", session: 'tutor' },
   tired: { title: "Let's take it gently 😴", advice: "When tired, avoid trying to learn new things — it won't stick. Instead, review flashcards or watch a short video explainer. Light review is still valuable.", session: 'video' },
-  stressed: { title: "I hear you — let's breathe first 🌿", advice: "Stress blocks learning. Before we start: take 5 slow deep breaths. Then let's do something manageable — one small topic, one Pomodoro session. You don't have to do everything today.", session: 'mood-break' },
-  unmotivated: { title: "Motivation isn't always there — that's normal 💙", advice: "You don't need to feel motivated to get started — just start with 5 minutes. Try something visual like a mind map or video explainer. Action creates motivation, not the other way around.", session: 'video' }
+  stressed: { title: "I hear you — let's breathe first 🌿", advice: "Stress blocks learning. Before we start: take 5 slow deep breaths (in for 4, hold for 4, out for 4). Then let's do something manageable — one small topic, one short session. You don't have to do everything today.<br><br>If you're feeling overwhelmed, please reach out to <strong>Samaritans: 116 123</strong> (free, 24/7).", session: 'mood-break' },
+  low: { title: "It's okay not to be okay 💙", advice: "Your wellbeing matters more than any exam. Take a break, talk to someone you trust, or do something that makes you feel better. There is no pressure to study right now.<br><br>If you need someone to talk to, call <strong>Samaritans: 116 123</strong> — it's free, confidential, and available 24/7. You're not alone.", session: null }
 };
 
 function selectMood(btn) {
@@ -8699,7 +9125,7 @@ function selectMood(btn) {
   document.getElementById('mood-advice').innerHTML = `<strong style="color:var(--gold)">${response.title}</strong><br><br>${response.advice}`;
   el.style.display = 'block';
   // Store mood
-  try { localStorage.setItem('lumina_mood', JSON.stringify({mood, date: new Date().toISOString()})); } catch(e) {}
+  try { localStorage.setItem('synaptiq_mood', JSON.stringify({mood, date: new Date().toISOString()})); } catch(e) {}
 }
 
 function startMoodSession() {
@@ -8812,10 +9238,10 @@ function renderMistakes() {
 
   // Load from localStorage (real data comes from Supabase)
   let mistakes = [];
-  try { const m = localStorage.getItem('lumina_mistakes'); if(m) mistakes = JSON.parse(m); } catch(e) {}
+  try { const m = localStorage.getItem('synaptiq_mistakes'); if(m) mistakes = JSON.parse(m); } catch(e) {}
 
   if (!mistakes.length) {
-    container.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--muted)"><div style="font-size:3rem;margin-bottom:1rem">✅</div><div style="font-weight:700">No mistakes tracked yet</div><div style="font-size:.875rem;margin-top:.5rem">As you answer questions, Lumina tracks what you get wrong so you can focus your revision</div></div>';
+    container.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--muted)"><div style="font-size:3rem;margin-bottom:1rem">✅</div><div style="font-weight:700">No mistakes tracked yet</div><div style="font-size:.875rem;margin-top:.5rem">As you answer questions, Synaptiq tracks what you get wrong so you can focus your revision</div></div>';
     return;
   }
 
@@ -8846,7 +9272,7 @@ function practiseTopic(subject, topic) {
 
 function practiseMistakes() {
   let mistakes = [];
-  try { const m = localStorage.getItem('lumina_mistakes'); if(m) mistakes = JSON.parse(m); } catch(e) {}
+  try { const m = localStorage.getItem('synaptiq_mistakes'); if(m) mistakes = JSON.parse(m); } catch(e) {}
   if (!mistakes.length) { showToast('No mistakes to practise yet'); return; }
   const top = mistakes.slice(0,3).map(m => `${m.topic} (${m.subject})`).join(', ');
   showDash('tutor');
@@ -8994,7 +9420,7 @@ function addMnemonicToFlashcards() {
   // Add to flashcards state
   if (window.flashcards) {
     window.flashcards.push({ id: Date.now(), subject, front: `Mnemonic for: ${topic}`, back: text.slice(0,200), nextReview: 1 });
-    try { localStorage.setItem('lumina_flashcards', JSON.stringify(window.flashcards)); } catch(e) {}
+    try { localStorage.setItem('synaptiq_flashcards', JSON.stringify(window.flashcards)); } catch(e) {}
   }
   showToast('🧠 Added to Flashcards!');
 }
@@ -9051,33 +9477,14 @@ window.addEventListener('DOMContentLoaded', () => {
   setTimeout(initSupabase, 500);
 });
 
-console.log('✦ Lumina AI v10 — All features loaded');
+
 </script>
 <script>
 // ════════════════════════════════════════════════════
 // LUMINA AI V11 — COMPLETE FEATURE SET
 // ════════════════════════════════════════════════════
 
-// ─── COOKIE BANNER ───────────────────────────────────
-function initCookieBanner() {
-  try { if (localStorage.getItem('lumina_cookies_accepted')) return; } catch(e) {}
-  const banner = document.createElement('div');
-  banner.className = 'cookie-banner';
-  banner.id = 'cookie-banner';
-  banner.innerHTML = `
-    <p>🍪 We use essential cookies to keep you logged in, and optional analytics cookies to improve Lumina AI. 
-    <a href="/cookies.html" style="color:var(--gold)">Learn more</a></p>
-    <button class="cookie-btn-decline" onclick="acceptCookies(false)">Essential only</button>
-    <button class="cookie-btn-accept" onclick="acceptCookies(true)">Accept all</button>`;
-  document.body.appendChild(banner);
-  setTimeout(() => banner.classList.add('show'), 500);
-}
-
-function acceptCookies(all) {
-  try { localStorage.setItem('lumina_cookies_accepted', all ? 'all' : 'essential'); } catch(e) {}
-  const banner = document.getElementById('cookie-banner');
-  if (banner) { banner.style.transform = 'translateY(100%)'; setTimeout(() => banner.remove(), 400); }
-}
+// Cookie banner handled by main script section
 
 // ─── SCIENTIFIC CALCULATOR ────────────────────────────
 let calcExpr = '';
@@ -9469,13 +9876,13 @@ function toggleVoiceInput() {
 
 // ─── BOOKMARKS ───────────────────────────────────────
 let bookmarks = [];
-try { const b = localStorage.getItem('lumina_bookmarks'); if(b) bookmarks = JSON.parse(b); } catch(e) {}
+try { const b = localStorage.getItem('synaptiq_bookmarks'); if(b) bookmarks = JSON.parse(b); } catch(e) {}
 
 function addBookmark(type, title, content) {
   const bookmark = { id: Date.now(), type, title, content: content.slice(0,500), date: new Date().toISOString() };
   bookmarks.unshift(bookmark);
   if (bookmarks.length > 100) bookmarks.pop();
-  try { localStorage.setItem('lumina_bookmarks', JSON.stringify(bookmarks)); } catch(e) {}
+  try { localStorage.setItem('synaptiq_bookmarks', JSON.stringify(bookmarks)); } catch(e) {}
   showToast('🔖 Bookmarked!');
 }
 
@@ -9520,14 +9927,14 @@ function filterBookmarks() {
 
 function deleteBookmark(id) {
   bookmarks = bookmarks.filter(b => b.id !== id);
-  try { localStorage.setItem('lumina_bookmarks', JSON.stringify(bookmarks)); } catch(e) {}
+  try { localStorage.setItem('synaptiq_bookmarks', JSON.stringify(bookmarks)); } catch(e) {}
   renderBookmarks();
 }
 
 function clearBookmarks() {
   if (!confirm('Delete all bookmarks?')) return;
   bookmarks = [];
-  try { localStorage.removeItem('lumina_bookmarks'); } catch(e) {}
+  try { localStorage.removeItem('synaptiq_bookmarks'); } catch(e) {}
   renderBookmarks();
 }
 
@@ -9537,9 +9944,9 @@ let todayProgress = { questions: 0, minutes: 0 };
 
 function loadGoals() {
   try {
-    const g = localStorage.getItem('lumina_goals'); if(g) goals = JSON.parse(g);
+    const g = localStorage.getItem('synaptiq_goals'); if(g) goals = JSON.parse(g);
     const today = new Date().toDateString();
-    const p = localStorage.getItem('lumina_progress_' + today);
+    const p = localStorage.getItem('synaptiq_progress_' + today);
     if (p) todayProgress = JSON.parse(p);
   } catch(e) {}
 }
@@ -9547,7 +9954,7 @@ function loadGoals() {
 function saveGoals() {
   goals.questions = parseInt(document.getElementById('goal-questions')?.value || 10);
   goals.minutes = parseInt(document.getElementById('goal-minutes')?.value || 30);
-  try { localStorage.setItem('lumina_goals', JSON.stringify(goals)); } catch(e) {}
+  try { localStorage.setItem('synaptiq_goals', JSON.stringify(goals)); } catch(e) {}
   updateGoalDisplay();
 }
 
@@ -9581,7 +9988,7 @@ function updateGoalDisplay() {
 function trackProgress(type, amount) {
   const today = new Date().toDateString();
   todayProgress[type] = (todayProgress[type] || 0) + amount;
-  try { localStorage.setItem('lumina_progress_' + today, JSON.stringify(todayProgress)); } catch(e) {}
+  try { localStorage.setItem('synaptiq_progress_' + today, JSON.stringify(todayProgress)); } catch(e) {}
   updateGoalDisplay();
 }
 
@@ -9590,7 +9997,7 @@ const a11yState = { dyslexia: false, contrast: false, motion: false, tts: false,
 
 function initA11y() {
   try {
-    const saved = localStorage.getItem('lumina_a11y');
+    const saved = localStorage.getItem('synaptiq_a11y');
     if (saved) { Object.assign(a11yState, JSON.parse(saved)); applyAllA11y(); }
   } catch(e) {}
 }
@@ -9598,7 +10005,7 @@ function initA11y() {
 function toggleA11y(feature) {
   a11yState[feature] = !a11yState[feature];
   applyAllA11y();
-  try { localStorage.setItem('lumina_a11y', JSON.stringify(a11yState)); } catch(e) {}
+  try { localStorage.setItem('synaptiq_a11y', JSON.stringify(a11yState)); } catch(e) {}
   showToast(a11yState[feature] ? `✅ ${feature} enabled` : `${feature} disabled`);
 }
 
@@ -9641,7 +10048,7 @@ if (!window._a11yTutor) {
 function resetFontSize() {
   document.documentElement.style.fontSize = '16px';
   document.getElementById('a11y-font-size').textContent = '100%';
-  try { localStorage.setItem('lumina_font_size', '100'); } catch(e) {}
+  try { localStorage.setItem('synaptiq_font_size', '100'); } catch(e) {}
 }
 
 // Override changeFontSize to also update a11y display
@@ -9657,11 +10064,11 @@ window.changeFontSize = function(delta) {
 // ─── OFFLINE MODE (Service Worker) ───────────────────
 if ('serviceWorker' in navigator) {
   const swCode = `
-const CACHE = 'lumina-v11';
+const CACHE = 'synaptiq-v11';
 const CORE = ['/','index.html'];
 self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE))));
 self.addEventListener('fetch', e => {
-  if (!navigator.onLine) e.respondWith(caches.match(e.request).then(r => r || new Response('Offline - connect to use Lumina AI', {headers:{'Content-Type':'text/html'}})));
+  if (!navigator.onLine) e.respondWith(caches.match(e.request).then(r => r || new Response('Offline - connect to use Synaptiq', {headers:{'Content-Type':'text/html'}})));
 });`;
   const blob = new Blob([swCode], {type:'application/javascript'});
   const url = URL.createObjectURL(blob);
@@ -9767,7 +10174,131 @@ if (_v11OrigGenQ && !window._v11QTracked) {
   };
 }
 
-console.log('✦ Lumina AI v11 — Full product build complete');
+// ══════════════════════════════════════════
+// FLASHCARDS
+// ══════════════════════════════════════════
+let fcCards = JSON.parse(localStorage.getItem('synaptiq_fc') || '[]');
+let fcCurrent = 0;
+let fcDue = [];
+
+function showFcCreate() {
+  const el = document.getElementById('fc-create');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function addFlashcard() {
+  const front = document.getElementById('fc-front').value.trim();
+  const back = document.getElementById('fc-back').value.trim();
+  const subject = document.getElementById('fc-tag').value.trim() || 'General';
+  if (!front || !back) return;
+  fcCards.push({
+    id: Date.now(), front, back, subject,
+    nextReview: new Date().toISOString().split('T')[0],
+    ease: 2
+  });
+  localStorage.setItem('synaptiq_fc', JSON.stringify(fcCards));
+  document.getElementById('fc-front').value = '';
+  document.getElementById('fc-back').value = '';
+  document.getElementById('fc-tag').value = '';
+  document.getElementById('fc-create').style.display = 'none';
+  loadFcDue();
+  showToast('Flashcard added!');
+}
+
+function loadFcDue() {
+  const today = new Date().toISOString().split('T')[0];
+  const subj = document.getElementById('fc-subject')?.value || '';
+  fcDue = fcCards.filter(c => c.nextReview <= today && (!subj || c.subject === subj));
+  fcCurrent = 0;
+  showFcCard();
+}
+
+function showFcCard() {
+  const card = document.getElementById('fc-card');
+  const actions = document.getElementById('fc-actions');
+  const prog = document.getElementById('fc-progress-text');
+  if (fcCurrent >= fcDue.length) {
+    card.style.display = 'none';
+    actions.style.display = 'none';
+    prog.textContent = fcDue.length === 0 ? 'No cards due today. Create some cards to get started!' : 'All done for today!';
+    return;
+  }
+  const c = fcDue[fcCurrent];
+  document.getElementById('fc-front-display').textContent = c.front;
+  document.getElementById('fc-back-display').textContent = c.back;
+  card.style.display = 'block';
+  card.classList.remove('flipped');
+  actions.style.display = 'flex';
+  prog.textContent = `Card ${fcCurrent + 1} of ${fcDue.length}`;
+}
+
+function fcAnswer(correct) {
+  const c = fcDue[fcCurrent];
+  const idx = fcCards.findIndex(x => x.id === c.id);
+  if (idx >= 0) {
+    const days = correct ? fcCards[idx].ease * 2 : 1;
+    const next = new Date();
+    next.setDate(next.getDate() + days);
+    fcCards[idx].nextReview = next.toISOString().split('T')[0];
+    if (correct) fcCards[idx].ease = Math.min(fcCards[idx].ease + 1, 10);
+    else fcCards[idx].ease = Math.max(1, fcCards[idx].ease - 1);
+    localStorage.setItem('synaptiq_fc', JSON.stringify(fcCards));
+  }
+  fcCurrent++;
+  showFcCard();
+}
+
+document.getElementById('fc-subject')?.addEventListener('change', loadFcDue);
+
+// ══════════════════════════════════════════
+// REVISION TIMETABLE
+// ══════════════════════════════════════════
+// generateTimetable — defined in main features section above
+
+// ══════════════════════════════════════════
+// COOKIE CONSENT (uses HTML banner #cookie-banner)
+// ══════════════════════════════════════════
+(function() {
+  const banner = document.getElementById('cookie-banner');
+  if (!banner) return;
+  if (localStorage.getItem('synaptiq_cookies_accepted')) { banner.remove(); return; }
+  const rejectBtn = banner.querySelector('.btn-outline');
+  const acceptBtn = banner.querySelector('.btn-gold');
+  if (rejectBtn) rejectBtn.addEventListener('click', () => { localStorage.setItem('synaptiq_cookies_accepted','essential'); banner.remove(); });
+  if (acceptBtn) acceptBtn.addEventListener('click', () => { localStorage.setItem('synaptiq_cookies_accepted','all'); banner.remove(); });
+})();
+
+// ══════════════════════════════════════════
+// SERVICE WORKER (Offline Mode)
+// ══════════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE = 'synaptiq-v11';
+    self.addEventListener('install', e => {
+      e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/'])));
+      self.skipWaiting();
+    });
+    self.addEventListener('activate', e => {
+      e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))));
+    });
+    self.addEventListener('fetch', e => {
+      if (e.request.method !== 'GET') return;
+      e.respondWith(fetch(e.request).catch(() => caches.match(e.request).then(r => r || caches.match('/'))));
+    });
+  `;
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(() => {});
+}
+
+window.addEventListener('online', () => showToast('Back online!'));
+window.addEventListener('offline', () => showToast('You are offline — some features unavailable'));
+window.addEventListener('unhandledrejection', (e) => {
+  if (e.reason?.message) showToast('⚠️ ' + e.reason.message.slice(0, 80));
+  e.preventDefault();
+});
+
+console.log('Synaptiq v11 loaded');
 </script>
 <script>
 // ═══════════════════════════════════════════════════════

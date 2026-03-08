@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — Lumina AI</title>
+<title>Admin — Synaptiq</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;600&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
   :root{--gold:#C9A84C;--bg:#08090E;--bg2:#0D0F18;--bg3:#121520;--bg4:#181C2A;--white:#F0EEF8;--muted:#6B7394;--border:rgba(255,255,255,0.07);--green:#4ADE80;--blue:#60A5FA;--red:#FB7185;}
@@ -46,7 +46,7 @@
 
 <div id="login">
   <div class="login-card">
-    <h1>🔐 Lumina Admin</h1>
+    <h1>🔐 Synaptiq Admin</h1>
     <p>Enter your admin key to access the dashboard</p>
     <input type="password" id="admin-key" placeholder="Admin secret key" onkeydown="if(event.key==='Enter')adminLogin()">
     <button class="btn" onclick="adminLogin()">Access Dashboard</button>
@@ -56,7 +56,7 @@
 
 <div id="dashboard">
   <header>
-    <h1>✦ Lumina Admin</h1>
+    <h1>✦ Synaptiq Admin</h1>
     <div style="display:flex;gap:.75rem;align-items:center">
       <span id="last-refresh" style="color:var(--muted);font-size:.8rem"></span>
       <button class="action-btn" onclick="loadDashboard()">↺ Refresh</button>

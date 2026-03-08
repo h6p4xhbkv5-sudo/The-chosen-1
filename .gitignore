@@ -1,32 +1,5 @@
-# Dependencies
-node_modules/
-yarn.lock
-pnpm-lock.yaml
-
-# Environment variables (never commit secrets)
+node_modules
 .env
 .env.local
-.env.*.local
-
-# Vercel
-.vercel/
-
-# Build outputs
-dist/
-build/
-.next/
-out/
-
-# OS
+.vercel
 .DS_Store
-Thumbs.db
-
-# Editor
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Logs
-*.log
-npm-debug.log*
