@@ -31,11 +31,15 @@ export default async function handler(req, res) {
   }
 
   if (action === 'users') {
-    const { data } = await supabase.from('profiles')
-      .select('*')
+    const page = 1;
+    const limit = 50;
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+    const { data, count } = await supabase.from('profiles')
+      .select('*', { count: 'exact' })
       .order('created_at', { ascending: false })
-      .limit(100);
-    return res.status(200).json({ users: data || [] });
+      .range(from, to);
+    return res.status(200).json({ users: data || [], total: count || 0, page });
   }
 
   if (action === 'send_weekly_emails') {
@@ -43,25 +47,30 @@ export default async function handler(req, res) {
       .select('email,name,xp,accuracy,streak,questions_answered')
       .eq('subscription_status', 'active');
     let sent = 0;
+    let failed = 0;
     for (const user of (users || [])) {
-      await fetch(`${process.env.SITE_URL}/api/email`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'weekly',
-          email: user.email,
-          name: user.name,
-          stats: {
-            questions: user.questions_answered,
-            accuracy: user.accuracy,
-            xp: user.xp,
-            streak: user.streak
-          }
-        })
-      }).catch(() => {});
-      sent++;
+      try {
+        await fetch(`${process.env.SITE_URL}/api/email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'weekly',
+            email: user.email,
+            name: user.name,
+            stats: {
+              questions: user.questions_answered,
+              accuracy: user.accuracy,
+              xp: user.xp,
+              streak: user.streak
+            }
+          })
+        });
+        sent++;
+      } catch {
+        failed++;
+      }
     }
-    return res.status(200).json({ sent });
+    return res.status(200).json({ sent, failed });
   }
 
   return res.status(400).json({ error: 'Unknown action' });

@@ -20,6 +20,8 @@ export default async function handler(req, res) {
 
   if (req.method === 'POST') {
     const { text, subject, tag } = req.body;
+    if (!text) return res.status(400).json({ error: 'text is required' });
+    if (!subject) return res.status(400).json({ error: 'subject is required' });
     const { data } = await supabase.from('notes').insert({
       user_id: user.id,
       text,
@@ -48,6 +50,8 @@ export default async function handler(req, res) {
 
   if (req.method === 'DELETE') {
     const { id } = req.body;
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!id || !UUID_RE.test(id)) return res.status(400).json({ error: 'A valid id is required' });
     await supabase.from('notes').delete().eq('id', id).eq('user_id', user.id);
     return res.status(200).json({ success: true });
   }

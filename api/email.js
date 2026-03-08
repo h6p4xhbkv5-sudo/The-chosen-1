@@ -7,6 +7,10 @@ export default async function handler(req, res) {
   const { type, email, name, stats } = req.body;
   const siteUrl = process.env.SITE_URL || 'https://synaptiq.vercel.app';
 
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !EMAIL_RE.test(email)) return res.status(400).json({ error: 'A valid email is required' });
+  if (!name) return res.status(400).json({ error: 'name is required' });
+
   const templates = {
     welcome: {
       subject: `Welcome to Synaptiq, ${name}!`,
@@ -94,7 +98,7 @@ export default async function handler(req, res) {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          from: 'Synaptiq <hello@synaptiqai.co.uk>',
+          from: 'Lumina AI <hello@luminaai.co.uk>',
           to: email,
           subject: template.subject,
           html: template.html

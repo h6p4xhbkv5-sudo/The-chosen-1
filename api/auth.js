@@ -5,21 +5,32 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const VALID_PLANS = ['student', 'homeschool'];
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', process.env.SITE_URL || '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const { action, email, password, name, learning_difficulty, year_group, subjects } = req.body;
+  const { action, email, password, name, plan, learning_difficulty, year_group, subjects } = req.body;
 
   try {
     if (action === 'signup') {
+      // Input validation
+      if (!email || !EMAIL_RE.test(email)) return res.status(400).json({ error: 'A valid email is required' });
+      if (!password || password.length < 8) return res.status(400).json({ error: 'password must be at least 8 characters' });
+      if (!name) return res.status(400).json({ error: 'name is required' });
+      if (plan && !VALID_PLANS.includes(plan)) return res.status(400).json({ error: 'Invalid plan. Must be "student" or "homeschool".' });
+
+      const chosenPlan = plan || 'student';
+
       const { data, error } = await supabase.auth.admin.createUser({
         email,
         password,
-        email_confirm: true,
-        user_metadata: { name }
+        email_confirm: false,
+        user_metadata: { name, plan: chosenPlan }
       });
       if (error) return res.status(400).json({ error: error.message });
 
@@ -27,7 +38,7 @@ export default async function handler(req, res) {
         id: data.user.id,
         name,
         email,
-        plan: 'free',
+        plan: chosenPlan,
         subscription_status: 'free',
         learning_difficulty: learning_difficulty || 'none',
         year_group: year_group || '',
@@ -42,19 +53,15 @@ export default async function handler(req, res) {
         created_at: new Date().toISOString()
       });
 
-      // Send welcome email
-      try {
-        await fetch(`${process.env.SITE_URL}/api/email`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ type: 'welcome', email, name })
-        });
-      } catch (e) { /* email is non-critical */ }
+      // Send invite/verification email
+      await supabase.auth.admin.inviteUserByEmail(email);
 
       return res.status(200).json({ success: true, user: data.user });
     }
 
     if (action === 'login') {
+      if (!email || !EMAIL_RE.test(email)) return res.status(400).json({ error: 'A valid email is required' });
+
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) return res.status(401).json({ error: 'Invalid email or password' });
 
@@ -90,6 +97,8 @@ export default async function handler(req, res) {
     }
 
     if (action === 'reset') {
+      if (!email || !EMAIL_RE.test(email)) return res.status(400).json({ error: 'A valid email is required' });
+
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${process.env.SITE_URL}/reset-password`
       });

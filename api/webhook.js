@@ -41,7 +41,7 @@ export default async function handler(req, res) {
         stripe_customer_id: data.customer,
         subscription_id: data.subscription
       }).eq('email', email);
-      // Send confirmation email
+      // Send confirmation email via internal endpoint
       await sendEmail(email, 'payment_confirmed', { plan });
       break;
     }
@@ -56,8 +56,12 @@ export default async function handler(req, res) {
 
     case 'invoice.payment_failed': {
       const customerId = data.customer;
+      // Idempotency: record webhook processing
+      await supabase.from('processed_webhooks').insert({ event_id: event.id });
+      // Look up profile
       const { data: profile } = await supabase.from('profiles')
         .select('email,name').eq('stripe_customer_id', customerId).single();
+      // Update status
       await supabase.from('profiles').update({
         subscription_status: 'past_due'
       }).eq('stripe_customer_id', customerId);
@@ -82,33 +86,10 @@ export default async function handler(req, res) {
 
 async function sendEmail(to, type, data) {
   if (!process.env.RESEND_API_KEY) return;
-  const templates = {
-    payment_confirmed: {
-      subject: 'Your Synaptiq subscription is active!',
-      html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#0D0F18;color:#F0EEF8;border-radius:16px;overflow:hidden">
-        <div style="background:linear-gradient(135deg,#C9A84C,#A07830);padding:2rem;text-align:center">
-          <h1 style="margin:0;font-size:1.8rem;color:#08090E">You're in!</h1>
-        </div>
-        <div style="padding:2rem">
-          <p>Your <strong>${data.plan === 'homeschool' ? 'Homeschool' : 'Student'} Plan</strong> is now active.</p>
-          <p>You now have full access to all Synaptiq features.</p>
-          <a href="${process.env.SITE_URL}" style="display:inline-block;background:#C9A84C;color:#08090E;padding:.875rem 2rem;border-radius:10px;font-weight:700;text-decoration:none;margin-top:1rem">Start Learning</a>
-        </div></div>`
-    },
-    payment_failed: {
-      subject: 'Synaptiq — Payment failed',
-      html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#0D0F18;color:#F0EEF8;padding:2rem">
-        <p>Hi ${data.name},</p>
-        <p>We couldn't process your payment. Please update your payment method to continue accessing Synaptiq.</p>
-        <a href="${process.env.SITE_URL}" style="background:#C9A84C;color:#08090E;padding:.75rem 1.5rem;border-radius:10px;font-weight:700;text-decoration:none">Update Payment</a>
-      </div>`
-    }
-  };
-  const template = templates[type];
-  if (!template) return;
-  await fetch('https://api.resend.com/emails', {
+  const payload = { type, to, data };
+  await fetch(`${process.env.SITE_URL}/api/email`, {
     method: 'POST',
-    headers: { 'Authorization': `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from: 'Synaptiq <hello@synaptiqai.co.uk>', to, subject: template.subject, html: template.html })
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
   }).catch(() => {});
 }
