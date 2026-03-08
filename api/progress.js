@@ -30,6 +30,9 @@ export default async function handler(req, res) {
 
   if (req.method === 'POST') {
     const { subject, topic, correct, total, xpEarned } = req.body;
+    if (total < 0) return res.status(400).json({ error: 'total must not be negative' });
+    if (correct > total) return res.status(400).json({ error: 'correct must not exceed total' });
+    if (xpEarned < 0) return res.status(400).json({ error: 'xpEarned must not be negative' });
     const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
 
     // Upsert progress
