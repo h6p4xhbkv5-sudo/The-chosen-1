@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Lessons — Lumina AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --black:#0A0C12; --bg2:#12141C; --bg3:#1A1D28; --bg4:#22263A;
+  --gold:#C9A84C; --white:#F0EEF8; --muted:#8B899C; --border:rgba(255,255,255,0.08);
+  --blue:#60A5FA; --green:#4ADE80; --purple:#A78BFA; --pink:#F472B6; --orange:#FB923C;
+  --font:'DM Sans',sans-serif; --font-mono:'Space Mono',monospace;
+  --radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--black);color:var(--white);font-family:var(--font);min-height:100vh}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,12,18,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.nav-brand{display:flex;align-items:center;gap:.75rem;font-weight:700;font-size:1.1rem;text-decoration:none;color:var(--white)}
+.nav-brand span{color:var(--gold)}
+.nav-back{display:inline-flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.875rem;text-decoration:none;transition:color .2s}
+.nav-back:hover{color:var(--white)}
+.nav-actions{display:flex;align-items:center;gap:.75rem}
+
+/* LAYOUT */
+.page{max-width:1000px;margin:0 auto;padding:2rem 1.5rem}
+.page-header{margin-bottom:2rem}
+.page-title{font-size:1.8rem;font-weight:700;margin-bottom:.4rem}
+.page-sub{color:var(--muted);font-size:.95rem}
+
+/* SELECTOR */
+.selector-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.5rem}
+.selector-card h3{font-size:.95rem;font-weight:700;color:var(--gold);margin-bottom:1rem}
+.selector-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.75rem;margin-bottom:1rem}
+@media(max-width:600px){.selector-grid{grid-template-columns:1fr 1fr}}
+.form-group{display:flex;flex-direction:column;gap:.3rem}
+.form-group label{font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.form-group select{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--white);padding:.6rem .875rem;font-size:.875rem;font-family:var(--font);width:100%;outline:none;transition:border-color .2s}
+.form-group select:focus{border-color:rgba(201,168,76,0.5)}
+.form-group select option{background:var(--bg3)}
+.topics-list{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
+.topic-pill{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:.35rem .875rem;font-size:.8rem;cursor:pointer;transition:all .2s;color:var(--muted)}
+.topic-pill:hover{border-color:rgba(201,168,76,0.5);color:var(--white)}
+.topic-pill.selected{background:rgba(201,168,76,0.15);border-color:var(--gold);color:var(--gold);font-weight:600}
+.topic-subtopics{display:none;margin-top:.5rem}
+.topic-subtopics.show{display:flex;flex-wrap:wrap;gap:.4rem;padding:.5rem 0}
+.subtopic-pill{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:20px;padding:.25rem .65rem;font-size:.75rem;cursor:pointer;color:var(--muted);transition:all .2s}
+.subtopic-pill:hover,.subtopic-pill.selected{background:rgba(201,168,76,0.2);color:var(--white);border-color:rgba(201,168,76,0.5)}
+
+/* LESSON MODES */
+.lesson-modes{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
+.mode-btn{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.5rem 1rem;font-size:.8rem;font-weight:600;cursor:pointer;color:var(--muted);transition:all .2s;display:flex;align-items:center;gap:.4rem}
+.mode-btn.selected{background:rgba(201,168,76,0.12);border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.mode-btn:hover{color:var(--white)}
+
+/* START BUTTON */
+.btn-gold{background:var(--gold);color:var(--black);border:none;border-radius:var(--radius);padding:.875rem 2rem;font-weight:700;font-size:.9rem;cursor:pointer;transition:opacity .2s}
+.btn-gold:hover{opacity:.85}
+.btn-gold:disabled{opacity:.5;cursor:not-allowed}
+.btn-outline{background:transparent;border:1px solid var(--border);border-radius:var(--radius);padding:.6rem 1rem;color:var(--white);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-outline:hover{border-color:rgba(201,168,76,0.4);color:var(--gold)}
+
+/* LESSON OUTPUT */
+.lesson-output{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;display:none}
+.lesson-output.show{display:block}
+.lesson-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.lesson-title{font-size:1.4rem;font-weight:700;margin-bottom:.3rem}
+.lesson-meta{font-size:.8rem;color:var(--muted)}
+.lesson-section{margin-bottom:2rem}
+.lesson-section-title{font-size:1rem;font-weight:700;color:var(--gold);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem;padding-bottom:.5rem;border-bottom:1px solid rgba(201,168,76,0.15)}
+.lesson-body{font-size:.9rem;line-height:1.9;color:rgba(240,238,248,0.9)}
+.lesson-body p{margin-bottom:.75rem}
+.lesson-body ul,.lesson-body ol{padding-left:1.5rem;margin-bottom:.75rem}
+.lesson-body li{margin-bottom:.4rem}
+.lesson-body strong{color:var(--gold)}
+.lesson-body code{font-family:var(--font-mono);background:var(--bg3);padding:.15rem .4rem;border-radius:4px;font-size:.85em}
+.lesson-body .callout{background:rgba(201,168,76,0.07);border-left:3px solid var(--gold);padding:.75rem 1rem;border-radius:0 8px 8px 0;margin:.75rem 0}
+.lesson-body .example{background:rgba(96,165,250,0.07);border-left:3px solid var(--blue);padding:.75rem 1rem;border-radius:0 8px 8px 0;margin:.75rem 0}
+.lesson-body .warning{background:rgba(244,114,182,0.07);border-left:3px solid var(--pink);padding:.75rem 1rem;border-radius:0 8px 8px 0;margin:.75rem 0}
+
+/* QUIZ in lesson */
+.lesson-quiz{background:var(--bg3);border-radius:var(--radius);padding:1.25rem;margin-bottom:.75rem}
+.quiz-q{font-size:.9rem;font-weight:600;margin-bottom:.75rem}
+.quiz-options{display:flex;flex-direction:column;gap:.4rem}
+.quiz-opt{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:.6rem .875rem;font-size:.85rem;cursor:pointer;transition:all .2s;text-align:left;color:var(--white)}
+.quiz-opt:hover{border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.06)}
+.quiz-opt.correct{background:rgba(74,222,128,0.15);border-color:var(--green);color:var(--green)}
+.quiz-opt.wrong{background:rgba(244,114,182,0.1);border-color:var(--pink);color:var(--pink)}
+.quiz-feedback{font-size:.8rem;margin-top:.5rem;display:none}
+.quiz-feedback.show{display:block}
+
+/* PROGRESS TABS */
+.lesson-tabs{display:flex;gap:.25rem;margin-bottom:1.5rem;background:var(--bg3);border-radius:var(--radius);padding:.35rem}
+.lesson-tab{flex:1;text-align:center;padding:.5rem .75rem;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;color:var(--muted);transition:all .2s;border:none;background:none}
+.lesson-tab.active{background:var(--bg4);color:var(--white)}
+
+/* DOT PULSE */
+.loading-msg{display:flex;align-items:center;gap:.75rem;color:var(--muted);padding:2rem;font-size:.9rem}
+.dot-pulse{display:inline-flex;gap:4px}
+.dot-pulse span{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:dp .8s infinite alternate}
+.dot-pulse span:nth-child(2){animation-delay:.2s}
+.dot-pulse span:nth-child(3){animation-delay:.4s}
+@keyframes dp{0%{opacity:.3;transform:scale(.8)}100%{opacity:1;transform:scale(1)}}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(2rem);background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem 1.5rem;font-size:.875rem;z-index:1000;opacity:0;transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* AUTH OVERLAY */
+#auth-overlay{position:fixed;inset:0;background:var(--black);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
+</style>
+</head>
+<body>
+
+<div id="auth-overlay">
+  <div style="font-size:2rem;color:var(--gold)">✦</div>
+  <div style="font-weight:700;font-size:1.1rem">Lumina AI</div>
+  <div style="color:var(--muted);font-size:.875rem">Loading your lessons...</div>
+</div>
+
+<nav class="nav">
+  <a class="nav-brand" href="/"><span>✦</span> Lumina AI</a>
+  <a class="nav-back" href="/">← Back to Dashboard</a>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">🎓 AI Lessons from the Curriculum</h1>
+    <p class="page-sub">Select any subject, topic, and level — Lumina AI generates a complete, interactive lesson covering the full UK specification</p>
+  </div>
+
+  <!-- SELECTOR -->
+  <div class="selector-card" id="selector-card">
+    <h3>✦ Choose Your Lesson</h3>
+    <div class="selector-grid">
+      <div class="form-group">
+        <label>Level</label>
+        <select id="l-level" onchange="updateSubjects()">
+          <option value="gcse">GCSE</option>
+          <option value="alevel">A-Level</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Subject</label>
+        <select id="l-subject" onchange="updateTopics()"></select>
+      </div>
+      <div class="form-group">
+        <label>Exam Board</label>
+        <select id="l-board">
+          <option>AQA</option><option>Edexcel</option><option>OCR</option>
+          <option>WJEC</option><option>Eduqas</option><option>Cambridge</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="margin-bottom:1rem">
+      <div style="font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem">Select Topic</div>
+      <div class="topics-list" id="topics-list"></div>
+      <div class="topic-subtopics" id="subtopics-area"></div>
+    </div>
+
+    <div style="margin-bottom:1rem">
+      <div style="font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem">Lesson Type</div>
+      <div class="lesson-modes">
+        <button class="mode-btn selected" data-mode="full" onclick="selectMode(this)">📖 Full Lesson</button>
+        <button class="mode-btn" data-mode="explain" onclick="selectMode(this)">💡 Explanation Only</button>
+        <button class="mode-btn" data-mode="examples" onclick="selectMode(this)">✏️ Worked Examples</button>
+        <button class="mode-btn" data-mode="quiz" onclick="selectMode(this)">🧠 Interactive Quiz</button>
+        <button class="mode-btn" data-mode="exam" onclick="selectMode(this)">🎯 Exam Technique</button>
+        <button class="mode-btn" data-mode="revision" onclick="selectMode(this)">⚡ Quick Revision</button>
+      </div>
+    </div>
+
+    <button class="btn-gold" id="start-btn" onclick="startLesson()" disabled>✦ Start Lesson</button>
+  </div>
+
+  <!-- LESSON OUTPUT -->
+  <div class="lesson-output" id="lesson-output"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+// ─── Curriculum Data ───────────────────────────────────
+const CURRICULUM = {
+  gcse: {
+    Mathematics: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Number':['Place value & rounding','Fractions, decimals & percentages','Indices & surds','Standard form','Ratio & proportion','Bounds & error'],
+      'Algebra':['Expressions & formulae','Linear equations','Quadratics','Simultaneous equations','Sequences (nth term)','Inequalities','Functions & graphs','Iteration'],
+      'Geometry':['Angles & parallel lines','Circles (arc, sector, tangent)','Transformations','Vectors','Pythagoras & trigonometry','Mensuration','Constructions & loci','Similarity & congruence'],
+      'Statistics & Probability':['Data representation','Averages & spread','Scatter diagrams','Sampling methods','Probability (single, combined, tree diagrams)']
+    }},
+    Physics: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Forces & Motion':['Speed, velocity & acceleration','Newton\'s laws','Momentum','Stopping distances','Hooke\'s Law'],
+      'Energy':['Energy stores & transfers','Conservation of energy','Efficiency','Power','Specific heat capacity'],
+      'Waves':['Properties of waves','EM spectrum','Reflection & refraction','Sound waves'],
+      'Electricity':['Circuit symbols & components','Ohm\'s Law','Series & parallel circuits','Mains electricity'],
+      'Magnetism':['Electromagnets','Motor effect','Generator effect','Transformers'],
+      'Atomic Structure':['Atomic model','Radioactive decay','Half-life','Nuclear fission & fusion']
+    }},
+    Chemistry: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Atomic Structure':['Atomic structure & isotopes','Electronic configuration','Periodic table trends'],
+      'Bonding & Structure':['Ionic bonding','Covalent bonding','Metallic bonding','Allotropes of carbon'],
+      'Quantitative Chemistry':['Moles','Empirical formulae','Reacting masses','Concentration & titration'],
+      'Chemical Changes':['Reactivity series','Oxidation & reduction','Electrolysis','Acids & neutralisation'],
+      'Energy Changes':['Exothermic & endothermic reactions','Bond enthalpies','Catalysts'],
+      'Rates & Equilibrium':['Rate of reaction','Collision theory','Le Chatelier\'s principle'],
+      'Organic Chemistry':['Alkanes & alkenes','Fractional distillation','Polymers','Alcohols'],
+      'Analysis':['Tests for ions','Chromatography','Flame tests']
+    }},
+    Biology: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Cell Biology':['Cell structure','Microscopy & magnification','Mitosis & meiosis','Stem cells','Diffusion, osmosis & active transport'],
+      'Organisation':['Enzymes & digestion','Circulatory system','Respiration','Breathing system','Photosynthesis'],
+      'Infection & Response':['Communicable diseases','Immune system & vaccination','Antibiotics'],
+      'Bioenergetics':['Photosynthesis (equation, factors)','Aerobic & anaerobic respiration'],
+      'Homeostasis':['Nervous system','Hormones','Diabetes','Temperature regulation'],
+      'Inheritance':['DNA & protein synthesis','Mendelian inheritance','Punnett squares','Genetic disorders','Evolution & natural selection']
+    }},
+    'English Literature': { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Shakespeare':['Character analysis','Themes & motifs','Historical context','Language analysis'],
+      'Modern Novel':['Plot & narrative structure','Character development','Themes','Social context'],
+      'Poetry':['GCSE Anthology poems','Unseen poetry','Poetic techniques','Comparative essays'],
+      'Essay Skills':['PEE structure','Embedding quotations','Contextual analysis']
+    }},
+    History: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Medicine Through Time':['Medieval medicine','Renaissance surgery','Industrial era','20th century NHS'],
+      'Germany 1890–1945':['Kaiser & WW1','Weimar Republic','Rise of Hitler','Life in Nazi Germany'],
+      'USA 1920–1973':['Roaring Twenties','Great Depression','Civil Rights Movement'],
+      'Elizabethan England':['Elizabeth I','Religious settlement','Armada','Society & culture'],
+      'Historical Skills':['Source analysis','Essay structure','Causation & significance']
+    }},
+    Geography: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Physical':['Tectonic hazards','Tropical storms','River landscapes','Coastal landscapes'],
+      'Human':['Urban change UK','Global development','Resource management'],
+      'Skills':['Map reading','Data presentation','Fieldwork techniques']
+    }},
+    'Computer Science': { boards:['AQA','OCR','Edexcel'], topics:{
+      'Programming':['Variables & data types','Selection & iteration','Functions','Pseudocode'],
+      'Data Structures':['Arrays','Searching & sorting algorithms'],
+      'Computer Systems':['CPU architecture','Memory','Binary & hexadecimal','Boolean logic'],
+      'Networks':['Topologies & protocols','Internet security','Encryption'],
+      'Theory':['Abstraction & decomposition','Algorithms & efficiency']
+    }},
+    Economics: { boards:['AQA','Edexcel','OCR'], topics:{
+      'Microeconomics':['Supply & demand','Elasticity','Market failure','Government intervention'],
+      'Macroeconomics':['GDP & economic growth','Unemployment & inflation','Fiscal & monetary policy'],
+      'International Trade':['Comparative advantage','Trade barriers','Globalisation']
+    }},
+    'Business Studies': { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Business Context':['Entrepreneurs & objectives','Stakeholders','Legal structures'],
+      'Marketing':['Market research','Marketing mix (4Ps)','Market segmentation'],
+      'Finance':['Revenue, costs & profit','Break-even analysis','Cash flow'],
+      'Human Resources':['Recruitment','Motivation theories','Organisational structure'],
+      'Operations':['Production methods','Quality management','Supply chain']
+    }},
+    French: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
+      'Identity & Culture':['Self & relationships','Customs & festivals','Education'],
+      'Travel & Tourism':['Holidays & transport','Accommodation','Describing places'],
+      'Grammar':['Present tense','Past tense (perfect & imperfect)','Future tense','Negation','Pronouns']
+    }},
+    Psychology: { boards:['AQA'], topics:{
+      'Social Influence':['Conformity (Asch)','Obedience (Milgram)','Minority influence'],
+      'Memory':['Multi-store model','Working memory model','Forgetting theories'],
+      'Attachment':['Caregiver-infant interactions','Bowlby & Learning theory','Ainsworth\'s Strange Situation'],
+      'Research Methods':['Experiments','Correlations','Observations','Statistical tests']
+    }}
+  },
+  alevel: {
+    Mathematics: { boards:['AQA','Edexcel','OCR','MEI'], topics:{
+      'Pure — Algebra':['Proof & surds','Quadratics & polynomials','Binomial expansion','Partial fractions','Parametric equations'],
+      'Pure — Calculus':['Differentiation rules (chain, product, quotient)','Integration (by parts, substitution)','Differential equations'],
+      'Pure — Trigonometry':['Radians & sector','Compound & double angle formulae','Solving trig equations'],
+      'Pure — Exponentials & Logs':['e^x & ln(x)','Laws of logarithms','Exponential growth & decay'],
+      'Pure — Vectors':['3D vectors','Dot product','Lines & planes'],
+      'Statistics':['Binomial & normal distributions','Hypothesis testing','Regression & correlation'],
+      'Mechanics':['SUVAT in 2D','Forces & Newton\'s laws','Moments & equilibrium','Projectiles','Work, energy & power']
+    }},
+    Physics: { boards:['AQA','Edexcel','OCR','Cambridge'], topics:{
+      'Mechanics':['Projectile motion','Newton\'s laws (advanced)','Circular motion','Gravitational fields'],
+      'Electricity':['Capacitors','Kirchhoff\'s laws','Semiconductor physics'],
+      'Waves & Optics':['Superposition & interference','Diffraction','Lenses & optics'],
+      'Fields':['Gravitational fields','Electric fields (Coulomb\'s law)','Electromagnetic induction'],
+      'Nuclear & Particle Physics':['Photoelectric effect','Nuclear binding energy','Standard model'],
+      'Thermal Physics':['Ideal gas laws','Kinetic theory','Thermodynamics']
+    }},
+    Chemistry: { boards:['AQA','Edexcel','OCR','Cambridge'], topics:{
+      'Physical Chemistry':['Thermodynamics (enthalpy, entropy, Gibbs)','Kinetics (rate laws, Arrhenius)','Equilibrium (Kc, Kp, Ka)','Electrochemistry'],
+      'Inorganic Chemistry':['Periodicity','Transition metals','Acid-base chemistry','Group 2 & Group 7'],
+      'Organic Chemistry':['Reaction mechanisms','Carbonyl chemistry','Amines','Aromatic chemistry','Stereoisomerism'],
+      'Analytical Chemistry':['NMR spectroscopy','Infrared spectroscopy','Mass spectrometry']
+    }},
+    Biology: { boards:['AQA','Edexcel','OCR','Cambridge'], topics:{
+      'Cell Biology':['Ultrastructure','Cell signalling','DNA replication & protein synthesis'],
+      'Exchange & Transport':['Gas exchange','Mass transport (circulatory, xylem, phloem)'],
+      'Genetics & Evolution':['Mendelian genetics','Population genetics (Hardy-Weinberg)','Genetic technology (PCR, electrophoresis)'],
+      'Energy & Metabolism':['Photosynthesis (light & dark reactions)','Respiration (glycolysis, Krebs, oxidative phosphorylation)'],
+      'Control & Regulation':['Nervous system (synapses, action potentials)','Endocrine system','Plant hormones'],
+      'Ecology':['Population dynamics','Succession','Nutrient cycles','Biodiversity & conservation']
+    }},
+    Economics: { boards:['AQA','Edexcel','OCR','Cambridge'], topics:{
+      'Microeconomics':['Consumer theory','Production & cost theory','Market structures','Game theory','Market failure & welfare economics'],
+      'Macroeconomics':['Aggregate demand & supply','Fiscal & monetary policy','Supply-side economics','Open economy macroeconomics'],
+      'International Economics':['Trade theory','Exchange rate systems','Globalisation & protectionism'],
+      'Development Economics':['Development indicators','Poverty & inequality','Sustainable development']
+    }},
+    Psychology: { boards:['AQA','Edexcel','OCR'], topics:{
+      'Social Psychology':['Prosocial behaviour','Aggression','Prejudice & discrimination'],
+      'Biological Psychology':['Brain structure & function','Stress (SAM, HPA axis)','Sleep psychology'],
+      'Abnormal Psychology':['Schizophrenia','Mood disorders','Eating disorders','Forensic psychology'],
+      'Research Methods':['Statistical analysis','Meta-analysis','Validity & reliability']
+    }},
+    Law: { boards:['AQA','OCR'], topics:{
+      'English Legal System':['Sources of law','Court structure','Legal personnel'],
+      'Criminal Law':['Actus reus & mens rea','Murder & manslaughter','Defences'],
+      'Tort Law':['Negligence','Occupiers\' liability','Nuisance'],
+      'Contract Law':['Offer & acceptance','Consideration','Breach & remedies']
+    }},
+    Politics: { boards:['AQA','Edexcel','OCR'], topics:{
+      'UK Politics':['Democracy & participation','Electoral systems','Political parties','Parliament & the executive','Devolution'],
+      'US Politics':['Constitutional framework','Congress, Presidency & Supreme Court','Civil rights'],
+      'Political Ideas':['Liberalism','Conservatism','Socialism','Feminism','Nationalism'],
+      'Global Politics':['Power & polarity','Global governance','Human rights','Security']
+    }},
+    Philosophy: { boards:['AQA','OCR'], topics:{
+      'Epistemology':['Empiricism vs rationalism','Theories of knowledge','Scepticism & Descartes'],
+      'Metaphysics':['Dualism vs physicalism','Free will vs determinism','Personal identity'],
+      'Ethics':['Utilitarianism','Kantian deontology','Virtue ethics','Metaethics'],
+      'Philosophy of Religion':['Arguments for God\'s existence','Problem of evil','Religious language']
+    }},
+    Sociology: { boards:['AQA','OCR'], topics:{
+      'Theory & Methods':['Functionalism, Marxism, Feminism','Research methods'],
+      'Education':['Role of education','Educational achievement & social class'],
+      'Families & Households':['Changing family structures','Feminist & Marxist views'],
+      'Crime & Deviance':['Theories of crime','Policing & control'],
+      'Media':['Media ownership','Representation & effects theories']
+    }},
+    'Computer Science': { boards:['AQA','OCR','Edexcel'], topics:{
+      'Theory of Computation':['Turing machine','Regular languages & finite automata','Complexity theory'],
+      'Data Structures & Algorithms':['Trees, hash tables, graphs','Algorithm design','Time & space complexity (Big O)'],
+      'Programming Paradigms':['OOP','Functional programming','Declarative programming'],
+      'Computer Architecture':['RISC vs CISC','Pipelining & parallel processing'],
+      'Databases':['Relational databases & SQL','Normalisation','NoSQL'],
+      'Networks & Security':['TCP/IP stack','Cryptography','Network threats']
+    }},
+    'Further Mathematics': { boards:['AQA','Edexcel','OCR','MEI'], topics:{
+      'Further Pure':['Complex numbers','Matrices','Further calculus','Proof by induction'],
+      'Further Statistics':['Continuous probability distributions','Chi-squared tests'],
+      'Further Mechanics':['Circular motion','Impulse & momentum','Simple harmonic motion'],
+      'Decision Mathematics':['Graph theory','Dijkstra & Prim algorithms','Linear programming']
+    }}
+  }
+};
+
+// ─── Auth ──────────────────────────────────────────────
+const SUPABASE_URL = window.SUPABASE_URL || '';
+const SUPABASE_ANON = window.SUPABASE_ANON_KEY || '';
+let supabaseClient = null;
+let currentUser = null;
+let selectedTopic = null;
+let selectedSubtopic = null;
+let selectedMode = 'full';
+
+async function initAuth() {
+  if (SUPABASE_URL && SUPABASE_ANON && window.supabase) {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session) { currentUser = { token: session.access_token, ...session.user }; }
+  }
+  if (!currentUser) {
+    try {
+      const token = localStorage.getItem('lumina_token');
+      if (token) currentUser = { token };
+      else {
+        const saved = localStorage.getItem('lumina_user');
+        if (saved) currentUser = JSON.parse(saved);
+      }
+    } catch(e) {}
+  }
+  const overlay = document.getElementById('auth-overlay');
+  if (!currentUser) { window.location.href = '/'; return; }
+  overlay.remove();
+  updateSubjects();
+}
+
+async function callClaude(messages, system) {
+  const body = { model:'claude-opus-4-6', max_tokens:3000, messages };
+  if (system) body.system = system;
+  const headers = { 'Content-Type':'application/json' };
+  if (currentUser?.token) headers['Authorization'] = 'Bearer ' + currentUser.token;
+  const r = await fetch('/api/chat', { method:'POST', headers, body:JSON.stringify(body) });
+  const text = await r.text();
+  let data;
+  try { data = JSON.parse(text); } catch(e) { throw new Error('Bad response (' + r.status + ')'); }
+  if (!r.ok) throw new Error(data.error || 'API error ' + r.status);
+  if (data.error) throw new Error(data.error.message || 'Anthropic error');
+  return data;
+}
+function getReply(d) { return d.content && d.content[0] ? d.content[0].text : ''; }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── UI helpers ────────────────────────────────────────
+function updateSubjects() {
+  const level = document.getElementById('l-level').value;
+  const subjectSel = document.getElementById('l-subject');
+  const subjects = Object.keys(CURRICULUM[level] || {});
+  subjectSel.innerHTML = subjects.map(s => `<option value="${s}">${s}</option>`).join('');
+  updateTopics();
+}
+
+function updateTopics() {
+  const level = document.getElementById('l-level').value;
+  const subject = document.getElementById('l-subject').value;
+  const data = CURRICULUM[level]?.[subject];
+  const container = document.getElementById('topics-list');
+  const subtopicsArea = document.getElementById('subtopics-area');
+  selectedTopic = null; selectedSubtopic = null;
+  document.getElementById('start-btn').disabled = true;
+  subtopicsArea.innerHTML = '';
+  subtopicsArea.classList.remove('show');
+
+  if (!data) { container.innerHTML = ''; return; }
+
+  // Update boards
+  const boardSel = document.getElementById('l-board');
+  if (data.boards?.length) {
+    boardSel.innerHTML = data.boards.map(b => `<option>${b}</option>`).join('');
+  }
+
+  container.innerHTML = Object.keys(data.topics).map(t =>
+    `<button class="topic-pill" onclick="selectTopic(this,'${encodeURIComponent(t)}')">${t}</button>`
+  ).join('');
+}
+
+function selectTopic(btn, topicEnc) {
+  const topic = decodeURIComponent(topicEnc);
+  const level = document.getElementById('l-level').value;
+  const subject = document.getElementById('l-subject').value;
+  document.querySelectorAll('.topic-pill').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedTopic = topic;
+  selectedSubtopic = null;
+
+  const subtopics = CURRICULUM[level]?.[subject]?.topics?.[topic] || [];
+  const area = document.getElementById('subtopics-area');
+  area.innerHTML = subtopics.map(st =>
+    `<button class="subtopic-pill" onclick="selectSubtopic(this,'${encodeURIComponent(st)}')">${st}</button>`
+  ).join('');
+  area.classList.add('show');
+  document.getElementById('start-btn').disabled = false;
+}
+
+function selectSubtopic(btn, stEnc) {
+  document.querySelectorAll('.subtopic-pill').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedSubtopic = decodeURIComponent(stEnc);
+}
+
+function selectMode(btn) {
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedMode = btn.dataset.mode;
+}
+
+// ─── Lesson Generation ─────────────────────────────────
+async function startLesson() {
+  if (!selectedTopic) { showToast('Please select a topic first'); return; }
+  const level = document.getElementById('l-level').value;
+  const subject = document.getElementById('l-subject').value;
+  const board = document.getElementById('l-board').value;
+  const topicFocus = selectedSubtopic || selectedTopic;
+  const btn = document.getElementById('start-btn');
+  const output = document.getElementById('lesson-output');
+
+  btn.disabled = true;
+  btn.textContent = '✦ Generating lesson...';
+  output.className = 'lesson-output show';
+  output.innerHTML = `<div class="loading-msg"><div class="dot-pulse"><span></span><span></span><span></span></div>Lumina AI is preparing your ${subject} lesson on "${topicFocus}"...</div>`;
+
+  const levelLabel = level === 'alevel' ? 'A-Level' : 'GCSE';
+  const modeGuides = {
+    full: `Create a COMPLETE interactive lesson with: 1) A clear explanation with examples and diagrams described in text. 2) Key definitions in bold. 3) Worked examples (show all steps). 4) Common exam mistakes to avoid. 5) 5 practice questions with model answers. 6) Quick summary bullet points. Use callout boxes [CALLOUT: ...], example boxes [EXAMPLE: ...], and warning boxes [WARNING: ...].`,
+    explain: `Write a thorough, clear explanation of the topic as if teaching it for the first time. Include key definitions, real-world analogies, and step-by-step breakdowns. Use clear headings. Assume the student knows the basics but not this specific topic.`,
+    examples: `Provide 5–7 fully worked examples with every step shown and explained. Start with a simple example and gradually increase difficulty to exam standard. Show all working out. After each example, explain WHY each step was taken.`,
+    quiz: `Create an interactive quiz with 8 multiple-choice questions. For each question provide: {"question":"...","options":["A)...","B)...","C)...","D)..."],"correct":0,"explanation":"..."} where correct is the 0-indexed position of the right answer. Cover all key aspects of the topic. Return ONLY valid JSON array.`,
+    exam: `Provide expert exam technique guidance including: 1) Exactly what examiners are looking for (mark scheme language). 2) Common mistakes students make and how to avoid them. 3) Key phrases and terminology to use. 4) How to structure extended answers. 5) Time management tips. 6) A model A-grade answer to a typical exam question.`,
+    revision: `Create a condensed revision guide with: 1) Key facts in bullet points. 2) Essential formulas/dates/terms in a table. 3) Memory aids or mnemonics. 4) 3 exam-style questions with brief model answers. Keep it concise and easy to scan.`
+  };
+
+  const sys = `You are Lumina AI, an expert UK ${levelLabel} ${board} ${subject} teacher.
+Your goal is to give the student a world-class lesson they can learn from immediately.
+${modeGuides[selectedMode]}
+Format your response in clear HTML using: <h3>, <p>, <ul>, <ol>, <li>, <strong>, <em>, <code> tags.
+Use [CALLOUT: text] for key points, [EXAMPLE: text] for examples, [WARNING: text] for common mistakes.
+Make it engaging, thorough, and exam-focused.`;
+
+  try {
+    const data = await callClaude([{
+      role: 'user',
+      content: `Teach me ${topicFocus} from ${subject} ${board} ${levelLabel}. My topic area is: ${selectedTopic}.`
+    }], sys);
+    let reply = getReply(data);
+
+    if (selectedMode === 'quiz') {
+      renderQuiz(reply, subject, topicFocus, levelLabel, board);
+    } else {
+      renderLesson(reply, subject, topicFocus, levelLabel, board);
+    }
+  } catch(e) {
+    output.innerHTML = `<div style="background:var(--bg3);border-radius:12px;padding:1.5rem;color:var(--muted)">⚠️ ${e.message || 'Could not generate lesson. Please try again.'}</div>`;
+  }
+  btn.disabled = false;
+  btn.textContent = '✦ Start Lesson';
+}
+
+function formatLessonHTML(text) {
+  return text
+    .replace(/\[CALLOUT: (.*?)\]/g, '<div class="callout">$1</div>')
+    .replace(/\[EXAMPLE: (.*?)\]/g, '<div class="example">$1</div>')
+    .replace(/\[WARNING: (.*?)\]/g, '<div class="warning">$1</div>');
+}
+
+function renderLesson(text, subject, topic, level, board) {
+  const output = document.getElementById('lesson-output');
+  const modeLabels = {full:'Full Lesson',explain:'Explanation',examples:'Worked Examples',exam:'Exam Technique',revision:'Quick Revision'};
+  output.innerHTML = `
+    <div class="lesson-header">
+      <div>
+        <div class="lesson-title">${subject}: ${topic}</div>
+        <div class="lesson-meta">${level} · ${board} · ${modeLabels[selectedMode]||''}</div>
+      </div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <button class="btn-outline" onclick="window.print()">🖨️ Print</button>
+        <button class="btn-outline" onclick="startLesson()">↻ Regenerate</button>
+        <button class="btn-outline" onclick="document.getElementById('selector-card').scrollIntoView({behavior:'smooth'})">← Change Topic</button>
+      </div>
+    </div>
+    <div class="lesson-body">${formatLessonHTML(text)}</div>`;
+}
+
+function renderQuiz(rawText, subject, topic, level, board) {
+  const output = document.getElementById('lesson-output');
+  let questions = [];
+  try {
+    const clean = rawText.replace(/```json|```/g,'').trim();
+    questions = JSON.parse(clean);
+  } catch(e) {
+    // Fallback: show as text lesson
+    renderLesson(rawText, subject, topic, level, board);
+    return;
+  }
+
+  let html = `
+    <div class="lesson-header">
+      <div>
+        <div class="lesson-title">Quiz: ${subject} — ${topic}</div>
+        <div class="lesson-meta">${level} · ${board} · 8 questions</div>
+      </div>
+      <button class="btn-outline" onclick="startLesson()">↻ New Quiz</button>
+    </div>
+    <div id="quiz-score" style="background:rgba(201,168,76,0.1);border-radius:12px;padding:1rem;margin-bottom:1.5rem;display:none">
+      <strong>Score: <span id="score-val">0</span> / ${questions.length}</strong>
+    </div>`;
+
+  questions.forEach((q, i) => {
+    html += `<div class="lesson-quiz" id="quiz-${i}">
+      <div class="quiz-q">${i+1}. ${q.question}</div>
+      <div class="quiz-options">${q.options.map((opt, j) =>
+        `<button class="quiz-opt" onclick="checkAnswer(${i},${j},${q.correct},'${encodeURIComponent(q.explanation||'')}')">${opt}</button>`
+      ).join('')}</div>
+      <div class="quiz-feedback" id="qfb-${i}"></div>
+    </div>`;
+  });
+
+  output.innerHTML = html;
+  window._quizAnswered = new Array(questions.length).fill(false);
+  window._quizScore = 0;
+}
+
+function checkAnswer(qIdx, chosenIdx, correctIdx, explanationEnc) {
+  if (window._quizAnswered?.[qIdx]) return;
+  if (window._quizAnswered) window._quizAnswered[qIdx] = true;
+  const quizBlock = document.getElementById('quiz-' + qIdx);
+  const opts = quizBlock.querySelectorAll('.quiz-opt');
+  opts[correctIdx].classList.add('correct');
+  if (chosenIdx !== correctIdx) opts[chosenIdx].classList.add('wrong');
+  else { if (window._quizScore !== undefined) window._quizScore++; }
+  opts.forEach(o => o.disabled = true);
+  const fb = document.getElementById('qfb-' + qIdx);
+  const explanation = decodeURIComponent(explanationEnc);
+  fb.innerHTML = chosenIdx === correctIdx
+    ? `<span style="color:var(--green)">✅ Correct!</span> ${explanation}`
+    : `<span style="color:var(--pink)">❌ Incorrect.</span> ${explanation}`;
+  fb.classList.add('show');
+  // Update score display
+  const answered = (window._quizAnswered || []).filter(Boolean).length;
+  const total = (window._quizAnswered || []).length;
+  if (answered === total) {
+    const scoreDiv = document.getElementById('quiz-score');
+    if (scoreDiv) { scoreDiv.style.display = 'block'; document.getElementById('score-val').textContent = window._quizScore; }
+  }
+}
+
+initAuth();
+</script>
+</body>
+</html>

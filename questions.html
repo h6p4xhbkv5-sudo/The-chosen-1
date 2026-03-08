@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Question Paper Generator — Lumina AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --black:#0A0C12; --bg2:#12141C; --bg3:#1A1D28; --bg4:#22263A;
+  --gold:#C9A84C; --white:#F0EEF8; --muted:#8B899C; --border:rgba(255,255,255,0.08);
+  --blue:#60A5FA; --green:#4ADE80; --purple:#A78BFA; --pink:#F472B6; --orange:#FB923C;
+  --font:'DM Sans',sans-serif; --font-mono:'Space Mono',monospace;
+  --radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--black);color:var(--white);font-family:var(--font);min-height:100vh}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,12,18,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.nav-brand{display:flex;align-items:center;gap:.75rem;font-weight:700;font-size:1.1rem;text-decoration:none;color:var(--white)}
+.nav-brand span{color:var(--gold)}
+.nav-back{display:inline-flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.875rem;text-decoration:none;transition:color .2s}
+.nav-back:hover{color:var(--white)}
+
+/* LAYOUT */
+.page{max-width:1100px;margin:0 auto;padding:2rem 1.5rem}
+.page-header{margin-bottom:2rem}
+.page-title{font-size:1.8rem;font-weight:700;margin-bottom:.4rem}
+.page-sub{color:var(--muted);font-size:.95rem}
+
+/* GRID */
+.gen-grid{display:grid;grid-template-columns:380px 1fr;gap:1.5rem;align-items:start}
+@media(max-width:900px){.gen-grid{grid-template-columns:1fr}}
+
+/* FORM CARD */
+.form-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;position:sticky;top:80px}
+.form-card h3{font-size:1rem;font-weight:700;margin-bottom:1.25rem;color:var(--gold)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:.75rem}
+@media(max-width:480px){.form-row{grid-template-columns:1fr}}
+.form-group{display:flex;flex-direction:column;gap:.3rem}
+.form-group label{font-size:.8rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.form-group select, .form-group input{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--white);padding:.6rem .875rem;font-size:.875rem;font-family:var(--font);width:100%;outline:none;transition:border-color .2s}
+.form-group select:focus, .form-group input:focus{border-color:rgba(201,168,76,0.5)}
+.form-group select option{background:var(--bg3)}
+.btn-gold{background:var(--gold);color:var(--black);border:none;border-radius:var(--radius);padding:.875rem 1.5rem;font-weight:700;font-size:.9rem;cursor:pointer;width:100%;margin-top:.75rem;transition:opacity .2s}
+.btn-gold:hover{opacity:.85}
+.btn-gold:disabled{opacity:.5;cursor:not-allowed}
+.btn-outline{background:transparent;border:1px solid var(--border);border-radius:var(--radius);padding:.6rem 1rem;color:var(--white);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-outline:hover{border-color:rgba(201,168,76,0.4);color:var(--gold)}
+
+/* OUTPUT AREA */
+.output-area{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;min-height:400px}
+.output-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1.5rem}
+.output-title{font-size:1.2rem;font-weight:700}
+.output-meta{font-size:.8rem;color:var(--muted)}
+.output-actions{display:flex;gap:.5rem}
+
+/* QUESTION BLOCK */
+.question-block{background:var(--bg3);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem;border-left:3px solid var(--gold)}
+.question-num{font-size:.8rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.marks-badge{background:rgba(201,168,76,0.15);color:var(--gold);border-radius:6px;padding:.2rem .5rem;font-size:.75rem}
+.question-text{font-size:.9rem;line-height:1.7;margin-bottom:.75rem;color:var(--white)}
+.answer-space{min-height:80px;background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.1);border-radius:8px;padding:.75rem;font-size:.875rem;color:var(--muted);cursor:text;transition:all .2s}
+.answer-space:focus{color:var(--white);border-color:rgba(201,168,76,0.3);background:rgba(201,168,76,0.03);outline:none}
+
+/* LOADING STATE */
+.loading-msg{display:flex;align-items:center;gap:.75rem;color:var(--muted);padding:2rem;font-size:.9rem}
+.dot-pulse{display:inline-flex;gap:4px}
+.dot-pulse span{width:6px;height:6px;background:var(--gold);border-radius:50%;animation:dp .8s infinite alternate}
+.dot-pulse span:nth-child(2){animation-delay:.2s}
+.dot-pulse span:nth-child(3){animation-delay:.4s}
+@keyframes dp{0%{opacity:.3;transform:scale(.8)}100%{opacity:1;transform:scale(1)}}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:3rem 2rem;color:var(--muted)}
+.empty-state .icon{font-size:3rem;margin-bottom:1rem}
+.empty-state p{font-size:.875rem;line-height:1.6}
+
+/* AUTH OVERLAY */
+#auth-overlay{position:fixed;inset:0;background:var(--black);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(2rem);background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:.75rem 1.5rem;font-size:.875rem;z-index:1000;opacity:0;transition:all .3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media print{.form-card,.nav{display:none!important}.output-area{border:none;padding:0}}
+</style>
+</head>
+<body>
+
+<div id="auth-overlay">
+  <div style="font-size:2rem;color:var(--gold)">✦</div>
+  <div style="font-weight:700;font-size:1.1rem">Lumina AI</div>
+  <div style="color:var(--muted);font-size:.875rem">Checking your session...</div>
+</div>
+
+<nav class="nav">
+  <a class="nav-brand" href="/"><span>✦</span> Lumina AI</a>
+  <a class="nav-back" href="/">← Back to Dashboard</a>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">📝 Question Paper Generator</h1>
+    <p class="page-sub">Generate exam-style practice papers tailored to your subject, level, and exam board</p>
+  </div>
+
+  <div class="gen-grid">
+    <!-- FORM -->
+    <div class="form-card">
+      <h3>✦ Configure Your Paper</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Subject</label>
+          <select id="q-subject">
+            <option>Mathematics</option><option>Physics</option><option>Chemistry</option>
+            <option>Biology</option><option>English Literature</option><option>English Language</option>
+            <option>History</option><option>Geography</option><option>Computer Science</option>
+            <option>Economics</option><option>Business Studies</option><option>French</option>
+            <option>Spanish</option><option>German</option><option>Psychology</option>
+            <option>Sociology</option><option>Religious Studies</option><option>Physical Education</option>
+            <option>Art</option><option>Music</option><option>Drama</option>
+            <option>Design and Technology</option><option>Law</option><option>Politics</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Exam Board</label>
+          <select id="q-board">
+            <option>AQA</option><option>Edexcel</option><option>OCR</option>
+            <option>WJEC</option><option>Eduqas</option><option>Cambridge</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Level</label>
+          <select id="q-level">
+            <option>Foundation GCSE</option><option>Higher GCSE</option>
+            <option>AS Level</option><option>A-Level</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Questions</label>
+          <select id="q-num">
+            <option>3</option><option selected>5</option><option>8</option><option>10</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Question Type</label>
+          <select id="q-type">
+            <option>Mixed</option><option>Multiple Choice</option><option>Short Answer</option>
+            <option>Extended Writing</option><option>Calculation</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Target Grade</label>
+          <select id="q-grade">
+            <option>Grade 4–5</option><option>Grade 6–7</option>
+            <option selected>Grade 7–8</option><option>Grade 8–9</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:.25rem">
+        <label>Specific Topics (optional)</label>
+        <input type="text" id="q-topics" placeholder="e.g. Quadratics, Pythagoras, Trigonometry">
+      </div>
+      <button class="btn-gold" id="gen-btn" onclick="generateQuestions()">✦ Generate with Lumina AI</button>
+    </div>
+
+    <!-- OUTPUT -->
+    <div class="output-area" id="output-area">
+      <div class="empty-state">
+        <div class="icon">📝</div>
+        <p>Configure your paper on the left and click <strong>Generate</strong> to create exam-quality questions with AI.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = window.SUPABASE_URL || '';
+const SUPABASE_ANON = window.SUPABASE_ANON_KEY || '';
+let supabaseClient = null;
+let currentUser = null;
+
+async function initAuth() {
+  const overlay = document.getElementById('auth-overlay');
+  // Try Supabase first
+  if (SUPABASE_URL && SUPABASE_ANON && window.supabase) {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session) {
+      currentUser = { token: session.access_token, ...session.user };
+      overlay.remove();
+      return;
+    }
+  }
+  // Fallback: check localStorage token
+  try {
+    const token = localStorage.getItem('lumina_token');
+    if (token) { currentUser = { token }; overlay.remove(); return; }
+    const saved = localStorage.getItem('lumina_user');
+    if (saved) { currentUser = JSON.parse(saved); overlay.remove(); return; }
+  } catch(e) {}
+  // Not logged in — redirect
+  window.location.href = '/';
+}
+
+async function callClaude(messages, system) {
+  const body = { model:'claude-opus-4-6', max_tokens:2000, messages };
+  if (system) body.system = system;
+  const headers = { 'Content-Type':'application/json' };
+  if (currentUser?.token) headers['Authorization'] = 'Bearer ' + currentUser.token;
+  const r = await fetch('/api/chat', { method:'POST', headers, body:JSON.stringify(body) });
+  const text = await r.text();
+  let data;
+  try { data = JSON.parse(text); } catch(e) { throw new Error('Bad response (' + r.status + ')'); }
+  if (!r.ok) throw new Error(data.error || 'API error ' + r.status);
+  if (data.error) throw new Error(data.error.message || 'Anthropic error');
+  return data;
+}
+
+function getReply(data) {
+  return data.content && data.content[0] ? data.content[0].text : '';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+async function generateQuestions() {
+  const sub = document.getElementById('q-subject').value;
+  const board = document.getElementById('q-board').value;
+  const level = document.getElementById('q-level').value;
+  const num = document.getElementById('q-num').value;
+  const type = document.getElementById('q-type').value;
+  const grade = document.getElementById('q-grade').value;
+  const topics = document.getElementById('q-topics').value;
+  const btn = document.getElementById('gen-btn');
+  const output = document.getElementById('output-area');
+
+  btn.disabled = true;
+  btn.textContent = '✦ Generating...';
+  output.innerHTML = `<div class="loading-msg"><div class="dot-pulse"><span></span><span></span><span></span></div>Lumina AI is generating your ${num} ${sub} questions...</div>`;
+
+  const sys = `You are an expert UK exam question writer specialising in ${board} ${level} ${sub}.
+Generate exactly ${num} exam-style questions for ${grade} target.
+Question types: ${type}. ${topics ? 'Focus on: ' + topics : 'Cover key specification topics.'}
+Format STRICTLY as JSON array: [{"question":"...","marks":3,"type":"short answer","hint":"..."}]
+Each question must be exam-quality, use UK spelling, follow ${board} mark scheme style.
+ONLY return the JSON array, nothing else.`;
+
+  try {
+    const data = await callClaude([{ role:'user', content:`Generate ${num} ${board} ${level} ${sub} questions, ${grade} target.${topics?' Topics: '+topics:''}` }], sys);
+    const reply = getReply(data);
+    let questions;
+    try {
+      questions = JSON.parse(reply.replace(/```json|```/g, '').trim());
+    } catch(e) {
+      output.innerHTML = '<div style="background:var(--bg3);border-radius:12px;padding:1.5rem;color:var(--muted)">⚠️ Could not generate questions. Please try again with fewer questions or a different subject.</div>';
+      return;
+    }
+
+    let html = `<div class="output-header">
+      <div><div class="output-title">${sub} Practice Paper</div>
+      <div class="output-meta">${num} questions · ${board} ${level} · ${grade}</div></div>
+      <div class="output-actions">
+        <button class="btn-outline" onclick="window.print()">🖨️ Print</button>
+        <button class="btn-outline" onclick="generateQuestions()">↻ Regenerate</button>
+      </div>
+    </div>`;
+
+    questions.forEach((q, i) => {
+      html += `<div class="question-block">
+        <div class="question-num">Question ${i+1} <span class="marks-badge">${q.marks||3} marks</span></div>
+        <div class="question-text">${q.question}</div>
+        ${q.hint ? `<div style="font-size:.8rem;color:var(--gold);margin-bottom:.75rem">💡 Hint: ${q.hint}</div>` : ''}
+        <div class="answer-space" contenteditable="true" spellcheck="true">Click here to write your answer...</div>
+      </div>`;
+    });
+
+    output.innerHTML = html;
+    showToast('✦ Questions generated!');
+  } catch(e) {
+    output.innerHTML = `<div style="background:var(--bg3);border-radius:12px;padding:1.5rem;color:var(--muted)">⚠️ ${e.message || 'Error generating questions. Please try again.'}</div>`;
+  }
+  btn.disabled = false;
+  btn.textContent = '✦ Generate with Lumina AI';
+}
+
+// Init on load
+initAuth();
+</script>
+</body>
+</html>
