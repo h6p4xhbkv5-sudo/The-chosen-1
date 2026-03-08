@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', process.env.SITE_URL || '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
@@ -12,6 +12,14 @@ export default async function handler(req, res) {
   const { model, messages, max_tokens, system } = req.body;
   if (!messages || !Array.isArray(messages)) {
     return res.status(400).json({ error: 'Invalid request: messages array required' });
+  }
+  // Input validation: limit message count and total length
+  if (messages.length > 50) {
+    return res.status(400).json({ error: 'Too many messages. Please start a new conversation.' });
+  }
+  const totalLength = JSON.stringify(messages).length;
+  if (totalLength > 100000) {
+    return res.status(400).json({ error: 'Message content too long. Please shorten your request.' });
   }
 
   try {

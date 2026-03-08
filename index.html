@@ -2928,9 +2928,15 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
               <select id="q-grade"><option>Grade 4-5</option><option>Grade 6-7</option><option selected>Grade 7-8</option><option>Grade 8-9</option></select>
             </div>
           </div>
-          <div class="form-group"><label>Specific Topics (optional)</label>
-            <input type="text" id="q-topics" placeholder="e.g. Quadratics, Pythagoras, Trigonometry">
+          <div class="form-row">
+            <div class="form-group"><label>Specific Topics (optional)</label>
+              <input type="text" id="q-topics" placeholder="e.g. Quadratics, Pythagoras, Trigonometry">
+            </div>
+            <div class="form-group"><label>Cognitive Level</label>
+              <select id="q-bloom"><option selected>Mixed</option><option>Remember & Understand</option><option>Apply & Analyse</option><option>Evaluate & Create</option></select>
+            </div>
           </div>
+          <div id="adaptive-suggestion" style="display:none;background:rgba(196,168,76,0.1);border:1px solid var(--gold);border-radius:10px;padding:.75rem 1rem;font-size:.85rem;color:var(--gold);margin-bottom:1rem"></div>
           <button class="btn btn-gold" style="width:100%;padding:1rem;font-size:1rem" onclick="generateQuestions()">✦ Generate with Synaptiq</button>
         </div>
         <div class="gen-output" id="q-output">
@@ -4098,12 +4104,34 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 <div id="toast"></div>
 <div id="xp-popup">+50 XP ⭐</div>
 
+<!-- ═══════════════════════ UPGRADE MODAL ═══════════════════════ -->
+<div id="upgrade-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;align-items:center;justify-content:center">
+  <div style="background:var(--bg2);border:1px solid var(--gold);border-radius:20px;padding:2rem;max-width:460px;width:90%;text-align:center;position:relative">
+    <button onclick="closeUpgradeModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem">✕</button>
+    <div style="font-size:2.5rem;margin-bottom:1rem">🔒</div>
+    <h3 style="font-family:var(--font-head);font-weight:800;font-size:1.3rem;margin-bottom:.5rem">Upgrade to Unlock</h3>
+    <p id="upgrade-reason" style="color:var(--muted);margin-bottom:1.5rem;font-size:.9rem">This feature requires a subscription</p>
+    <div style="display:flex;flex-direction:column;gap:.75rem">
+      <button class="btn-gold" style="width:100%;padding:.875rem" onclick="startCheckoutFlow('student')">
+        Student Plan — £60/mo<br><span style="font-size:.75rem;font-weight:400">Unlimited AI tutoring, all subjects & features</span>
+      </button>
+      <button class="btn-gold" style="width:100%;padding:.875rem;background:transparent;border:1px solid var(--gold);color:var(--gold)" onclick="startCheckoutFlow('homeschool')">
+        Homeschool Plan — £200/mo<br><span style="font-size:.75rem;font-weight:400">Up to 5 profiles + parent dashboard</span>
+      </button>
+    </div>
+    <p style="font-size:.75rem;color:var(--muted);margin-top:1rem">14-day money-back guarantee. Cancel anytime.</p>
+  </div>
+</div>
+<style>
+  #upgrade-modal.show { display:flex !important; }
+</style>
+
 <!-- ═══════════════════════ COOKIE BANNER ═══════════════════════ -->
 <div id="cookie-banner">
   <p class="cookie-text">We use cookies to improve your experience and comply with GDPR. See our <a onclick="nav('privacy')">Privacy Policy</a>.</p>
   <div class="cookie-btns">
-    <button class="btn btn-outline" style="font-size:.8rem" onclick="document.getElementById('cookie-banner').remove()">Reject</button>
-    <button class="btn btn-gold" style="font-size:.8rem" onclick="document.getElementById('cookie-banner').remove()">Accept All</button>
+    <button class="btn btn-outline" style="font-size:.8rem" onclick="localStorage.setItem('synaptiq_cookies_accepted','essential');document.getElementById('cookie-banner').remove()">Reject</button>
+    <button class="btn btn-gold" style="font-size:.8rem" onclick="localStorage.setItem('synaptiq_cookies_accepted','all');document.getElementById('cookie-banner').remove()">Accept All</button>
   </div>
 </div>
 
@@ -4127,8 +4155,131 @@ const state = {
   ttsEnabled: false,
   calcValue: '',
   calcPrev: '',
-  calcOp: ''
+  calcOp: '',
+  dailyQuestionCount: 0
 };
+
+// ═══════════════════════════════════════
+// FREE TRIAL & PAYWALL ENFORCEMENT
+// ═══════════════════════════════════════
+const FREE_DAILY_QUESTION_LIMIT = 5;
+const FREE_TRIAL_DAYS = 7;
+
+function getSubscriptionStatus() {
+  const u = state.user;
+  if (!u) return 'none';
+  if (u.subscription_status === 'active') return 'active';
+  if (u.plan === 'free' || !u.subscription_status || u.subscription_status === 'cancelled') {
+    const trialStart = u.trial_started_at || localStorage.getItem('synaptiq_trial_start');
+    if (trialStart) {
+      const elapsed = (Date.now() - new Date(trialStart).getTime()) / (1000 * 60 * 60 * 24);
+      if (elapsed <= FREE_TRIAL_DAYS) return 'trial';
+      return 'trial_expired';
+    }
+    return 'free';
+  }
+  if (u.subscription_status === 'past_due') return 'past_due';
+  return 'free';
+}
+
+function canAccessPremiumFeature(featureName) {
+  const status = getSubscriptionStatus();
+  if (status === 'active') return true;
+  if (status === 'trial' || status === 'free') {
+    // Trial users get limited access
+    const premiumOnly = ['essay', 'photo', 'video', 'grade-predictor'];
+    if (premiumOnly.includes(featureName)) {
+      showUpgradeModal(featureName);
+      return false;
+    }
+    return true;
+  }
+  if (status === 'trial_expired' || status === 'past_due') {
+    showUpgradeModal(featureName);
+    return false;
+  }
+  showUpgradeModal(featureName);
+  return false;
+}
+
+function canAskQuestion() {
+  const status = getSubscriptionStatus();
+  if (status === 'active') return true;
+  // Load daily count
+  const today = new Date().toISOString().split('T')[0];
+  const stored = localStorage.getItem('synaptiq_daily_q');
+  if (stored) {
+    const parsed = JSON.parse(stored);
+    if (parsed.date === today) {
+      state.dailyQuestionCount = parsed.count;
+    } else {
+      state.dailyQuestionCount = 0;
+      localStorage.setItem('synaptiq_daily_q', JSON.stringify({ date: today, count: 0 }));
+    }
+  }
+  if (state.dailyQuestionCount >= FREE_DAILY_QUESTION_LIMIT) {
+    showUpgradeModal('daily-limit');
+    return false;
+  }
+  return true;
+}
+
+function incrementQuestionCount() {
+  const today = new Date().toISOString().split('T')[0];
+  state.dailyQuestionCount++;
+  localStorage.setItem('synaptiq_daily_q', JSON.stringify({ date: today, count: state.dailyQuestionCount }));
+}
+
+function showUpgradeModal(reason) {
+  const reasons = {
+    'essay': 'Essay Marking is a premium feature',
+    'photo': 'Photo Solver is a premium feature',
+    'video': 'Video Explainer is a premium feature',
+    'grade-predictor': 'Grade Predictor is a premium feature',
+    'daily-limit': `You've used all ${FREE_DAILY_QUESTION_LIMIT} free questions today`,
+    'trial_expired': 'Your free trial has ended',
+    'default': 'This feature requires a subscription'
+  };
+  const msg = reasons[reason] || reasons['default'];
+  const modal = document.getElementById('upgrade-modal');
+  if (modal) {
+    document.getElementById('upgrade-reason').textContent = msg;
+    modal.classList.add('show');
+  } else {
+    // Fallback if modal not in DOM yet
+    showToast(msg + ' — Upgrade to continue!');
+  }
+}
+
+function closeUpgradeModal() {
+  const modal = document.getElementById('upgrade-modal');
+  if (modal) modal.classList.remove('show');
+}
+
+async function startCheckoutFlow(plan) {
+  closeUpgradeModal();
+  const email = state.user?.email;
+  if (!email) { nav('auth'); return; }
+  showToast('Redirecting to checkout...');
+  try {
+    const res = await fetch('/api/stripe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'checkout',
+        plan: plan || 'student',
+        email,
+        successUrl: window.location.origin + '?payment=success',
+        cancelUrl: window.location.origin + '?payment=cancelled'
+      })
+    });
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+    else showToast('Could not start checkout. Please try again.');
+  } catch(e) {
+    showToast('Checkout error — please try again.');
+  }
+}
 
 // ═══════════════════════════════════════
 // NAVIGATION
@@ -4283,34 +4434,32 @@ async function createAccount() {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Signup failed');
 
+    const trialStart = new Date().toISOString();
     state.user = {
       id: data.user?.id, name, email,
-      plan: state.selectedPlan,
+      plan: 'free',
+      subscription_status: 'free',
+      trial_started_at: trialStart,
       year: year_group,
       subjects,
       board: document.getElementById('reg-board').value,
-      diffs: state.selectedDiffs
+      diffs: state.selectedDiffs,
+      xp: 0, level: 1, streak: 0, questions_answered: 0, accuracy: 0
     };
     if (data.token) localStorage.setItem('synaptiq_token', data.token);
     localStorage.setItem('synaptiq_user', JSON.stringify(state.user));
+    localStorage.setItem('synaptiq_trial_start', trialStart);
     applyLearningProfile();
     enterDashboard();
     addXP(100, 'Welcome bonus!');
+    // Show upgrade prompt if user selected a paid plan
+    if (state.selectedPlan !== 'free') {
+      setTimeout(() => {
+        showToast('Your 7-day free trial has started! Upgrade anytime for unlimited access.');
+      }, 2000);
+    }
   } catch(e) {
-    // Fallback to local-only mode
-    state.user = {
-      name, email,
-      plan: state.selectedPlan,
-      year: year_group,
-      subjects,
-      board: document.getElementById('reg-board').value,
-      diffs: state.selectedDiffs
-    };
-    localStorage.setItem('synaptiq_user', JSON.stringify(state.user));
-    applyLearningProfile();
-    enterDashboard();
-    addXP(100, 'Welcome bonus!');
-    if (e.message !== 'Failed to fetch') showToast(e.message);
+    showToast(e.message === 'Failed to fetch' ? 'Network error — please check your connection and try again.' : e.message);
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = 'Start Learning Free'; }
   }
@@ -4354,17 +4503,7 @@ async function loginUser() {
     enterDashboard();
     if (state.user.streak > 1) showToast(`${state.user.streak}-day streak! Keep it up!`);
   } catch(e) {
-    // Fallback to local-only mode
-    try {
-      const saved = localStorage.getItem('synaptiq_user');
-      if (saved) { state.user = JSON.parse(saved); }
-      else { state.user = { name: email.split('@')[0], email, plan: 'student', diffs: [] }; }
-    } catch(e2) {
-      state.user = { name: 'Student', email, plan: 'student', diffs: [] };
-    }
-    applyLearningProfile();
-    enterDashboard();
-    if (e.message !== 'Failed to fetch') showToast(e.message);
+    showToast(e.message === 'Failed to fetch' ? 'Network error — please check your connection and try again.' : e.message);
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = 'Log In →'; }
   }
@@ -4402,7 +4541,13 @@ function logout() {
 function enterDashboard() {
   const u = state.user;
   document.getElementById('sb-name').textContent = u.name;
-  document.getElementById('sb-plan').textContent = u.plan === 'student' ? 'Student Plan' : 'Homeschool Plan';
+  const planLabels = { free: 'Free Trial', student: 'Student Plan', homeschool: 'Homeschool Plan' };
+  const status = getSubscriptionStatus();
+  const planLabel = status === 'active' ? (planLabels[u.plan] || 'Student Plan') :
+    status === 'trial' ? 'Free Trial' :
+    status === 'trial_expired' ? 'Trial Expired' :
+    status === 'past_due' ? 'Payment Due' : 'Free Plan';
+  document.getElementById('sb-plan').textContent = planLabel;
   document.getElementById('sb-avatar').textContent = u.name.charAt(0).toUpperCase();
   document.getElementById('dash-greeting').textContent = `${getGreeting()}, ${u.name.split(' ')[0]}!`;
   document.getElementById('dash-search-wrap').style.display = 'block';
@@ -4418,8 +4563,91 @@ function enterDashboard() {
   // Update dynamic stats
   updateDashboardStats();
 
+  // Load progress from backend
+  loadProgressFromBackend();
+
   nav('dashboard');
   showDash('home');
+
+  // Trigger onboarding tour for first-time users
+  if (!localStorage.getItem('synaptiq_tour_done')) {
+    setTimeout(() => startTour(), 1500);
+  }
+}
+
+async function loadProgressFromBackend() {
+  const token = localStorage.getItem('synaptiq_token');
+  if (!token) return;
+  try {
+    const res = await fetch('/api/progress', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data.profile) {
+      const p = data.profile;
+      if (state.user) {
+        state.user.questions_answered = p.questions_answered || state.user.questions_answered || 0;
+        state.user.accuracy = p.accuracy || state.user.accuracy || 0;
+        state.user.streak = p.streak || state.user.streak || 0;
+        state.user.xp = p.xp || state.user.xp || 0;
+        state.user.level = p.level || state.user.level || 1;
+        state.user.subscription_status = p.subscription_status || state.user.subscription_status;
+        state.user.plan = p.plan || state.user.plan;
+        state.xp = state.user.xp;
+        state.level = state.user.level;
+        localStorage.setItem('synaptiq_user', JSON.stringify(state.user));
+        updateDashboardStats();
+        updateXPDisplay();
+      }
+    }
+    // Update subject progress bars if data available
+    if (data.progress?.length) {
+      updateSubjectProgress(data.progress);
+    }
+    // Update heatmap with real data
+    if (data.activity?.length) {
+      renderRealHeatmap(data.activity);
+    }
+  } catch(e) { /* Offline — use cached data */ }
+}
+
+function updateSubjectProgress(progressData) {
+  const bars = document.querySelectorAll('.subj-bar');
+  const subjects = {};
+  progressData.forEach(p => {
+    if (!subjects[p.subject]) subjects[p.subject] = { total: 0, correct: 0 };
+    subjects[p.subject].total += p.questions_done || 0;
+    subjects[p.subject].correct += Math.round((p.accuracy || 0) / 100 * (p.questions_done || 0));
+  });
+  bars.forEach(bar => {
+    const subj = bar.dataset.subject;
+    if (subj && subjects[subj]) {
+      const pct = subjects[subj].total > 0 ? Math.round(subjects[subj].correct / subjects[subj].total * 100) : 0;
+      const fill = bar.querySelector('.subj-fill');
+      const label = bar.querySelector('.subj-pct');
+      if (fill) fill.style.width = pct + '%';
+      if (label) label.textContent = pct + '%';
+    }
+  });
+}
+
+function renderRealHeatmap(activityData) {
+  const el = document.getElementById('heatmap');
+  if (!el) return;
+  const levels = ['', 'l1', 'l2', 'l3', 'l4'];
+  const activityMap = {};
+  activityData.forEach(a => { activityMap[a.date] = (a.questions_done || 0) + (a.xp_earned || 0) / 50; });
+  let html = '';
+  for (let i = 0; i < 84; i++) {
+    const date = new Date(); date.setDate(date.getDate() - (83 - i));
+    const key = date.toISOString().split('T')[0];
+    const label = date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+    const val = activityMap[key] || 0;
+    const lvl = val === 0 ? 0 : val < 3 ? 1 : val < 6 ? 2 : val < 10 ? 3 : 4;
+    html += `<div class="heat-cell ${levels[lvl]}" data-tip="${label}: ${Math.round(val)} sessions"></div>`;
+  }
+  el.innerHTML = html;
 }
 
 function updateDashboardStats() {
@@ -4670,15 +4898,30 @@ function getA11yInstructions() {
   return parts.join('\n\n');
 }
 
+function getSafeguardingPrompt() {
+  return `\n\nSAFEGUARDING (MANDATORY): You are speaking to a school-age student (14-18 years old). Follow these rules absolutely:
+1. NEVER generate violent, sexual, discriminatory, or age-inappropriate content.
+2. Keep ALL responses educational and age-appropriate.
+3. If a student expresses distress, self-harm ideation, bullying, or mentions abuse, respond with empathy and provide:
+   - Childline: 0800 1111 (free, confidential, 24/7)
+   - Shout Crisis Text Line: text "SHOUT" to 85258
+   - Their school safeguarding lead or trusted adult
+   Do NOT attempt to counsel — direct them to professional support.
+4. If asked to help with anything unethical, illegal, or harmful, firmly but kindly decline and redirect to the learning topic.
+5. Encourage healthy study habits — remind students to take breaks, sleep well, and not over-stress about exams.`;
+}
+
 function getTutorSystem() {
   const user = state.user;
   const year = user?.year || 'Year 11';
   const board = user?.board || 'AQA';
-  let sys = `You are an expert ${state.subject} tutor for UK students, specialising in ${board} ${year}. 
+  let sys = `You are an expert ${state.subject} tutor for UK students, specialising in ${board} ${year}.
 Your name is Synaptiq. You are encouraging, patient, and brilliant at explaining complex ideas simply.
 Always tailor your explanations to the student's level. Use UK terminology and exam board conventions.
 When giving examples, use real-world scenarios. If the student seems stuck, break it down further.
-For maths and science, always show your working step by step.`;
+For maths and science, always show your working step by step.
+When a student asks a question, first ask them what they think the answer might be before explaining. Use scaffolded questioning (Socratic method) to guide understanding rather than simply telling. Identify common misconceptions and address them directly.`;
+  sys += getSafeguardingPrompt();
   const a11y = getA11yInstructions();
   if (a11y) sys += '\n\n' + a11y;
   return sys;
@@ -4700,9 +4943,13 @@ function setSubject(name, icon, color) {
 function addTutorMsg(role, text) {
   const el = document.createElement('div');
   el.className = 'msg ' + role;
-  // Format ADHD steps
-  if (state.modes.adhd && role === 'bot') {
-    el.innerHTML = formatADHD(text);
+  if (role === 'bot') {
+    // Sanitize AI response and render with formatting
+    if (state.modes.adhd) {
+      el.innerHTML = formatADHD(text);
+    } else {
+      el.innerHTML = renderAIResponse(text);
+    }
   } else {
     el.textContent = text;
   }
@@ -4712,12 +4959,13 @@ function addTutorMsg(role, text) {
 }
 
 function formatADHD(text) {
-  // Add visual step breaks
-  return text.replace(/\n/g, '<br>')
-    .replace(/(\d+\.) /g, '<span class="step-badge" style="display:inline-block">$1</span> ');
+  // Sanitize first, then add visual step breaks
+  let safe = renderAIResponse(text);
+  return safe.replace(/(\d+\.) /g, '<span class="step-badge" style="display:inline-block">$1</span> ');
 }
 
 async function tutorSend() {
+  if (!canAskQuestion()) return;
   const input = document.getElementById('tutor-input');
   const text = input.value.trim();
   if (!text) return;
@@ -4736,6 +4984,7 @@ async function tutorSend() {
     state.tutorHistory.push({ role: 'assistant', content: reply });
     addTutorMsg('bot', reply);
     addXP(10);
+    incrementQuestionCount();
   } catch (e) {
     typing.remove();
     addTutorMsg('bot', '⚠️ ' + e.message);
@@ -4763,7 +5012,11 @@ function clearTutor() {
 function addDashMsg(role, text) {
   const el = document.createElement('div');
   el.className = 'msg ' + role;
-  el.textContent = text;
+  if (role === 'bot') {
+    el.innerHTML = renderAIResponse(text);
+  } else {
+    el.textContent = text;
+  }
   document.getElementById('dash-chat').appendChild(el);
   document.getElementById('dash-chat').scrollTop = 99999;
 }
@@ -4780,7 +5033,7 @@ async function dashSend() {
   typing.innerHTML = '<span></span><span></span><span></span>';
   document.getElementById('dash-chat').appendChild(typing);
   document.getElementById('dash-chat').scrollTop = 99999;
-  const sys = 'You are Synaptiq, a helpful AI tutor. Answer questions concisely and helpfully for UK students. Keep answers short (2-3 paragraphs max) for the dashboard widget. ' + getA11yInstructions();
+  const sys = 'You are Synaptiq, a helpful AI tutor. Answer questions concisely and helpfully for UK students. Keep answers short (2-3 paragraphs max) for the dashboard widget. ' + getA11yInstructions() + getSafeguardingPrompt();
   try {
     const data = await callClaude(state.dashHistory, sys);
     const reply = getReply(data);
@@ -4802,6 +5055,7 @@ function dashKey(e) {
 // QUESTION GENERATOR
 // ═══════════════════════════════════════
 async function generateQuestions() {
+  if (!canAskQuestion()) return;
   const sub = document.getElementById('q-subject').value;
   const board = document.getElementById('q-board').value;
   const level = document.getElementById('q-level').value;
@@ -4809,6 +5063,7 @@ async function generateQuestions() {
   const type = document.getElementById('q-type').value;
   const grade = document.getElementById('q-grade').value;
   const topics = document.getElementById('q-topics').value;
+  const bloom = document.getElementById('q-bloom')?.value || 'Mixed';
   const output = document.getElementById('q-output');
   const qContainer = document.getElementById('q-questions');
   output.classList.add('show');
@@ -4816,13 +5071,30 @@ async function generateQuestions() {
   document.getElementById('q-output-sub').textContent = `${num} questions · ${board} ${level} · ${grade}`;
   qContainer.innerHTML = '<div class="msg bot" style="max-width:100%">✦ Generating your questions with Synaptiq...</div>';
   const a11y = getA11yInstructions();
+  // Bloom's taxonomy mapping
+  const bloomInstructions = {
+    'Mixed': 'Include a mix of cognitive levels: some recall, some application, and some evaluation/analysis questions.',
+    'Remember & Understand': 'Focus on RECALL and COMPREHENSION: definitions, key facts, describe, explain, list, identify.',
+    'Apply & Analyse': 'Focus on APPLICATION and ANALYSIS: calculate, solve, compare, contrast, examine, investigate.',
+    'Evaluate & Create': 'Focus on EVALUATION and SYNTHESIS: evaluate, justify, assess, design, construct, argue.'
+  };
+  // Board-specific marking conventions
+  const boardStyle = {
+    'AQA': 'Use AQA command words (state, describe, explain, evaluate, compare). Include AO1/AO2/AO3 skills.',
+    'Edexcel': 'Use Edexcel/Pearson question phrasing. Reference specification content areas.',
+    'OCR': 'Use OCR-style command terms and synoptic question approaches.',
+    'WJEC': 'Use WJEC/Eduqas question formatting conventions.'
+  };
   let sys = `You are an expert UK exam question writer specialising in ${board} ${level} ${sub}.
 Generate exactly ${num} exam-style questions for ${grade} target.
 Question types: ${type}. ${topics ? 'Focus on: ' + topics : 'Cover key topics.'}
+${bloomInstructions[bloom] || bloomInstructions['Mixed']}
+${boardStyle[board] || ''}
 Format STRICTLY as JSON array with this structure:
-[{"question":"...","marks":3,"type":"short answer","hint":"..."}]
-Each question must be exam-quality, use UK spelling, follow ${board} style.
+[{"question":"...","marks":3,"type":"short answer","hint":"...","bloom":"remember|understand|apply|analyse|evaluate|create"}]
+Each question must be exam-quality, use UK spelling, follow ${board} style and mark scheme conventions.
 ONLY return the JSON array, nothing else.${a11y ? '\n\nIMPORTANT accessibility notes: ' + a11y : ''}`;
+  sys += getSafeguardingPrompt();
   try {
     const data = await callClaude([{ role: 'user', content: `Generate ${num} ${sub} questions for ${board} ${level}, ${grade} target. ${topics ? 'Topics: ' + topics : ''}` }], sys);
     const reply = getReply(data);
@@ -4844,10 +5116,126 @@ ONLY return the JSON array, nothing else.${a11y ? '\n\nIMPORTANT accessibility n
           <div class="answer-space" contenteditable="true" spellcheck="true" style="outline:none">Click here to write your answer...</div>
         </div>`;
     });
+    // Add "Check My Answers" button
+    qContainer.innerHTML += `<button class="btn-gold" style="width:100%;margin-top:1rem" onclick="checkAnswers()">Check My Answers ✦</button>`;
+    // Store generated questions for marking
+    state.currentQuestions = questions;
+    state.currentQSubject = sub;
+    state.currentQBoard = board;
     addXP(20);
+    incrementQuestionCount();
     showToast('✦ Questions generated!');
   } catch (e) {
     qContainer.innerHTML = `<div class="msg bot" style="max-width:100%">⚠️ Error: ${e.message}</div>`;
+  }
+}
+
+async function checkAnswers() {
+  if (!state.currentQuestions) return;
+  const answerSpaces = document.querySelectorAll('#q-questions .answer-space');
+  const answers = Array.from(answerSpaces).map(el => el.textContent.trim());
+  const hasAnswers = answers.some(a => a && a !== 'Click here to write your answer...');
+  if (!hasAnswers) { showToast('Write your answers first!'); return; }
+
+  const pairs = state.currentQuestions.map((q, i) => ({
+    question: q.question,
+    marks: q.marks || 3,
+    studentAnswer: answers[i] || '(no answer)'
+  }));
+
+  const sub = state.currentQSubject;
+  const board = state.currentQBoard;
+  const sys = `You are an expert ${board} ${sub} examiner. Mark the student's answers strictly but fairly.
+Return ONLY valid JSON array: [{"questionNum":1,"marksAwarded":2,"marksTotal":3,"correct":true,"feedback":"Brief feedback"}]
+Use UK marking conventions. Award partial marks where appropriate.`;
+
+  showToast('✦ Marking your answers...');
+  try {
+    const data = await callClaude([{ role: 'user', content: JSON.stringify(pairs) }], sys);
+    const reply = getReply(data);
+    const clean = reply.replace(/```json|```/g, '').trim();
+    const results = JSON.parse(clean);
+
+    let totalMarks = 0, totalPossible = 0, correct = 0;
+    results.forEach(r => {
+      totalMarks += r.marksAwarded || 0;
+      totalPossible += r.marksTotal || 3;
+      if (r.correct) correct++;
+      const block = document.querySelectorAll('#q-questions .question-block')[r.questionNum - 1];
+      if (block) {
+        const existing = block.querySelector('.answer-feedback');
+        if (existing) existing.remove();
+        const fb = document.createElement('div');
+        fb.className = 'answer-feedback';
+        fb.style.cssText = `margin-top:.5rem;padding:.75rem;border-radius:8px;font-size:.85rem;background:${r.correct ? 'rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3)' : 'rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3)'}`;
+        fb.innerHTML = `<strong>${r.correct ? '✅' : '❌'} ${r.marksAwarded}/${r.marksTotal} marks</strong><br>${r.feedback || ''}`;
+        block.appendChild(fb);
+      }
+    });
+
+    const pct = totalPossible > 0 ? Math.round(correct / results.length * 100) : 0;
+    addXP(correct * 5, `+${correct * 5} XP for ${correct}/${results.length} correct`);
+    showToast(`${totalMarks}/${totalPossible} marks — ${pct}% correct`);
+
+    // Save progress to backend
+    const token = localStorage.getItem('synaptiq_token');
+    if (token && state.user?.id) {
+      saveProgressDB(sub, 'practice', correct, results.length, correct * 5);
+    }
+    // Update local stats
+    if (state.user) {
+      state.user.questions_answered = (state.user.questions_answered || 0) + results.length;
+      const oldTotal = (state.user.questions_answered - results.length) || 0;
+      state.user.accuracy = oldTotal > 0
+        ? Math.round(((state.user.accuracy || 0) * oldTotal + pct) / state.user.questions_answered)
+        : pct;
+      localStorage.setItem('synaptiq_user', JSON.stringify(state.user));
+      updateDashboardStats();
+    }
+    // Adaptive difficulty suggestion
+    showAdaptiveSuggestion(pct, grade);
+  } catch(e) {
+    showToast('⚠️ Could not mark answers: ' + e.message);
+  }
+}
+
+function showAdaptiveSuggestion(accuracy, currentGrade) {
+  const suggestion = document.getElementById('adaptive-suggestion');
+  if (!suggestion) return;
+  const grades = ['Grade 4-5', 'Grade 6-7', 'Grade 7-8', 'Grade 8-9'];
+  const idx = grades.indexOf(currentGrade);
+  if (accuracy >= 85 && idx < grades.length - 1) {
+    suggestion.textContent = `🚀 Great work! You scored ${accuracy}% — try ${grades[idx + 1]} next to push yourself further!`;
+    suggestion.style.display = 'block';
+    // Auto-suggest higher grade
+    const gradeSelect = document.getElementById('q-grade');
+    if (gradeSelect) gradeSelect.value = grades[idx + 1];
+  } else if (accuracy < 50 && idx > 0) {
+    suggestion.textContent = `💪 ${accuracy}% — consider practising at ${grades[idx - 1]} to build confidence, then work back up.`;
+    suggestion.style.display = 'block';
+    const gradeSelect = document.getElementById('q-grade');
+    if (gradeSelect) gradeSelect.value = grades[idx - 1];
+  } else {
+    suggestion.style.display = 'none';
+  }
+  // Track mastery
+  trackMastery(state.currentQSubject, accuracy);
+}
+
+function trackMastery(subject, accuracy) {
+  const key = 'synaptiq_mastery';
+  let mastery = {};
+  try { mastery = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e) {}
+  if (!mastery[subject]) mastery[subject] = { attempts: 0, totalAccuracy: 0 };
+  mastery[subject].attempts++;
+  mastery[subject].totalAccuracy += accuracy;
+  const avg = Math.round(mastery[subject].totalAccuracy / mastery[subject].attempts);
+  mastery[subject].averageAccuracy = avg;
+  mastery[subject].mastered = avg >= 85 && mastery[subject].attempts >= 3;
+  localStorage.setItem(key, JSON.stringify(mastery));
+  if (mastery[subject].mastered && mastery[subject].attempts === 3) {
+    showToast(`🏆 ${subject} mastered! Average accuracy: ${avg}%`);
+    addXP(50, `🏆 ${subject} mastery bonus!`);
   }
 }
 
@@ -5048,6 +5436,33 @@ function showToast(msg) {
   t.textContent = msg; t.classList.add('show');
   clearTimeout(window._toastTimer);
   window._toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ═══════════════════════════════════════
+// HTML SANITIZATION (XSS Prevention)
+// ═══════════════════════════════════════
+function sanitizeHTML(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function renderAIResponse(text) {
+  // Sanitize first, then convert safe markdown-like formatting
+  let safe = sanitizeHTML(text);
+  // Convert newlines to <br>
+  safe = safe.replace(/\n/g, '<br>');
+  // Convert **bold** to <strong>
+  safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  // Convert *italic* to <em>
+  safe = safe.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  // Convert `code` to <code>
+  safe = safe.replace(/`([^`]+)`/g, '<code>$1</code>');
+  return safe;
 }
 
 function getGreeting() {
@@ -5680,13 +6095,36 @@ function revealSR() {
 function rateSR(difficulty) {
   const xpMap = { easy:5, ok:10, hard:15 };
   addXP(xpMap[difficulty], difficulty==='hard'?'💪 Kept at it +15 XP':'⭐ +' + xpMap[difficulty]+' XP');
+  // Leitner spaced repetition scheduling
+  const card = srCards[srIndex % srCards.length];
+  if (card) {
+    const intervals = { easy: 7, ok: 3, hard: 1 }; // days until next review
+    const now = new Date();
+    card.lastReviewed = now.toISOString();
+    card.nextReview = new Date(now.getTime() + intervals[difficulty] * 24 * 60 * 60 * 1000).toISOString();
+    card.box = difficulty === 'easy' ? Math.min((card.box || 1) + 1, 5) : difficulty === 'hard' ? 1 : (card.box || 1);
+    card.reviewCount = (card.reviewCount || 0) + 1;
+    saveSRCards();
+  }
   srIndex++;
-  if (srIndex >= srCards.length) {
+  // Filter to only due cards
+  const dueCards = srCards.filter(c => !c.nextReview || new Date(c.nextReview) <= new Date());
+  if (srIndex >= srCards.length || dueCards.length === 0) {
     closeSR();
-    showToast('🎉 All cards reviewed! Come back tomorrow for more.');
+    const nextDue = srCards.filter(c => c.nextReview).sort((a,b) => new Date(a.nextReview) - new Date(b.nextReview))[0];
+    if (nextDue) {
+      const daysUntil = Math.ceil((new Date(nextDue.nextReview) - new Date()) / (1000*60*60*24));
+      showToast(`🎉 All cards reviewed! Next review in ${daysUntil} day${daysUntil !== 1 ? 's' : ''}.`);
+    } else {
+      showToast('🎉 All cards reviewed! Generate more cards to keep learning.');
+    }
     return;
   }
   loadSRCard();
+}
+
+function saveSRCards() {
+  try { localStorage.setItem('synaptiq_flashcards', JSON.stringify(srCards)); } catch(e) {}
 }
 
 async function generateSRCard() {
@@ -5958,7 +6396,7 @@ function selectNoteTag(btn) {
   selectedNoteTag = btn.dataset.tag;
 }
 
-function saveNote() {
+async function saveNote() {
   const text = document.getElementById('note-text-input').value.trim();
   if (!text) { showToast('Please write something first!'); return; }
   const note = {
@@ -5974,6 +6412,21 @@ function saveNote() {
   renderNotes();
   addXP(5, '📓 Note saved +5 XP');
   showToast('✅ Note saved to your notebook!');
+  // Sync to backend
+  const token = localStorage.getItem('synaptiq_token');
+  if (token) {
+    try {
+      const res = await fetch('/api/notes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ text, subject: selectedNoteTag, tag: selectedNoteTag })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.note?.id) { note.backendId = data.note.id; saveNotesToStorage(); }
+      }
+    } catch(e) { /* Offline — local save is fine */ }
+  }
 }
 
 function saveLastMsgToNotes() {
@@ -6001,11 +6454,23 @@ async function aiSummariseNote() {
   }
 }
 
-function deleteNote(id) {
+async function deleteNote(id) {
+  const note = notes.find(n => n.id === id);
   notes = notes.filter(n => n.id !== id);
   saveNotesToStorage();
   renderNotes();
   showToast('🗑️ Note deleted');
+  // Sync to backend
+  const token = localStorage.getItem('synaptiq_token');
+  if (token && note?.backendId) {
+    try {
+      await fetch('/api/notes', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ id: note.backendId })
+      });
+    } catch(e) { /* Offline — local delete is fine */ }
+  }
 }
 
 function filterNotes(filter, btn) {
@@ -6043,11 +6508,41 @@ function saveNotesToStorage() {
   try { localStorage.setItem('synaptiq_notes', JSON.stringify(notes)); } catch(e) {}
 }
 
-function loadNotesFromStorage() {
+async function loadNotesFromStorage() {
   try {
     const saved = localStorage.getItem('synaptiq_notes');
     if (saved) { notes = JSON.parse(saved); renderNotes(); }
   } catch(e) {}
+  // Try to load from backend
+  const token = localStorage.getItem('synaptiq_token');
+  if (token) {
+    try {
+      const res = await fetch('/api/notes', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.notes?.length) {
+          // Merge backend notes with local notes (avoid duplicates)
+          const localIds = new Set(notes.map(n => n.backendId).filter(Boolean));
+          data.notes.forEach(bn => {
+            if (!localIds.has(bn.id)) {
+              notes.push({
+                id: bn.id,
+                backendId: bn.id,
+                text: bn.text,
+                subject: bn.subject || bn.tag || 'General',
+                date: new Date(bn.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+                time: new Date(bn.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
+              });
+            }
+          });
+          saveNotesToStorage();
+          renderNotes();
+        }
+      }
+    } catch(e) { /* Offline — use local notes */ }
+  }
 }
 
 // ═══════════════════════════════════════
@@ -6426,6 +6921,7 @@ function handleEssayImage(e) {
 }
 
 async function markEssay() {
+  if (!canAccessPremiumFeature('essay')) return;
   const subject = document.getElementById('essay-subject').value;
   const board = document.getElementById('essay-board').value;
   const question = document.getElementById('essay-question').value;
@@ -6437,14 +6933,33 @@ async function markEssay() {
   btn.disabled = true;
   document.getElementById('essay-results').style.display = 'none';
 
-  const sys = `You are an experienced UK ${subject} examiner for ${board}. Mark the student's essay strictly. Return ONLY valid JSON with NO markdown:
+  // Board-specific Assessment Objectives
+  const boardRubrics = {
+    'English': {
+      'AQA': [{ name: 'AO1: Response to text & textual references', weight: 30 }, { name: 'AO2: Language, form & structure analysis', weight: 30 }, { name: 'AO3: Context & setting', weight: 20 }, { name: 'AO4: Spelling, punctuation & grammar', weight: 20 }],
+      'Edexcel': [{ name: 'AO1: Critical reading & textual reference', weight: 25 }, { name: 'AO2: Effects of language & structure', weight: 30 }, { name: 'AO3: Relationship between text & context', weight: 25 }, { name: 'AO4: Technical accuracy', weight: 20 }],
+      'default': [{ name: 'AO1: Knowledge & Understanding', weight: 25 }, { name: 'AO2: Analysis of language & structure', weight: 30 }, { name: 'AO3: Contexts', weight: 25 }, { name: 'AO4: Written accuracy', weight: 20 }]
+    },
+    'History': {
+      'AQA': [{ name: 'AO1: Historical knowledge & understanding', weight: 40 }, { name: 'AO2: Analysis & evaluation of sources', weight: 35 }, { name: 'AO3: Historical interpretation', weight: 25 }],
+      'default': [{ name: 'AO1: Knowledge & understanding', weight: 35 }, { name: 'AO2: Source analysis', weight: 35 }, { name: 'AO3: Interpretation', weight: 30 }]
+    },
+    'default': [{ name: 'AO1: Knowledge & Understanding', weight: 30 }, { name: 'AO2: Application & Analysis', weight: 30 }, { name: 'AO3: Evaluation & Judgement', weight: 25 }, { name: 'AO4: Communication & Quality', weight: 15 }]
+  };
+  const subjectRubrics = boardRubrics[subject] || {};
+  const rubric = subjectRubrics[board] || subjectRubrics['default'] || boardRubrics['default'];
+  const rubricStr = rubric.map(r => `{"name":"${r.name}","score":0}`).join(',');
+
+  let sys = `You are an experienced UK ${subject} examiner for ${board}. Mark the student's essay strictly using the ${board} mark scheme conventions. Return ONLY valid JSON with NO markdown:
 {
-  "grade": "A*|A|B|C|D|E",
+  "grade": "A*|A|B|C|D|E" (or 9-1 for GCSE),
   "marks": "e.g. 28/30",
-  "criteria": [{"name":"AO1 Knowledge","score":85},{"name":"AO2 Analysis","score":72},{"name":"AO3 Context","score":68},{"name":"AO4 Expression","score":90}],
-  "feedback": "Detailed paragraph feedback",
-  "improve": "Specific bullet points on how to improve"
-}`;
+  "criteria": [${rubricStr}],
+  "feedback": "Detailed paragraph feedback referencing specific ${board} mark scheme descriptors",
+  "improve": "Specific bullet points referencing ${board} assessment criteria on how to improve"
+}
+Score each criterion 0-100 based on the ${board} mark scheme band descriptors. Be specific about which band the student is working at.`;
+  sys += getSafeguardingPrompt();
 
   const msgs = [{ role: 'user', content: `Question: ${question || 'General essay'}\n\nEssay:\n${text}` }];
 
@@ -6470,7 +6985,7 @@ async function markEssay() {
         <div class="essay-criteria-score">${c.score}%</div>
       </div>`).join('');
 
-    document.getElementById('essay-feedback-text').innerHTML = (result.feedback || '').replace(/\n/g,'<br>');
+    document.getElementById('essay-feedback-text').innerHTML = renderAIResponse(result.feedback || '');
     document.getElementById('essay-improve-text').innerHTML = (result.improve || '').replace(/\n/g,'<br>');
     document.getElementById('essay-results').style.display = 'block';
     addXP(30, '✍️ Essay marked +30 XP');
@@ -6863,6 +7378,7 @@ function selectVidStyle(btn) {
 }
 
 async function generateVideo() {
+  if (!canAccessPremiumFeature('video')) return;
   const topic = document.getElementById('vid-topic').value.trim();
   const subject = document.getElementById('vid-subject').value;
   const level = document.getElementById('vid-level').value;
@@ -7772,6 +8288,7 @@ function handlePhotoQuestion(e) {
 }
 
 async function solvePhoto() {
+  if (!canAccessPremiumFeature('photo')) return;
   if (!photoImageData) return;
   const subject = document.getElementById('photo-subject').value;
   const mode = document.getElementById('photo-mode').value;
@@ -7785,7 +8302,8 @@ async function solvePhoto() {
     hint: 'Give me just a hint — one or two sentences pointing me in the right direction. Do not solve it.'
   };
 
-  const sys = `You are an expert UK ${subject} tutor. A student has photographed a question. ${modeInstructions[mode]} Use UK curriculum standards and clear formatting.`;
+  let sys = `You are an expert UK ${subject} tutor. A student has photographed a question. ${modeInstructions[mode]} Use UK curriculum standards and clear formatting.`;
+  sys += getSafeguardingPrompt();
   try {
     const res = await fetch('/api/chat', {
       method: 'POST',
@@ -7801,7 +8319,7 @@ async function solvePhoto() {
     });
     const data = await res.json();
     const answer = data.content?.[0]?.text || 'Could not analyse image';
-    document.getElementById('photo-answer-text').innerHTML = answer.replace(/\n/g,'<br>');
+    document.getElementById('photo-answer-text').innerHTML = renderAIResponse(answer);
     document.getElementById('photo-answer').style.display = 'block';
     if (window.MathJax) MathJax.typesetPromise([document.getElementById('photo-answer-text')]).catch(()=>{});
     addXP(15, '📷 Photo question solved +15 XP');
@@ -9034,19 +9552,10 @@ if ('serviceWorker' in navigator) {
 
 window.addEventListener('online', () => showToast('Back online!'));
 window.addEventListener('offline', () => showToast('You are offline — some features unavailable'));
-
-function showToast(msg) {
-  let toast = document.getElementById('synaptiq-toast');
-  if (!toast) {
-    toast = document.createElement('div');
-    toast.id = 'synaptiq-toast';
-    toast.style.cssText = 'position:fixed;top:80px;right:1.5rem;z-index:10000;background:var(--bg2,#0D0F18);border:1px solid var(--border,rgba(255,255,255,0.07));border-radius:12px;padding:0.75rem 1.25rem;font-size:0.85rem;color:var(--white,#F0EEF8);transform:translateX(120%);transition:transform 0.3s';
-    document.body.appendChild(toast);
-  }
-  toast.textContent = msg;
-  toast.style.transform = 'translateX(0)';
-  setTimeout(() => { toast.style.transform = 'translateX(120%)'; }, 3000);
-}
+window.addEventListener('unhandledrejection', (e) => {
+  if (e.reason?.message) showToast('⚠️ ' + e.reason.message.slice(0, 80));
+  e.preventDefault();
+});
 
 console.log('Synaptiq v11 loaded');
 </script>
