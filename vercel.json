@@ -11,6 +11,8 @@
     { "src": "/terms", "dest": "/terms.html" },
     { "src": "/cookies", "dest": "/cookies.html" },
     { "src": "/contact", "dest": "/contact.html" },
+    { "src": "/questions", "dest": "/questions.html" },
+    { "src": "/lessons", "dest": "/lessons.html" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
