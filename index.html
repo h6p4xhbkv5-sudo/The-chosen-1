@@ -996,13 +996,16 @@ body {
 }
 .tutor-header h3 { font-size: 1.1rem; font-weight: 700; }
 .tutor-header p { font-size: .8rem; color: var(--muted); }
-.quick-actions { display: flex; gap: .5rem; flex-wrap: wrap; padding: 1rem 2rem; border-bottom: 1px solid var(--border); background: var(--bg2); }
+.quick-actions { display: flex; gap: .5rem; flex-wrap: wrap; padding: 1rem 2rem; border-bottom: 1px solid var(--border); background: var(--bg2); align-items: center; }
+.quick-section-label { width: 100%; font-size: .65rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-top: .5rem; padding-bottom: .2rem; border-bottom: 1px solid var(--border); }
+.quick-section-label:first-child { margin-top: 0; }
 .quick-btn {
   padding: .4rem .9rem; border-radius: 20px;
   background: var(--bg3); border: 1px solid var(--border);
   color: var(--muted); font-size: .8rem;
   cursor: pointer; transition: all .2s;
 }
+.quick-btn.chapter-btn { font-size: .72rem; padding: .35rem .75rem; }
 .quick-btn:hover { border-color: var(--gold); color: var(--gold); }
 .tutor-messages {
   flex: 1; overflow-y: auto;
@@ -3075,8 +3078,37 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
             <button class="quick-btn" onclick="tutorQuick('Give me exam technique tips')">🎯 Exam technique</button>
             <button class="quick-btn" onclick="tutorQuick('What are the most common exam topics?')">📋 Common topics</button>
             <button class="quick-btn" onclick="tutorQuick('Explain this simply as if I am 10 years old')">🧒 Simplify</button>
+            <button class="quick-btn" onclick="tutorQuick('What are the most efficient methods and shortcuts for solving A-Level Maths problems?')">⚡ Efficient methods</button>
             <button class="quick-btn" onclick="toggleGeo()">📐 Geometry</button>
             <button class="quick-btn" onclick="openSR()">🧠 Flashcards</button>
+
+            <div class="quick-section-label">Year 1 — Pure</div>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me Chapter 1: Algebraic Expressions & Surds. Cover key concepts, worked examples, and give me a practice question.')">1. Algebraic Expressions</button>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me Chapter 2: Quadratics. Cover factorising, completing the square, the discriminant, and give me a practice question.')">2. Quadratics</button>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me Chapter 3: Equations & Inequalities. Cover simultaneous equations, linear & quadratic inequalities, and give me a practice question.')">3. Equations & Inequalities</button>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me Chapter 4: Graphs & Transformations. Cover sketching curves, translations, stretches, reflections, and give me a practice question.')">4. Graphs & Transformations</button>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me Chapter 5: Coordinate Geometry. Cover straight lines, gradients, midpoints, circles, and give me a practice question.')">5. Coordinate Geometry</button>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me Chapter 6: Trigonometry. Cover sin/cos/tan, trig graphs, trig identities, solving trig equations, and give me a practice question.')">6. Trigonometry</button>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me Chapter 7: Polynomials & Binomial Expansion. Cover the factor theorem, algebraic division, binomial expansion, and give me a practice question.')">7. Binomial Expansion</button>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me Chapter 8: Exponentials & Logarithms. Cover e^x, ln(x), laws of logs, solving exponential equations, and give me a practice question.')">8. Exponentials & Logs</button>
+
+            <div class="quick-section-label">Year 1 — Stats & Mechanics</div>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me S1: Statistical Sampling & Data Collection. Cover sampling methods, types of data, and give me a practice question.')">S1. Sampling & Data</button>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me S2: Data Presentation & Interpretation. Cover histograms, box plots, cumulative frequency, measures of location and spread, and give me a practice question.')">S2. Data Interpretation</button>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me M1: Kinematics (SUVAT). Cover displacement, velocity, acceleration, SUVAT equations, velocity-time graphs, and give me a practice question.')">M1. Kinematics (SUVAT)</button>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me M2: Forces & Newton\'s Laws. Cover weight, friction, normal reaction, resolving forces, F=ma, and give me a practice question.')">M2. Forces & Newton's Laws</button>
+
+            <div class="quick-section-label">Year 2 — Pure</div>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me Chapter 9: Differentiation (Advanced). Cover chain rule, product rule, quotient rule, implicit differentiation, and give me a practice question.')">9. Differentiation</button>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me Chapter 10: Integration (Advanced). Cover integration by substitution, by parts, partial fractions, differential equations, and give me a practice question.')">10. Integration</button>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me Chapter 11: Vectors. Cover 2D and 3D vectors, position vectors, dot product, geometric problems, and give me a practice question.')">11. Vectors</button>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me Chapter 12: Proof. Cover proof by deduction, exhaustion, contradiction, and give me a practice question.')">12. Proof</button>
+
+            <div class="quick-section-label">Year 2 — Stats & Mechanics</div>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me S3: Probability & Statistical Distributions. Cover binomial distribution, normal distribution, probability rules, and give me a practice question.')">S3. Probability & Distributions</button>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me S4: Hypothesis Testing. Cover null and alternative hypotheses, significance levels, critical regions for binomial and normal tests, and give me a practice question.')">S4. Hypothesis Testing</button>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me M3: Moments. Cover moments about a point, equilibrium, tilting, and give me a practice question.')">M3. Moments</button>
+            <button class="quick-btn chapter-btn" onclick="tutorQuick('Teach me M4: Projectiles & Further Kinematics. Cover projectile motion, resolving velocity, time of flight, range, and give me a practice question.')">M4. Projectiles</button>
           </div>
           <div class="tutor-messages" id="tutor-messages"></div>
           <div class="tutor-input-area">

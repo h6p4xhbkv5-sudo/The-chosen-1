@@ -1,8 +1,11 @@
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY) : null;
+let supabase = null;
+if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
+  supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+}
 
 export const config = { api: { bodyParser: false } };
 
@@ -16,6 +19,7 @@ async function getRawBody(req) {
 }
 
 export default async function handler(req, res) {
+  if (!stripe || !supabase) return res.status(503).json({ error: 'Payments not configured' });
   if (req.method !== 'POST') return res.status(405).end();
 
   const rawBody = await getRawBody(req);
