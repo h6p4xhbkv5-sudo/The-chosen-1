@@ -1,12 +1,13 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
-);
-
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const VALID_PLANS = ['student', 'homeschool'];
+
+// Only create Supabase client if credentials are configured
+let supabase = null;
+if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
+  supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+}
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', process.env.SITE_URL || '*');
@@ -14,14 +15,18 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const { action, email, password, name, plan, learning_difficulty, year_group, subjects } = req.body;
+  const { action, email, password, name, plan, learning_difficulty, year_group, subjects } = req.body || {};
+
+  // If Supabase is not configured, use local demo mode
+  if (!supabase) {
+    return handleDemoMode(req, res, { action, email, password, name, plan, year_group, subjects, learning_difficulty });
+  }
 
   try {
     if (action === 'signup') {
-      // Input validation
       if (!email || !EMAIL_RE.test(email)) return res.status(400).json({ error: 'A valid email is required' });
-      if (!password || password.length < 8) return res.status(400).json({ error: 'password must be at least 8 characters' });
-      if (!name) return res.status(400).json({ error: 'name is required' });
+      if (!password || password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters' });
+      if (!name) return res.status(400).json({ error: 'Name is required' });
       if (plan && !VALID_PLANS.includes(plan)) return res.status(400).json({ error: 'Invalid plan. Must be "student" or "homeschool".' });
 
       const chosenPlan = plan || 'student';
@@ -53,7 +58,6 @@ export default async function handler(req, res) {
         created_at: new Date().toISOString()
       });
 
-      // Send invite/verification email
       await supabase.auth.admin.inviteUserByEmail(email);
 
       return res.status(200).json({ success: true, user: data.user });
@@ -71,7 +75,6 @@ export default async function handler(req, res) {
         .eq('id', data.user.id)
         .single();
 
-      // Update last_active and streak
       const today = new Date().toISOString().split('T')[0];
       if (profile && profile.last_active !== today) {
         const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
@@ -142,4 +145,80 @@ export default async function handler(req, res) {
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
+}
+
+// Demo mode — works without Supabase for testing
+function handleDemoMode(req, res, { action, email, password, name, plan, year_group, subjects, learning_difficulty }) {
+  if (action === 'signup') {
+    if (!email || !EMAIL_RE.test(email)) return res.status(400).json({ error: 'A valid email is required' });
+    if (!password || password.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters' });
+    if (!name) return res.status(400).json({ error: 'Name is required' });
+
+    const demoId = 'demo_' + Date.now().toString(36);
+    return res.status(200).json({
+      success: true,
+      token: 'demo_token_' + demoId,
+      user: {
+        id: demoId,
+        email,
+        name,
+        plan: plan || 'student',
+        subscription_status: 'free',
+        year_group: year_group || 'Year 13 (A-Level)',
+        subjects: subjects || ['Mathematics'],
+        learning_difficulty: learning_difficulty || 'none',
+        exam_board: 'AQA',
+        xp: 0,
+        level: 1,
+        streak: 1,
+        questions_answered: 0,
+        accuracy: 0
+      }
+    });
+  }
+
+  if (action === 'login') {
+    if (!email || !EMAIL_RE.test(email)) return res.status(400).json({ error: 'A valid email is required' });
+    if (!password) return res.status(400).json({ error: 'Please enter your password' });
+
+    const demoId = 'demo_' + Buffer.from(email).toString('base64').slice(0, 12);
+    return res.status(200).json({
+      success: true,
+      token: 'demo_token_' + demoId,
+      user: {
+        id: demoId,
+        email,
+        name: email.split('@')[0],
+        plan: 'student',
+        subscription_status: 'free',
+        year_group: 'Year 13 (A-Level)',
+        subjects: ['Mathematics'],
+        exam_board: 'AQA',
+        xp: 0,
+        level: 1,
+        streak: 1,
+        questions_answered: 0,
+        accuracy: 0
+      }
+    });
+  }
+
+  if (action === 'verify') {
+    const token = req.headers?.authorization?.replace('Bearer ', '');
+    if (!token || !token.startsWith('demo_token_')) return res.status(401).json({ error: 'Invalid token' });
+    return res.status(200).json({
+      success: true,
+      user: { id: 'demo', email: 'demo@synaptiq.app', name: 'Student' }
+    });
+  }
+
+  if (action === 'reset') {
+    return res.status(200).json({ success: true });
+  }
+
+  if (action === 'update_profile') {
+    return res.status(200).json({ success: true, profile: {} });
+  }
+
+  return res.status(400).json({ error: 'Unknown action' });
 }

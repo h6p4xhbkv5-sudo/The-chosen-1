@@ -7,10 +7,10 @@
 import { createClient } from '@supabase/supabase-js';
 import { applyHeaders, isRateLimited } from './_lib.js';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY,
-);
+let supabase = null;
+if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
+  supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+}
 
 const TABLES = [
   'profiles',
@@ -27,6 +27,8 @@ export default async function handler(req, res) {
   applyHeaders(res, 'GET, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+
+  if (!supabase) return res.status(200).json({ exported_at: new Date().toISOString(), data: {}, note: 'Demo mode — no server data stored' });
 
   // Authenticate
   const token = req.headers.authorization?.replace('Bearer ', '');

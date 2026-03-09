@@ -1,10 +1,14 @@
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const stripe = process.env.STRIPE_SECRET_KEY ? new Stripe(process.env.STRIPE_SECRET_KEY) : null;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default async function handler(req, res) {
+  if (!stripe) {
+    res.setHeader('Access-Control-Allow-Origin', process.env.SITE_URL || '*');
+    return res.status(503).json({ error: 'Payments not configured yet' });
+  }
   res.setHeader('Access-Control-Allow-Origin', process.env.SITE_URL || '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
