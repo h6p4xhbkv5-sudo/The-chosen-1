@@ -105,7 +105,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
 <div class="page">
   <div class="page-header">
     <h1 class="page-title">📝 Question Paper Generator</h1>
-    <p class="page-sub">Generate exam-style practice papers tailored to your subject, level, and exam board</p>
+    <p class="page-sub">Generate exam-style A-Level Maths practice papers tailored to your exam board</p>
   </div>
 
   <div class="gen-grid">
@@ -113,17 +113,10 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
     <div class="form-card">
       <h3>✦ Configure Your Paper</h3>
       <div class="form-row">
-        <div class="form-group">
+        <div class="form-group" style="display:none">
           <label>Subject</label>
           <select id="q-subject">
-            <option>Mathematics</option><option>Physics</option><option>Chemistry</option>
-            <option>Biology</option><option>English Literature</option><option>English Language</option>
-            <option>History</option><option>Geography</option><option>Computer Science</option>
-            <option>Economics</option><option>Business Studies</option><option>French</option>
-            <option>Spanish</option><option>German</option><option>Psychology</option>
-            <option>Sociology</option><option>Religious Studies</option><option>Physical Education</option>
-            <option>Art</option><option>Music</option><option>Drama</option>
-            <option>Design and Technology</option><option>Law</option><option>Politics</option>
+            <option selected>Mathematics</option>
           </select>
         </div>
         <div class="form-group">

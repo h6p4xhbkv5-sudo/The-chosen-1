@@ -130,7 +130,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
 <div class="page">
   <div class="page-header">
     <h1 class="page-title">🎓 AI Lessons from the Curriculum</h1>
-    <p class="page-sub">Select any subject, topic, and level — Lumina AI generates a complete, interactive lesson covering the full UK specification</p>
+    <p class="page-sub">Select a topic and level — Synaptiq AI generates a complete, interactive A-Level Maths lesson</p>
   </div>
 
   <!-- SELECTOR -->
@@ -140,8 +140,8 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
       <div class="form-group">
         <label>Level</label>
         <select id="l-level" onchange="updateSubjects()">
+          <option value="alevel" selected>A-Level</option>
           <option value="gcse">GCSE</option>
-          <option value="alevel">A-Level</option>
         </select>
       </div>
       <div class="form-group">
@@ -152,7 +152,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
         <label>Exam Board</label>
         <select id="l-board">
           <option>AQA</option><option>Edexcel</option><option>OCR</option>
-          <option>WJEC</option><option>Eduqas</option><option>Cambridge</option>
+          <option>MEI</option><option>WJEC</option>
         </select>
       </div>
     </div>
@@ -194,80 +194,6 @@ const CURRICULUM = {
       'Algebra':['Expressions & formulae','Linear equations','Quadratics','Simultaneous equations','Sequences (nth term)','Inequalities','Functions & graphs','Iteration'],
       'Geometry':['Angles & parallel lines','Circles (arc, sector, tangent)','Transformations','Vectors','Pythagoras & trigonometry','Mensuration','Constructions & loci','Similarity & congruence'],
       'Statistics & Probability':['Data representation','Averages & spread','Scatter diagrams','Sampling methods','Probability (single, combined, tree diagrams)']
-    }},
-    Physics: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
-      'Forces & Motion':['Speed, velocity & acceleration','Newton\'s laws','Momentum','Stopping distances','Hooke\'s Law'],
-      'Energy':['Energy stores & transfers','Conservation of energy','Efficiency','Power','Specific heat capacity'],
-      'Waves':['Properties of waves','EM spectrum','Reflection & refraction','Sound waves'],
-      'Electricity':['Circuit symbols & components','Ohm\'s Law','Series & parallel circuits','Mains electricity'],
-      'Magnetism':['Electromagnets','Motor effect','Generator effect','Transformers'],
-      'Atomic Structure':['Atomic model','Radioactive decay','Half-life','Nuclear fission & fusion']
-    }},
-    Chemistry: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
-      'Atomic Structure':['Atomic structure & isotopes','Electronic configuration','Periodic table trends'],
-      'Bonding & Structure':['Ionic bonding','Covalent bonding','Metallic bonding','Allotropes of carbon'],
-      'Quantitative Chemistry':['Moles','Empirical formulae','Reacting masses','Concentration & titration'],
-      'Chemical Changes':['Reactivity series','Oxidation & reduction','Electrolysis','Acids & neutralisation'],
-      'Energy Changes':['Exothermic & endothermic reactions','Bond enthalpies','Catalysts'],
-      'Rates & Equilibrium':['Rate of reaction','Collision theory','Le Chatelier\'s principle'],
-      'Organic Chemistry':['Alkanes & alkenes','Fractional distillation','Polymers','Alcohols'],
-      'Analysis':['Tests for ions','Chromatography','Flame tests']
-    }},
-    Biology: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
-      'Cell Biology':['Cell structure','Microscopy & magnification','Mitosis & meiosis','Stem cells','Diffusion, osmosis & active transport'],
-      'Organisation':['Enzymes & digestion','Circulatory system','Respiration','Breathing system','Photosynthesis'],
-      'Infection & Response':['Communicable diseases','Immune system & vaccination','Antibiotics'],
-      'Bioenergetics':['Photosynthesis (equation, factors)','Aerobic & anaerobic respiration'],
-      'Homeostasis':['Nervous system','Hormones','Diabetes','Temperature regulation'],
-      'Inheritance':['DNA & protein synthesis','Mendelian inheritance','Punnett squares','Genetic disorders','Evolution & natural selection']
-    }},
-    'English Literature': { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
-      'Shakespeare':['Character analysis','Themes & motifs','Historical context','Language analysis'],
-      'Modern Novel':['Plot & narrative structure','Character development','Themes','Social context'],
-      'Poetry':['GCSE Anthology poems','Unseen poetry','Poetic techniques','Comparative essays'],
-      'Essay Skills':['PEE structure','Embedding quotations','Contextual analysis']
-    }},
-    History: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
-      'Medicine Through Time':['Medieval medicine','Renaissance surgery','Industrial era','20th century NHS'],
-      'Germany 1890–1945':['Kaiser & WW1','Weimar Republic','Rise of Hitler','Life in Nazi Germany'],
-      'USA 1920–1973':['Roaring Twenties','Great Depression','Civil Rights Movement'],
-      'Elizabethan England':['Elizabeth I','Religious settlement','Armada','Society & culture'],
-      'Historical Skills':['Source analysis','Essay structure','Causation & significance']
-    }},
-    Geography: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
-      'Physical':['Tectonic hazards','Tropical storms','River landscapes','Coastal landscapes'],
-      'Human':['Urban change UK','Global development','Resource management'],
-      'Skills':['Map reading','Data presentation','Fieldwork techniques']
-    }},
-    'Computer Science': { boards:['AQA','OCR','Edexcel'], topics:{
-      'Programming':['Variables & data types','Selection & iteration','Functions','Pseudocode'],
-      'Data Structures':['Arrays','Searching & sorting algorithms'],
-      'Computer Systems':['CPU architecture','Memory','Binary & hexadecimal','Boolean logic'],
-      'Networks':['Topologies & protocols','Internet security','Encryption'],
-      'Theory':['Abstraction & decomposition','Algorithms & efficiency']
-    }},
-    Economics: { boards:['AQA','Edexcel','OCR'], topics:{
-      'Microeconomics':['Supply & demand','Elasticity','Market failure','Government intervention'],
-      'Macroeconomics':['GDP & economic growth','Unemployment & inflation','Fiscal & monetary policy'],
-      'International Trade':['Comparative advantage','Trade barriers','Globalisation']
-    }},
-    'Business Studies': { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
-      'Business Context':['Entrepreneurs & objectives','Stakeholders','Legal structures'],
-      'Marketing':['Market research','Marketing mix (4Ps)','Market segmentation'],
-      'Finance':['Revenue, costs & profit','Break-even analysis','Cash flow'],
-      'Human Resources':['Recruitment','Motivation theories','Organisational structure'],
-      'Operations':['Production methods','Quality management','Supply chain']
-    }},
-    French: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
-      'Identity & Culture':['Self & relationships','Customs & festivals','Education'],
-      'Travel & Tourism':['Holidays & transport','Accommodation','Describing places'],
-      'Grammar':['Present tense','Past tense (perfect & imperfect)','Future tense','Negation','Pronouns']
-    }},
-    Psychology: { boards:['AQA'], topics:{
-      'Social Influence':['Conformity (Asch)','Obedience (Milgram)','Minority influence'],
-      'Memory':['Multi-store model','Working memory model','Forgetting theories'],
-      'Attachment':['Caregiver-infant interactions','Bowlby & Learning theory','Ainsworth\'s Strange Situation'],
-      'Research Methods':['Experiments','Correlations','Observations','Statistical tests']
     }}
   },
   alevel: {
@@ -279,73 +205,6 @@ const CURRICULUM = {
       'Pure — Vectors':['3D vectors','Dot product','Lines & planes'],
       'Statistics':['Binomial & normal distributions','Hypothesis testing','Regression & correlation'],
       'Mechanics':['SUVAT in 2D','Forces & Newton\'s laws','Moments & equilibrium','Projectiles','Work, energy & power']
-    }},
-    Physics: { boards:['AQA','Edexcel','OCR','Cambridge'], topics:{
-      'Mechanics':['Projectile motion','Newton\'s laws (advanced)','Circular motion','Gravitational fields'],
-      'Electricity':['Capacitors','Kirchhoff\'s laws','Semiconductor physics'],
-      'Waves & Optics':['Superposition & interference','Diffraction','Lenses & optics'],
-      'Fields':['Gravitational fields','Electric fields (Coulomb\'s law)','Electromagnetic induction'],
-      'Nuclear & Particle Physics':['Photoelectric effect','Nuclear binding energy','Standard model'],
-      'Thermal Physics':['Ideal gas laws','Kinetic theory','Thermodynamics']
-    }},
-    Chemistry: { boards:['AQA','Edexcel','OCR','Cambridge'], topics:{
-      'Physical Chemistry':['Thermodynamics (enthalpy, entropy, Gibbs)','Kinetics (rate laws, Arrhenius)','Equilibrium (Kc, Kp, Ka)','Electrochemistry'],
-      'Inorganic Chemistry':['Periodicity','Transition metals','Acid-base chemistry','Group 2 & Group 7'],
-      'Organic Chemistry':['Reaction mechanisms','Carbonyl chemistry','Amines','Aromatic chemistry','Stereoisomerism'],
-      'Analytical Chemistry':['NMR spectroscopy','Infrared spectroscopy','Mass spectrometry']
-    }},
-    Biology: { boards:['AQA','Edexcel','OCR','Cambridge'], topics:{
-      'Cell Biology':['Ultrastructure','Cell signalling','DNA replication & protein synthesis'],
-      'Exchange & Transport':['Gas exchange','Mass transport (circulatory, xylem, phloem)'],
-      'Genetics & Evolution':['Mendelian genetics','Population genetics (Hardy-Weinberg)','Genetic technology (PCR, electrophoresis)'],
-      'Energy & Metabolism':['Photosynthesis (light & dark reactions)','Respiration (glycolysis, Krebs, oxidative phosphorylation)'],
-      'Control & Regulation':['Nervous system (synapses, action potentials)','Endocrine system','Plant hormones'],
-      'Ecology':['Population dynamics','Succession','Nutrient cycles','Biodiversity & conservation']
-    }},
-    Economics: { boards:['AQA','Edexcel','OCR','Cambridge'], topics:{
-      'Microeconomics':['Consumer theory','Production & cost theory','Market structures','Game theory','Market failure & welfare economics'],
-      'Macroeconomics':['Aggregate demand & supply','Fiscal & monetary policy','Supply-side economics','Open economy macroeconomics'],
-      'International Economics':['Trade theory','Exchange rate systems','Globalisation & protectionism'],
-      'Development Economics':['Development indicators','Poverty & inequality','Sustainable development']
-    }},
-    Psychology: { boards:['AQA','Edexcel','OCR'], topics:{
-      'Social Psychology':['Prosocial behaviour','Aggression','Prejudice & discrimination'],
-      'Biological Psychology':['Brain structure & function','Stress (SAM, HPA axis)','Sleep psychology'],
-      'Abnormal Psychology':['Schizophrenia','Mood disorders','Eating disorders','Forensic psychology'],
-      'Research Methods':['Statistical analysis','Meta-analysis','Validity & reliability']
-    }},
-    Law: { boards:['AQA','OCR'], topics:{
-      'English Legal System':['Sources of law','Court structure','Legal personnel'],
-      'Criminal Law':['Actus reus & mens rea','Murder & manslaughter','Defences'],
-      'Tort Law':['Negligence','Occupiers\' liability','Nuisance'],
-      'Contract Law':['Offer & acceptance','Consideration','Breach & remedies']
-    }},
-    Politics: { boards:['AQA','Edexcel','OCR'], topics:{
-      'UK Politics':['Democracy & participation','Electoral systems','Political parties','Parliament & the executive','Devolution'],
-      'US Politics':['Constitutional framework','Congress, Presidency & Supreme Court','Civil rights'],
-      'Political Ideas':['Liberalism','Conservatism','Socialism','Feminism','Nationalism'],
-      'Global Politics':['Power & polarity','Global governance','Human rights','Security']
-    }},
-    Philosophy: { boards:['AQA','OCR'], topics:{
-      'Epistemology':['Empiricism vs rationalism','Theories of knowledge','Scepticism & Descartes'],
-      'Metaphysics':['Dualism vs physicalism','Free will vs determinism','Personal identity'],
-      'Ethics':['Utilitarianism','Kantian deontology','Virtue ethics','Metaethics'],
-      'Philosophy of Religion':['Arguments for God\'s existence','Problem of evil','Religious language']
-    }},
-    Sociology: { boards:['AQA','OCR'], topics:{
-      'Theory & Methods':['Functionalism, Marxism, Feminism','Research methods'],
-      'Education':['Role of education','Educational achievement & social class'],
-      'Families & Households':['Changing family structures','Feminist & Marxist views'],
-      'Crime & Deviance':['Theories of crime','Policing & control'],
-      'Media':['Media ownership','Representation & effects theories']
-    }},
-    'Computer Science': { boards:['AQA','OCR','Edexcel'], topics:{
-      'Theory of Computation':['Turing machine','Regular languages & finite automata','Complexity theory'],
-      'Data Structures & Algorithms':['Trees, hash tables, graphs','Algorithm design','Time & space complexity (Big O)'],
-      'Programming Paradigms':['OOP','Functional programming','Declarative programming'],
-      'Computer Architecture':['RISC vs CISC','Pipelining & parallel processing'],
-      'Databases':['Relational databases & SQL','Normalisation','NoSQL'],
-      'Networks & Security':['TCP/IP stack','Cryptography','Network threats']
     }},
     'Further Mathematics': { boards:['AQA','Edexcel','OCR','MEI'], topics:{
       'Further Pure':['Complex numbers','Matrices','Further calculus','Proof by induction'],
@@ -496,7 +355,7 @@ async function startLesson() {
     revision: `Create a condensed revision guide with: 1) Key facts in bullet points. 2) Essential formulas/dates/terms in a table. 3) Memory aids or mnemonics. 4) 3 exam-style questions with brief model answers. Keep it concise and easy to scan.`
   };
 
-  const sys = `You are Lumina AI, an expert UK ${levelLabel} ${board} ${subject} teacher.
+  const sys = `You are Synaptiq AI, an expert UK ${levelLabel} ${board} Mathematics teacher.
 Your goal is to give the student a world-class lesson they can learn from immediately.
 ${modeGuides[selectedMode]}
 Format your response in clear HTML using: <h3>, <p>, <ul>, <ol>, <li>, <strong>, <em>, <code> tags.
