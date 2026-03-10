@@ -6,6 +6,7 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 const mocks = vi.hoisted(() => {
+  process.env.STRIPE_SECRET_KEY = 'sk_test_xxx';
   const stripe = {
     checkout: {
       sessions: { create: vi.fn() },
