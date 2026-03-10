@@ -4756,7 +4756,8 @@ async function createAccount() {
 
   try {
     let data;
-    const payload = { action: 'signup', email, password, name, learning_difficulty, year_group, subjects };
+    const plan = state.selectedPlan === 'home' ? 'homeschool' : state.selectedPlan;
+    const payload = { action: 'signup', email, password, name, plan, learning_difficulty, year_group, subjects };
 
     // Try API with timeout and one retry
     let res;
@@ -8714,20 +8715,8 @@ document.addEventListener('keydown', (e) => {
 });
 
 // ─── PWA SERVICE WORKER ───────────────────────────────
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    // Register inline service worker for offline capability
-    const swCode = `
-const CACHE = 'synaptiq-v9';
-const ASSETS = ['/'];
-self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS))));
-self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request).catch(() => caches.match('/')))));
-    `;
-    const blob = new Blob([swCode], { type: 'application/javascript' });
-    const swUrl = URL.createObjectURL(blob);
-    navigator.serviceWorker.register(swUrl).catch(() => {});
-  });
-}
+// (Removed: rogue SW that intercepted POST requests and returned cached HTML.
+//  The correct SW is registered further below with GET-only interception.)
 
 // ─── PATCH enterDashboard ─────────────────────────────
 const _v9PrevEnter = window.enterDashboard;
@@ -10102,23 +10091,7 @@ window.changeFontSize = function(delta) {
   if (el) el.textContent = pct + '%';
 };
 
-// ─── OFFLINE MODE (Service Worker) ───────────────────
-if ('serviceWorker' in navigator) {
-  const swCode = `
-const CACHE = 'synaptiq-v11';
-const CORE = ['/','index.html'];
-self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE))));
-self.addEventListener('fetch', e => {
-  if (!navigator.onLine) e.respondWith(caches.match(e.request).then(r => r || new Response('Offline - connect to use Synaptiq', {headers:{'Content-Type':'text/html'}})));
-});`;
-  const blob = new Blob([swCode], {type:'application/javascript'});
-  const url = URL.createObjectURL(blob);
-  navigator.serviceWorker.register(url).catch(()=>{});
-}
-
-// Offline/online toasts
-window.addEventListener('offline', () => showToast('📵 You\'re offline — some features unavailable'));
-window.addEventListener('online', () => showToast('✅ Back online!'));
+// (Removed: redundant offline-only SW — consolidated into the single SW below)
 
 // ─── PRINT SUPPORT ────────────────────────────────────
 function printCurrentPage() {
@@ -10310,17 +10283,25 @@ document.getElementById('fc-subject')?.addEventListener('change', loadFcDue);
 })();
 
 // ══════════════════════════════════════════
-// SERVICE WORKER (Offline Mode)
+// SERVICE WORKER (Offline Mode — GET only)
 // ══════════════════════════════════════════
 if ('serviceWorker' in navigator) {
+  // Unregister any stale blob-URL service workers before registering the new one
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    regs.forEach(r => { if (r.active && r.active.scriptURL.startsWith('blob:')) r.unregister(); });
+  }).catch(() => {});
+
   const swCode = `
-    const CACHE = 'synaptiq-v11';
+    const CACHE = 'synaptiq-v12';
     self.addEventListener('install', e => {
       e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/'])));
       self.skipWaiting();
     });
     self.addEventListener('activate', e => {
-      e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))));
+      e.waitUntil(
+        caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
+          .then(() => self.clients.claim())
+      );
     });
     self.addEventListener('fetch', e => {
       if (e.request.method !== 'GET') return;
