@@ -50,8 +50,14 @@ export default async function handler(req, res) {
         created_at: new Date().toISOString()
       });
 
-      await supabase.auth.admin.inviteUserByEmail(email);
-      return res.status(200).json({ success: true, user: data.user });
+      // Sign in the new user to generate a session token
+      const { data: session, error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
+      const token = session?.session?.access_token || null;
+
+      // Send confirmation email (non-blocking — don't let failure break signup)
+      try { await supabase.auth.admin.inviteUserByEmail(email); } catch (_) {}
+
+      return res.status(200).json({ success: true, token, user: data.user });
     }
 
     if (action === 'login') {
