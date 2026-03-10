@@ -2680,33 +2680,35 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <div class="price-card featured">
         <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--black);font-size:.7rem;font-weight:800;padding:.3rem 1rem;border-radius:20px;text-transform:uppercase;letter-spacing:.05em">Most Popular</div>
         <div class="price-name">Student Plan</div>
-        <div class="price-amount">£60<span>/month</span></div>
+        <div class="price-amount">£20<span>/month</span></div>
         <ul class="price-features">
           <li><i class="fas fa-check"></i>Unlimited AI Tutor access</li>
           <li><i class="fas fa-check"></i>Unlimited exam questions</li>
+          <li><i class="fas fa-check"></i>Timed exam simulator</li>
           <li><i class="fas fa-check"></i>Photo question solver</li>
           <li><i class="fas fa-check"></i>All exam boards (AQA, Edexcel, OCR, MEI)</li>
+          <li><i class="fas fa-check"></i>Diagnostic placement test</li>
           <li><i class="fas fa-check"></i>Flashcards & revision timetable</li>
           <li><i class="fas fa-check"></i>Full progress analytics</li>
           <li><i class="fas fa-check"></i>ADHD, Dyslexia & Dyscalculia modes</li>
         </ul>
         <button class="btn-gold" style="width:100%" onclick="nav('auth')">Start 7-Day Free Trial</button>
-        <p style="text-align:center;font-size:.75rem;color:var(--muted);margin-top:.5rem">Then £60/mo. Cancel anytime.</p>
+        <p style="text-align:center;font-size:.75rem;color:var(--muted);margin-top:.5rem">Then £20/mo. Cancel anytime.</p>
       </div>
       <div class="price-card">
-        <div class="price-name">Homeschool Plan</div>
-        <div class="price-amount">£200<span>/month</span></div>
+        <div class="price-name">Schools & Institutions</div>
+        <div class="price-amount" style="font-size:1.5rem">Custom<span> pricing</span></div>
         <ul class="price-features">
-          <li><i class="fas fa-check"></i>Everything in Student</li>
-          <li><i class="fas fa-check"></i>Up to 5 student profiles</li>
+          <li><i class="fas fa-check"></i>Everything in Student Plan</li>
+          <li><i class="fas fa-check"></i>Bulk student licences</li>
+          <li><i class="fas fa-check"></i>Teacher dashboard & reports</li>
+          <li><i class="fas fa-check"></i>Set & track assignments</li>
           <li><i class="fas fa-check"></i>Full curriculum mapping</li>
-          <li><i class="fas fa-check"></i>Parent dashboard & reports</li>
-          <li><i class="fas fa-check"></i>Teacher assignment tools</li>
-          <li><i class="fas fa-check"></i>Priority email support</li>
-          <li><i class="fas fa-check"></i>Weekly progress emails</li>
+          <li><i class="fas fa-check"></i>Priority support</li>
+          <li><i class="fas fa-check"></i>Per-student pricing available</li>
         </ul>
-        <button class="btn-gold" style="width:100%" onclick="nav('auth')">Start Free Trial</button>
-        <p style="text-align:center;font-size:.75rem;color:var(--muted);margin-top:.5rem">14-day money-back guarantee</p>
+        <button class="btn-gold" style="width:100%" onclick="window.location.href='/contact'">Enquire for Pricing</button>
+        <p style="text-align:center;font-size:.75rem;color:var(--muted);margin-top:.5rem">Contact us for school & group rates</p>
       </div>
     </div>
     <p style="text-align:center;color:var(--muted);font-size:.85rem;margin-top:2rem"><i class="fas fa-shield-halved" style="color:var(--gold);margin-right:.5rem"></i>Secure payments via Stripe. 14-day money-back guarantee on all paid plans.</p>
@@ -2818,13 +2820,8 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         <div class="plan-options">
           <div class="plan-opt selected" id="plan-student" onclick="selectPlan('student')">
             <div class="plan-name">Student</div>
-            <div class="plan-price">£60<span style="font-size:.75rem;font-weight:400">/mo</span></div>
-            <div class="plan-tag">Individual</div>
-          </div>
-          <div class="plan-opt" id="plan-home" onclick="selectPlan('home')">
-            <div class="plan-name">Homeschool</div>
-            <div class="plan-price">£200<span style="font-size:.75rem;font-weight:400">/mo</span></div>
-            <div class="plan-tag">Family</div>
+            <div class="plan-price">£20<span style="font-size:.75rem;font-weight:400">/mo</span></div>
+            <div class="plan-tag">7-day free trial</div>
           </div>
         </div>
         <div class="form-group"><label>Full Name</label><input type="text" id="reg-name" placeholder="Your full name"></div>
@@ -2964,6 +2961,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <div class="sidebar-section-label">REVISION</div>
       <div class="sidebar-item" id="si-flashcards" onclick="showDash('flashcards')"><i class="fas fa-clone"></i>Flashcards</div>
       <div class="sidebar-item" id="si-exams" onclick="showDash('exams')"><i class="fas fa-calendar"></i>Exam Countdown</div>
+      <div class="sidebar-item" id="si-exam-sim" onclick="showDash('exam-sim')"><i class="fas fa-stopwatch"></i>Exam Simulator</div>
       <div class="sidebar-item" id="si-timetable" onclick="showDash('timetable')"><i class="fas fa-table"></i>Revision Timetable</div>
       <div class="sidebar-item" id="si-papers" onclick="showDash('papers')"><i class="fas fa-file-alt"></i>Past Papers</div>
       <div class="sidebar-item" id="si-glossary" onclick="showDash('glossary')"><i class="fas fa-book-open"></i>Glossary</div>
@@ -2972,6 +2970,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <div class="sidebar-item" id="si-formulas" onclick="showDash('formulas')"><i class="fas fa-square-root-alt"></i>Formula Sheets</div>
       <div class="sidebar-item" id="si-mindmap" onclick="showDash('mindmap')"><i class="fas fa-project-diagram"></i>Mind Map</div>
       <div class="sidebar-item" id="si-grade" onclick="showDash('grade')"><i class="fas fa-chart-bar"></i>Grade Predictor</div>
+      <div class="sidebar-item" id="si-diagnostic" onclick="showDash('diagnostic')"><i class="fas fa-stethoscope"></i>Diagnostic Test</div>
       <div class="sidebar-section-label">TRACK</div>
       <div class="sidebar-item" id="si-progress" onclick="showDash('progress')"><i class="fas fa-chart-line"></i>Progress</div>
       <div class="sidebar-item" id="si-goals" onclick="showDash('goals')"><i class="fas fa-bullseye"></i>Daily Goals</div>
@@ -3543,6 +3542,168 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
           <button class="btn-gold" onclick="generateTimetable()" id="tt-gen-btn">✦ Generate My Timetable</button>
           <div id="timetable-output" style="margin-top:1.5rem;display:none"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- ═══ EXAM SIMULATOR ═══ -->
+    <div class="subpage" id="sp-exam-sim">
+      <div class="page-title">⏱️ Exam Simulator</div>
+      <p class="page-subtitle">Practice under timed exam conditions with AI-generated mock papers</p>
+      <div style="max-width:900px">
+        <!-- Setup panel (hidden during exam) -->
+        <div id="exam-sim-setup">
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem">
+            <div style="font-weight:700;margin-bottom:1rem">Configure Your Mock Exam</div>
+            <div class="form-row" style="grid-template-columns:1fr 1fr;gap:1rem">
+              <div class="form-group">
+                <label class="form-label">Exam Board</label>
+                <select class="form-select" id="sim-board">
+                  <option>AQA</option><option>Edexcel</option><option>OCR</option><option>WJEC</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Paper</label>
+                <select class="form-select" id="sim-paper">
+                  <option value="pure1">Pure Mathematics 1</option>
+                  <option value="pure2">Pure Mathematics 2</option>
+                  <option value="stats">Statistics & Mechanics</option>
+                  <option value="mixed">Mixed Paper</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row" style="grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-top:1rem">
+              <div class="form-group">
+                <label class="form-label">Duration (minutes)</label>
+                <select class="form-select" id="sim-duration">
+                  <option value="30">30 min (Mini Mock)</option>
+                  <option value="60">60 min (Half Paper)</option>
+                  <option value="90" selected>90 min (Full Paper)</option>
+                  <option value="120">120 min (Extended)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Number of Questions</label>
+                <select class="form-select" id="sim-count">
+                  <option value="5">5 questions</option>
+                  <option value="8">8 questions</option>
+                  <option value="10" selected>10 questions</option>
+                  <option value="15">15 questions</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Difficulty</label>
+                <select class="form-select" id="sim-diff">
+                  <option value="Grade 4-5">Grade 4-5</option>
+                  <option value="Grade 6-7" selected>Grade 6-7</option>
+                  <option value="Grade 7-8">Grade 7-8</option>
+                  <option value="Grade 8-9">Grade 8-9</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:flex;gap:1rem;margin-top:1.25rem">
+              <button class="btn-gold" onclick="startExamSim()" id="sim-start-btn" style="flex:1">⏱️ Start Timed Exam</button>
+            </div>
+          </div>
+          <!-- Past results -->
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:1.5rem">
+            <div style="font-weight:700;margin-bottom:1rem">📊 Previous Mock Results</div>
+            <div id="sim-history">
+              <div style="text-align:center;padding:2rem;color:var(--muted)">
+                <div style="font-size:2rem;margin-bottom:.5rem">📝</div>
+                <div>No mock exams completed yet. Start one above!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active exam panel (hidden until exam starts) -->
+        <div id="exam-sim-active" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:1rem 1.5rem;margin-bottom:1.5rem;position:sticky;top:0;z-index:10">
+            <div style="display:flex;align-items:center;gap:1rem">
+              <div style="font-weight:700" id="sim-paper-title">Mock Paper</div>
+              <span class="marks-badge" id="sim-q-progress">0/10</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:1.5rem">
+              <div style="font-size:1.5rem;font-weight:800;font-variant-numeric:tabular-nums" id="sim-timer">90:00</div>
+              <button class="btn-gold" onclick="submitExamSim()" id="sim-submit-btn">Submit Paper</button>
+            </div>
+          </div>
+          <div id="sim-questions"></div>
+        </div>
+
+        <!-- Results panel (hidden until exam submitted) -->
+        <div id="exam-sim-results" style="display:none">
+          <div style="background:linear-gradient(135deg,var(--bg3),rgba(201,168,76,0.05));border:1px solid var(--gold);border-radius:16px;padding:2rem;margin-bottom:1.5rem;text-align:center">
+            <div style="font-size:3rem;margin-bottom:.5rem" id="sim-result-emoji">📊</div>
+            <div style="font-size:1.5rem;font-weight:800;margin-bottom:.25rem" id="sim-result-score">0%</div>
+            <div style="color:var(--muted)" id="sim-result-grade">Estimated Grade: —</div>
+            <div style="color:var(--muted);font-size:.875rem;margin-top:.5rem" id="sim-result-time">Completed in —</div>
+          </div>
+          <div id="sim-result-detail"></div>
+          <div style="display:flex;gap:1rem;margin-top:1.5rem">
+            <button class="btn-gold" onclick="retakeExamSim()" style="flex:1">🔄 Retake Exam</button>
+            <button class="btn-gold" onclick="showDash('exam-sim');retakeExamSim()" style="flex:1;background:transparent;border:1px solid var(--gold);color:var(--gold)">📋 New Paper</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ DIAGNOSTIC TEST ═══ -->
+    <div class="subpage" id="sp-diagnostic">
+      <div class="page-title">🩺 Diagnostic Test</div>
+      <p class="page-subtitle">Discover your strengths and areas for improvement across A-Level Maths</p>
+      <div style="max-width:900px">
+        <!-- Setup -->
+        <div id="diag-setup">
+          <div style="background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:2rem;margin-bottom:1.5rem;text-align:center">
+            <div style="font-size:3rem;margin-bottom:1rem">🎯</div>
+            <div style="font-size:1.25rem;font-weight:700;margin-bottom:.5rem">Take Your Placement Test</div>
+            <div style="color:var(--muted);margin-bottom:1.5rem;max-width:500px;margin-left:auto;margin-right:auto">
+              Answer 12 questions across core A-Level topics. Synaptiq will assess your current level and create a personalised learning plan.
+            </div>
+            <div class="form-row" style="grid-template-columns:1fr 1fr;gap:1rem;max-width:400px;margin:0 auto 1.5rem">
+              <div class="form-group">
+                <label class="form-label">Exam Board</label>
+                <select class="form-select" id="diag-board">
+                  <option>AQA</option><option>Edexcel</option><option>OCR</option><option>WJEC</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Current Level</label>
+                <select class="form-select" id="diag-level">
+                  <option value="GCSE">Just finished GCSE</option>
+                  <option value="AS" selected>AS Level / Year 12</option>
+                  <option value="A2">A2 Level / Year 13</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn-gold" onclick="startDiagnostic()" id="diag-start-btn" style="min-width:250px">🩺 Start Diagnostic Test</button>
+            <div style="font-size:.8rem;color:var(--muted);margin-top:.75rem">Takes approximately 15-20 minutes</div>
+          </div>
+
+          <!-- Previous results -->
+          <div id="diag-prev-results" style="display:none;background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:1.5rem">
+            <div style="font-weight:700;margin-bottom:1rem">📊 Your Last Diagnostic</div>
+            <div id="diag-prev-content"></div>
+          </div>
+        </div>
+
+        <!-- Active test -->
+        <div id="diag-active" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:1rem 1.5rem;margin-bottom:1.5rem">
+            <div style="font-weight:700">Diagnostic Test</div>
+            <div style="display:flex;align-items:center;gap:1rem">
+              <div id="diag-progress-text" style="font-size:.875rem;color:var(--muted)">Question 1 of 12</div>
+              <div style="width:120px;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden">
+                <div id="diag-progress-bar" style="height:100%;background:var(--gold);border-radius:3px;width:0%;transition:width .3s"></div>
+              </div>
+            </div>
+          </div>
+          <div id="diag-question-area"></div>
+        </div>
+
+        <!-- Results -->
+        <div id="diag-results" style="display:none"></div>
       </div>
     </div>
 
@@ -4724,7 +4885,7 @@ function nextStep(from) {
   if (from === 3) {
     const diffs = state.selectedDiffs.length ? state.selectedDiffs.join(', ') : 'No specific needs';
     document.getElementById('profile-summary').innerHTML = `
-      <strong>Plan:</strong> ${state.selectedPlan === 'student' ? 'Student (£60/mo)' : 'Homeschool (£200/mo)'}<br>
+      <strong>Plan:</strong> ${state.selectedPlan === 'student' ? 'Student (£20/mo)' : 'Student (£20/mo)'}<br>
       <strong>Year:</strong> ${document.getElementById('reg-year').value}<br>
       <strong>Subjects:</strong> ${Array.from(document.querySelectorAll('#reg-subjects-grid .subject-chip.selected')).map(c => c.textContent).join(', ') || 'None selected'}<br>
       <strong>Learning needs:</strong> ${diffs}
@@ -5517,6 +5678,395 @@ async function dashSend() {
 function dashKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); dashSend(); }
 }
+
+// ═══════════════════════════════════════
+// EXAM SIMULATOR
+// ═══════════════════════════════════════
+let _examTimer = null;
+let _examStartTime = null;
+let _examSecondsLeft = 0;
+
+async function startExamSim() {
+  if (!canAskQuestion()) return;
+  const board = document.getElementById('sim-board').value;
+  const paper = document.getElementById('sim-paper');
+  const paperLabel = paper.options[paper.selectedIndex].text;
+  const duration = parseInt(document.getElementById('sim-duration').value);
+  const count = parseInt(document.getElementById('sim-count').value);
+  const diff = document.getElementById('sim-diff').value;
+  const a11y = getA11yInstructions();
+
+  const btn = document.getElementById('sim-start-btn');
+  btn.disabled = true; btn.textContent = 'Generating paper...';
+
+  const topicMap = {
+    pure1: 'Algebra, Quadratics, Surds, Coordinate Geometry, Differentiation, Integration basics, Proof',
+    pure2: 'Trigonometry, Exponentials, Logarithms, Sequences, Further Calculus, Parametric Equations, Vectors',
+    stats: 'Statistical Sampling, Data Presentation, Probability, Statistical Distributions, Hypothesis Testing, Kinematics, Forces, Moments',
+    mixed: 'Any A-Level Maths topics'
+  };
+  const topics = topicMap[paper.value] || topicMap.mixed;
+
+  const sys = `You are an expert UK A-Level Maths exam paper writer for ${board}.
+Generate exactly ${count} exam-style questions for a ${paperLabel} mock paper.
+Target difficulty: ${diff}. Topics: ${topics}.
+Questions should increase in difficulty from first to last, like a real exam paper.
+Each question should specify marks (total marks across all questions should be realistic).
+Format STRICTLY as JSON array:
+[{"question":"...","marks":4,"topic":"...","model_answer":"full worked solution with all steps shown"}]
+Use UK spelling and ${board} conventions. LaTeX is NOT available — use plain text maths notation (e.g. x^2, sqrt(x), dy/dx).
+ONLY return the JSON array, nothing else.${a11y ? '\n\nAccessibility: ' + a11y : ''}`;
+
+  try {
+    const data = await callClaude([{ role: 'user', content: `Generate a ${count}-question ${board} ${paperLabel} mock paper, ${diff} difficulty.` }], sys);
+    const reply = getReply(data);
+    let questions;
+    try {
+      questions = JSON.parse(reply.replace(/```json|```/g, '').trim());
+    } catch (_) {
+      showToast('Could not generate exam paper — please try again');
+      btn.disabled = false; btn.textContent = '⏱️ Start Timed Exam';
+      return;
+    }
+
+    state.examSim = { board, paper: paperLabel, duration, diff, questions, answers: new Array(questions.length).fill(''), startTime: Date.now() };
+    _examStartTime = Date.now();
+    _examSecondsLeft = duration * 60;
+
+    // Build question UI
+    const container = document.getElementById('sim-questions');
+    const totalMarks = questions.reduce((s, q) => s + (q.marks || 4), 0);
+    document.getElementById('sim-paper-title').textContent = `${board} ${paperLabel}`;
+    document.getElementById('sim-q-progress').textContent = `${totalMarks} marks total`;
+    container.innerHTML = '';
+    questions.forEach((q, i) => {
+      container.innerHTML += `
+        <div class="question-block" style="background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem">
+          <div class="question-num" style="display:flex;justify-content:space-between;align-items:center">
+            <span>Question ${i + 1}</span>
+            <span class="marks-badge">${q.marks || 4} marks</span>
+          </div>
+          <div class="question-text" style="margin:.75rem 0;line-height:1.6">${q.question}</div>
+          <textarea id="sim-ans-${i}" class="form-input" rows="4" placeholder="Write your answer here..." style="width:100%;resize:vertical;font-family:inherit" oninput="state.examSim.answers[${i}]=this.value"></textarea>
+        </div>`;
+    });
+
+    // Show exam, hide setup
+    document.getElementById('exam-sim-setup').style.display = 'none';
+    document.getElementById('exam-sim-active').style.display = 'block';
+    document.getElementById('exam-sim-results').style.display = 'none';
+
+    // Start timer
+    updateExamTimer();
+    _examTimer = setInterval(() => {
+      _examSecondsLeft--;
+      updateExamTimer();
+      if (_examSecondsLeft <= 0) {
+        clearInterval(_examTimer);
+        showToast('Time is up! Submitting your paper...');
+        submitExamSim();
+      }
+    }, 1000);
+
+    addXP(10);
+  } catch (e) {
+    showToast('Error generating exam: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = '⏱️ Start Timed Exam';
+  }
+}
+
+function updateExamTimer() {
+  const m = Math.floor(_examSecondsLeft / 60);
+  const s = _examSecondsLeft % 60;
+  const el = document.getElementById('sim-timer');
+  el.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+  if (_examSecondsLeft <= 300) el.style.color = '#ef4444';
+  else if (_examSecondsLeft <= 600) el.style.color = '#f59e0b';
+  else el.style.color = '';
+}
+
+async function submitExamSim() {
+  if (_examTimer) { clearInterval(_examTimer); _examTimer = null; }
+  const sim = state.examSim;
+  if (!sim) return;
+
+  const timeTaken = Math.round((Date.now() - sim.startTime) / 1000);
+  const btn = document.getElementById('sim-submit-btn');
+  btn.disabled = true; btn.textContent = 'Marking...';
+
+  // Build marking prompt
+  const answersText = sim.questions.map((q, i) =>
+    `Q${i + 1} (${q.marks} marks): ${q.question}\nStudent Answer: ${sim.answers[i] || '(blank)'}\nModel Answer: ${q.model_answer}`
+  ).join('\n\n');
+
+  const sys = `You are an expert A-Level Maths examiner for ${sim.board}. Mark each answer strictly and fairly.
+For each question, award marks out of the maximum based on the model answer.
+Format as JSON array: [{"marks_awarded":2,"marks_available":4,"feedback":"specific feedback on what was correct/incorrect and what was needed for full marks"}]
+ONLY return the JSON array.`;
+
+  let results;
+  try {
+    const data = await callClaude([{ role: 'user', content: answersText }], sys);
+    results = JSON.parse(getReply(data).replace(/```json|```/g, '').trim());
+  } catch (_) {
+    // Fallback: give 0 marks if marking fails
+    results = sim.questions.map(q => ({ marks_awarded: 0, marks_available: q.marks || 4, feedback: 'Could not mark — please review the model answer.' }));
+  }
+
+  const totalAwarded = results.reduce((s, r) => s + (r.marks_awarded || 0), 0);
+  const totalAvailable = results.reduce((s, r) => s + (r.marks_available || 4), 0);
+  const pct = Math.round((totalAwarded / totalAvailable) * 100);
+
+  // Grade boundaries (approximate A-Level)
+  const grade = pct >= 90 ? 'A*' : pct >= 80 ? 'A' : pct >= 70 ? 'B' : pct >= 60 ? 'C' : pct >= 50 ? 'D' : pct >= 40 ? 'E' : 'U';
+  const emoji = pct >= 80 ? '🌟' : pct >= 60 ? '👏' : pct >= 40 ? '📈' : '💪';
+
+  // Show results
+  document.getElementById('sim-result-emoji').textContent = emoji;
+  document.getElementById('sim-result-score').textContent = `${totalAwarded}/${totalAvailable} (${pct}%)`;
+  document.getElementById('sim-result-grade').textContent = `Estimated Grade: ${grade}`;
+  const mins = Math.floor(timeTaken / 60);
+  const secs = timeTaken % 60;
+  document.getElementById('sim-result-time').textContent = `Completed in ${mins}m ${secs}s of ${sim.duration} minutes`;
+
+  // Detailed results
+  const detail = document.getElementById('sim-result-detail');
+  detail.innerHTML = '';
+  sim.questions.forEach((q, i) => {
+    const r = results[i] || { marks_awarded: 0, marks_available: q.marks, feedback: '' };
+    const color = r.marks_awarded === r.marks_available ? '#22c55e' : r.marks_awarded > 0 ? '#f59e0b' : '#ef4444';
+    detail.innerHTML += `
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:1.25rem;margin-bottom:.75rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem">
+          <span style="font-weight:700">Question ${i + 1}: ${q.topic || ''}</span>
+          <span style="font-weight:800;color:${color}">${r.marks_awarded}/${r.marks_available}</span>
+        </div>
+        <div style="font-size:.875rem;margin-bottom:.5rem"><strong>Question:</strong> ${q.question}</div>
+        <div style="font-size:.875rem;margin-bottom:.5rem"><strong>Your answer:</strong> ${sim.answers[i] || '<em>(blank)</em>'}</div>
+        <div style="font-size:.875rem;margin-bottom:.5rem;color:var(--gold)"><strong>Model answer:</strong> ${q.model_answer}</div>
+        <div style="font-size:.875rem;color:var(--muted)"><strong>Feedback:</strong> ${r.feedback}</div>
+      </div>`;
+  });
+
+  document.getElementById('exam-sim-active').style.display = 'none';
+  document.getElementById('exam-sim-results').style.display = 'block';
+  btn.disabled = false; btn.textContent = 'Submit Paper';
+
+  // Save result to history
+  const history = JSON.parse(localStorage.getItem('synaptiq_exam_history') || '[]');
+  history.unshift({ date: new Date().toISOString(), board: sim.board, paper: sim.paper, pct, grade, totalAwarded, totalAvailable, timeTaken, duration: sim.duration });
+  if (history.length > 20) history.length = 20;
+  localStorage.setItem('synaptiq_exam_history', JSON.stringify(history));
+
+  addXP(50, 'Mock exam completed!');
+  incrementQuestionCount(sim.questions.length);
+  renderExamHistory();
+}
+
+function retakeExamSim() {
+  document.getElementById('exam-sim-setup').style.display = 'block';
+  document.getElementById('exam-sim-active').style.display = 'none';
+  document.getElementById('exam-sim-results').style.display = 'none';
+  if (_examTimer) { clearInterval(_examTimer); _examTimer = null; }
+}
+
+function renderExamHistory() {
+  const history = JSON.parse(localStorage.getItem('synaptiq_exam_history') || '[]');
+  const el = document.getElementById('sim-history');
+  if (!history.length) return;
+  el.innerHTML = history.map(h => {
+    const d = new Date(h.date);
+    const color = h.pct >= 70 ? '#22c55e' : h.pct >= 50 ? '#f59e0b' : '#ef4444';
+    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:.75rem;border-bottom:1px solid var(--border)">
+      <div>
+        <div style="font-weight:600">${h.board} ${h.paper}</div>
+        <div style="font-size:.8rem;color:var(--muted)">${d.toLocaleDateString('en-GB')} · ${Math.floor(h.timeTaken / 60)}m</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-weight:800;color:${color}">${h.pct}% (${h.grade})</div>
+        <div style="font-size:.8rem;color:var(--muted)">${h.totalAwarded}/${h.totalAvailable} marks</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Load exam history on dashboard load
+document.addEventListener('DOMContentLoaded', () => { if (document.getElementById('sim-history')) renderExamHistory(); });
+
+// ═══════════════════════════════════════
+// DIAGNOSTIC / PLACEMENT TEST
+// ═══════════════════════════════════════
+const DIAG_TOPICS = [
+  { topic: 'Algebra & Surds', subtopics: 'simplifying surds, algebraic fractions, completing the square' },
+  { topic: 'Quadratics & Polynomials', subtopics: 'factor theorem, discriminant, simultaneous equations' },
+  { topic: 'Coordinate Geometry', subtopics: 'straight lines, circles, tangent/normal equations' },
+  { topic: 'Trigonometry', subtopics: 'trig identities, solving trig equations, radians' },
+  { topic: 'Differentiation', subtopics: 'chain rule, product rule, stationary points, applications' },
+  { topic: 'Integration', subtopics: 'definite integrals, area under curves, integration by substitution' },
+  { topic: 'Exponentials & Logarithms', subtopics: 'laws of logarithms, exponential growth/decay, ln and e' },
+  { topic: 'Sequences & Series', subtopics: 'arithmetic sequences, geometric series, binomial expansion' },
+  { topic: 'Vectors', subtopics: 'position vectors, scalar product, geometric proofs' },
+  { topic: 'Proof', subtopics: 'proof by deduction, proof by contradiction, proof by exhaustion' },
+  { topic: 'Statistics', subtopics: 'mean/median/mode, standard deviation, probability distributions' },
+  { topic: 'Mechanics', subtopics: 'SUVAT equations, Newton\'s laws, resolving forces' }
+];
+
+async function startDiagnostic() {
+  if (!canAskQuestion()) return;
+  const board = document.getElementById('diag-board').value;
+  const level = document.getElementById('diag-level').value;
+  const btn = document.getElementById('diag-start-btn');
+  btn.disabled = true; btn.textContent = 'Generating questions...';
+
+  const sys = `You are an expert UK A-Level Maths diagnostic test creator for ${board}.
+Generate exactly 12 diagnostic questions, one per topic, testing a student at ${level} level.
+Topics in order: ${DIAG_TOPICS.map(t => t.topic).join(', ')}.
+Each question should be answerable in 1-2 minutes. Include 2 easy, 5 medium, and 5 hard questions.
+For each question provide 4 multiple-choice options (A, B, C, D) with exactly one correct answer.
+Format as JSON array:
+[{"topic":"...","question":"...","options":["A)...","B)...","C)...","D)..."],"correct":0,"difficulty":"easy|medium|hard","explanation":"brief explanation of the correct answer"}]
+Use plain text maths notation (x^2, sqrt, dy/dx). ONLY return the JSON array.`;
+
+  try {
+    const data = await callClaude([{ role: 'user', content: `Create a 12-question A-Level Maths diagnostic test for ${board} ${level} level.` }], sys);
+    let questions;
+    try {
+      questions = JSON.parse(getReply(data).replace(/```json|```/g, '').trim());
+    } catch (_) {
+      showToast('Could not generate diagnostic — please try again');
+      btn.disabled = false; btn.textContent = '🩺 Start Diagnostic Test';
+      return;
+    }
+
+    state.diagnostic = { board, level, questions, answers: new Array(questions.length).fill(-1), current: 0 };
+
+    document.getElementById('diag-setup').style.display = 'none';
+    document.getElementById('diag-active').style.display = 'block';
+    document.getElementById('diag-results').style.display = 'none';
+    renderDiagQuestion(0);
+  } catch (e) {
+    showToast('Error: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = '🩺 Start Diagnostic Test';
+  }
+}
+
+function renderDiagQuestion(idx) {
+  const diag = state.diagnostic;
+  const q = diag.questions[idx];
+  const total = diag.questions.length;
+  diag.current = idx;
+
+  document.getElementById('diag-progress-text').textContent = `Question ${idx + 1} of ${total}`;
+  document.getElementById('diag-progress-bar').style.width = `${((idx + 1) / total) * 100}%`;
+
+  const area = document.getElementById('diag-question-area');
+  const selected = diag.answers[idx];
+  area.innerHTML = `
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem">
+      <div style="display:flex;justify-content:space-between;margin-bottom:1rem">
+        <span style="font-weight:700">${q.topic}</span>
+        <span class="marks-badge">${q.difficulty}</span>
+      </div>
+      <div style="font-size:1.05rem;line-height:1.6;margin-bottom:1.25rem">${q.question}</div>
+      <div style="display:flex;flex-direction:column;gap:.5rem">
+        ${q.options.map((opt, i) => `
+          <button onclick="selectDiagAnswer(${idx},${i})" id="diag-opt-${i}"
+            style="text-align:left;padding:.75rem 1rem;border-radius:12px;border:1px solid ${selected === i ? 'var(--gold)' : 'var(--border)'};background:${selected === i ? 'rgba(201,168,76,0.1)' : 'var(--bg2)'};color:var(--white);cursor:pointer;font-size:.95rem;transition:all .2s">${opt}</button>
+        `).join('')}
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:1rem">
+      <button onclick="renderDiagQuestion(${idx - 1})" class="btn-gold" style="${idx === 0 ? 'visibility:hidden;' : ''}background:transparent;border:1px solid var(--gold);color:var(--gold)">← Previous</button>
+      ${idx < total - 1
+        ? `<button onclick="renderDiagQuestion(${idx + 1})" class="btn-gold">Next →</button>`
+        : `<button onclick="submitDiagnostic()" class="btn-gold">Finish & See Results</button>`
+      }
+    </div>`;
+}
+
+function selectDiagAnswer(qIdx, optIdx) {
+  state.diagnostic.answers[qIdx] = optIdx;
+  renderDiagQuestion(qIdx);
+}
+
+function submitDiagnostic() {
+  const diag = state.diagnostic;
+  const topicResults = diag.questions.map((q, i) => {
+    const correct = diag.answers[i] === q.correct;
+    return { topic: q.topic, correct, difficulty: q.difficulty, explanation: q.explanation, userAnswer: diag.answers[i], correctAnswer: q.correct, question: q.question, options: q.options };
+  });
+
+  const correctCount = topicResults.filter(r => r.correct).length;
+  const pct = Math.round((correctCount / topicResults.length) * 100);
+  const strengths = topicResults.filter(r => r.correct).map(r => r.topic);
+  const weaknesses = topicResults.filter(r => !r.correct).map(r => r.topic);
+
+  const level = pct >= 80 ? 'Advanced' : pct >= 60 ? 'Intermediate' : pct >= 40 ? 'Foundation' : 'Needs Support';
+  const emoji = pct >= 80 ? '🌟' : pct >= 60 ? '👍' : pct >= 40 ? '📚' : '💪';
+
+  const resultsEl = document.getElementById('diag-results');
+  resultsEl.style.display = 'block';
+  document.getElementById('diag-active').style.display = 'none';
+
+  resultsEl.innerHTML = `
+    <div style="background:linear-gradient(135deg,var(--bg3),rgba(201,168,76,0.05));border:1px solid var(--gold);border-radius:16px;padding:2rem;text-align:center;margin-bottom:1.5rem">
+      <div style="font-size:3rem;margin-bottom:.5rem">${emoji}</div>
+      <div style="font-size:1.5rem;font-weight:800;margin-bottom:.25rem">${correctCount}/${topicResults.length} (${pct}%)</div>
+      <div style="font-size:1.1rem;color:var(--gold);font-weight:600;margin-bottom:1rem">Level: ${level}</div>
+      ${strengths.length ? `<div style="margin-bottom:.5rem"><strong style="color:#22c55e">Strengths:</strong> ${strengths.join(', ')}</div>` : ''}
+      ${weaknesses.length ? `<div><strong style="color:#ef4444">Areas to improve:</strong> ${weaknesses.join(', ')}</div>` : ''}
+    </div>
+
+    <div style="font-weight:700;margin-bottom:1rem">📋 Detailed Breakdown</div>
+    ${topicResults.map((r, i) => `
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.5rem;display:flex;justify-content:space-between;align-items:center">
+        <div style="flex:1">
+          <div style="font-weight:600">${i + 1}. ${r.topic} <span class="marks-badge">${r.difficulty}</span></div>
+          <div style="font-size:.85rem;color:var(--muted);margin-top:.25rem">${r.question}</div>
+          ${!r.correct ? `<div style="font-size:.8rem;color:var(--gold);margin-top:.25rem">💡 ${r.explanation}</div>` : ''}
+        </div>
+        <div style="font-size:1.25rem;margin-left:1rem">${r.correct ? '✅' : '❌'}</div>
+      </div>
+    `).join('')}
+
+    <div style="display:flex;gap:1rem;margin-top:1.5rem">
+      <button class="btn-gold" onclick="showDash('tutor')" style="flex:1">💬 Study Weak Areas with AI Tutor</button>
+      <button class="btn-gold" onclick="retakeDiagnostic()" style="flex:1;background:transparent;border:1px solid var(--gold);color:var(--gold)">🔄 Retake Test</button>
+    </div>`;
+
+  // Save results
+  const diagResult = { date: new Date().toISOString(), pct, level, strengths, weaknesses, correctCount, total: topicResults.length };
+  localStorage.setItem('synaptiq_diagnostic', JSON.stringify(diagResult));
+  addXP(30, 'Diagnostic test completed!');
+  renderPrevDiagnostic();
+}
+
+function retakeDiagnostic() {
+  document.getElementById('diag-setup').style.display = 'block';
+  document.getElementById('diag-active').style.display = 'none';
+  document.getElementById('diag-results').style.display = 'none';
+}
+
+function renderPrevDiagnostic() {
+  const saved = localStorage.getItem('synaptiq_diagnostic');
+  if (!saved) return;
+  const r = JSON.parse(saved);
+  const container = document.getElementById('diag-prev-results');
+  container.style.display = 'block';
+  document.getElementById('diag-prev-content').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-weight:600">${r.pct}% — Level: ${r.level}</div>
+        <div style="font-size:.8rem;color:var(--muted)">Taken ${new Date(r.date).toLocaleDateString('en-GB')}</div>
+      </div>
+      <div style="font-size:.875rem;color:var(--muted)">${r.correctCount}/${r.total} correct</div>
+    </div>
+    ${r.weaknesses.length ? `<div style="margin-top:.75rem;font-size:.875rem"><strong>Focus areas:</strong> ${r.weaknesses.join(', ')}</div>` : ''}`;
+}
+
+document.addEventListener('DOMContentLoaded', () => { if (document.getElementById('diag-prev-results')) renderPrevDiagnostic(); });
 
 // ═══════════════════════════════════════
 // QUESTION GENERATOR

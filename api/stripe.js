@@ -17,16 +17,14 @@ export default async function handler(req, res) {
   const { action, plan, email } = req.body;
 
   const prices = {
-    student: process.env.STRIPE_PRICE_STUDENT,
-    homeschool: process.env.STRIPE_PRICE_HOMESCHOOL
+    student: process.env.STRIPE_PRICE_STUDENT
   };
 
   try {
     if (action === 'checkout') {
       // Validate plan
-      const validPlans = ['student', 'homeschool'];
-      if (!plan || !validPlans.includes(plan)) {
-        return res.status(400).json({ error: 'Invalid plan. Must be "student" or "homeschool".' });
+      if (!plan || plan !== 'student') {
+        return res.status(400).json({ error: 'Invalid plan. Must be "student".' });
       }
 
       // Validate email

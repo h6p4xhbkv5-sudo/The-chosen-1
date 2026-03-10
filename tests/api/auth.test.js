@@ -167,12 +167,10 @@ describe('Auth handler (api/auth.js)', () => {
       );
     });
 
-    it('uses the homeschool plan when explicitly specified', async () => {
-      mocks.supabase.auth.admin.createUser.mockResolvedValue({ data: { user: { id: 'u-4' } }, error: null });
-      await handler(makeReq({ body: { ...VALID, plan: 'homeschool' } }), makeRes());
-      expect(mocks.supabase.auth.admin.createUser).toHaveBeenCalledWith(
-        expect.objectContaining({ user_metadata: expect.objectContaining({ plan: 'homeschool' }) }),
-      );
+    it('rejects non-student plans', async () => {
+      const res = makeRes();
+      await handler(makeReq({ body: { ...VALID, plan: 'homeschool' } }), res);
+      expect(res.statusCode).toBe(400);
     });
 
     it('writes a profile row to Supabase', async () => {
