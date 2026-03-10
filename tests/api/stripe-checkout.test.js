@@ -48,7 +48,6 @@ describe('Stripe checkout handler (api/stripe.js)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     process.env.STRIPE_PRICE_STUDENT    = 'price_student_001';
-    process.env.STRIPE_PRICE_HOMESCHOOL = 'price_homeschool_001';
     process.env.SITE_URL                = 'https://lumina.example.com';
 
     mocks.stripe.checkout.sessions.create.mockResolvedValue({ url: 'https://checkout.stripe.com/pay/cs_test' });
@@ -81,11 +80,10 @@ describe('Stripe checkout handler (api/stripe.js)', () => {
       expect(res.body.url).toBe('https://checkout.stripe.com/pay/cs_test');
     });
 
-    it('uses the homeschool price ID for the homeschool plan', async () => {
-      await handler(makeReq({ action: 'checkout', plan: 'homeschool', email: 'b@b.com' }), makeRes());
-      expect(mocks.stripe.checkout.sessions.create).toHaveBeenCalledWith(
-        expect.objectContaining({ line_items: [{ price: 'price_homeschool_001', quantity: 1 }] }),
-      );
+    it('rejects non-student plans', async () => {
+      const res = makeRes();
+      await handler(makeReq({ action: 'checkout', plan: 'homeschool', email: 'b@b.com' }), res);
+      expect(res.statusCode).toBe(400);
     });
 
     it('passes the plan in session metadata', async () => {

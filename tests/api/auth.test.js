@@ -72,6 +72,7 @@ describe('Auth handler (api/auth.js)', () => {
     vi.clearAllMocks();
     process.env.SITE_URL = 'https://lumina.example.com';
     mocks.supabase.auth.admin.inviteUserByEmail.mockResolvedValue({});
+    mocks.supabase.auth.signInWithPassword.mockResolvedValue({ data: { session: { access_token: 'tok-123' } }, error: null });
     mocks.supabase.from.mockReturnValue(makeBuilder());
   });
 
@@ -137,13 +138,14 @@ describe('Auth handler (api/auth.js)', () => {
   describe('signup', () => {
     const VALID = { action: 'signup', email: 'alice@example.com', password: 'password123', name: 'Alice' };
 
-    it('creates a user and returns success', async () => {
+    it('creates a user and returns success with token', async () => {
       mocks.supabase.auth.admin.createUser.mockResolvedValue({ data: { user: { id: 'u-1' } }, error: null });
       const res = makeRes();
       await handler(makeReq({ body: VALID }), res);
       expect(res.statusCode).toBe(200);
       expect(res.body.success).toBe(true);
       expect(res.body.user.id).toBe('u-1');
+      expect(res.body.token).toBe('tok-123');
     });
 
     it('calls createUser with correct email_confirm and metadata', async () => {
@@ -165,12 +167,10 @@ describe('Auth handler (api/auth.js)', () => {
       );
     });
 
-    it('uses the homeschool plan when explicitly specified', async () => {
-      mocks.supabase.auth.admin.createUser.mockResolvedValue({ data: { user: { id: 'u-4' } }, error: null });
-      await handler(makeReq({ body: { ...VALID, plan: 'homeschool' } }), makeRes());
-      expect(mocks.supabase.auth.admin.createUser).toHaveBeenCalledWith(
-        expect.objectContaining({ user_metadata: expect.objectContaining({ plan: 'homeschool' }) }),
-      );
+    it('rejects non-student plans', async () => {
+      const res = makeRes();
+      await handler(makeReq({ body: { ...VALID, plan: 'homeschool' } }), res);
+      expect(res.statusCode).toBe(400);
     });
 
     it('writes a profile row to Supabase', async () => {

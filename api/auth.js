@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
+import { applyHeaders, isRateLimited, getIp } from './_lib.js';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const VALID_PLANS = ['student', 'homeschool'];
+const VALID_PLANS = ['student'];
 
 // Safe Supabase init — won't crash if env vars are missing
 let supabase = null;
@@ -14,10 +15,13 @@ try {
 }
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', process.env.SITE_URL || '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  applyHeaders(res, 'POST, GET, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(200).end();
+
+  const ip = getIp(req);
+  if (isRateLimited(`${ip}:auth`, 20, 60_000)) {
+    return res.status(429).json({ error: 'Too many requests — please try again later' });
+  }
 
   const { action, email, password, name, plan, learning_difficulty, year_group, subjects } = req.body || {};
 
@@ -50,8 +54,14 @@ export default async function handler(req, res) {
         created_at: new Date().toISOString()
       });
 
-      await supabase.auth.admin.inviteUserByEmail(email);
-      return res.status(200).json({ success: true, user: data.user });
+      // Sign in the new user to generate a session token
+      const { data: session, error: signInErr } = await supabase.auth.signInWithPassword({ email, password });
+      const token = session?.session?.access_token || null;
+
+      // Send confirmation email (non-blocking — don't let failure break signup)
+      try { await supabase.auth.admin.inviteUserByEmail(email); } catch (_) {}
+
+      return res.status(200).json({ success: true, token, user: data.user });
     }
 
     if (action === 'login') {
@@ -106,7 +116,10 @@ export default async function handler(req, res) {
 
     return res.status(400).json({ error: 'Unknown action' });
   } catch (e) {
-    return res.status(500).json({ error: e.message });
+    const msg = /fetch|network|ECONNREFUSED|ETIMEDOUT|socket/i.test(e.message)
+      ? 'Unable to reach the database. Please try again shortly.'
+      : e.message;
+    return res.status(500).json({ error: msg });
   }
 }
 
