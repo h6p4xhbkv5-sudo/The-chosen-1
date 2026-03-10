@@ -5,6 +5,8 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 const mocks = vi.hoisted(() => {
+  process.env.SUPABASE_URL = 'https://test.supabase.co';
+  process.env.SUPABASE_SERVICE_KEY = 'test-service-key';
   const supabase = { from: vi.fn() };
   return { supabase };
 });

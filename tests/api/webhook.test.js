@@ -6,6 +6,10 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 
 const mocks = vi.hoisted(() => {
+  process.env.SUPABASE_URL = 'https://test.supabase.co';
+  process.env.SUPABASE_SERVICE_KEY = 'test-service-key';
+  process.env.STRIPE_SECRET_KEY = 'sk_test_xxx';
+  process.env.STRIPE_WEBHOOK_SECRET = 'whsec_test';
   const stripe = {
     webhooks: { constructEvent: vi.fn() },
   };
