@@ -4755,11 +4755,17 @@ async function createAccount() {
   if (btn) { btn.disabled = true; btn.textContent = 'Creating account...'; }
 
   try {
-    const res = await fetch('/api/auth', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'signup', email, password, name, learning_difficulty, year_group, subjects })
-    });
+    let res;
+    try {
+      res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'signup', email, password, name, learning_difficulty, year_group, subjects })
+      });
+    } catch (netErr) {
+      showToast('Network error — please check your connection and try again.');
+      return;
+    }
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Signup failed');
 
@@ -4788,7 +4794,7 @@ async function createAccount() {
       }, 2000);
     }
   } catch(e) {
-    showToast(/fetch|network/i.test(e.message) ? 'Network error — please check your connection and try again.' : e.message);
+    showToast(e.message || 'Signup failed');
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = 'Start Learning Free'; }
   }
@@ -4803,11 +4809,17 @@ async function loginUser() {
   if (btn) { btn.disabled = true; btn.textContent = 'Logging in...'; }
 
   try {
-    const res = await fetch('/api/auth', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'login', email, password: pass })
-    });
+    let res;
+    try {
+      res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'login', email, password: pass })
+      });
+    } catch (netErr) {
+      showToast('Network error — please check your connection and try again.');
+      return;
+    }
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'Login failed');
 
@@ -4832,7 +4844,7 @@ async function loginUser() {
     enterDashboard();
     if (state.user.streak > 1) showToast(`${state.user.streak}-day streak! Keep it up!`);
   } catch(e) {
-    showToast(/fetch|network/i.test(e.message) ? 'Network error — please check your connection and try again.' : e.message);
+    showToast(e.message || 'Login failed');
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = 'Log In →'; }
   }

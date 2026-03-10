@@ -68,6 +68,9 @@ export default async function handler(req, res) {
 
     return res.status(400).json({ error: 'Unknown action' });
   } catch (e) {
-    return res.status(500).json({ error: e.message });
+    const msg = /fetch|network|ECONNREFUSED|ETIMEDOUT|socket/i.test(e.message)
+      ? 'Something went wrong. Please try again shortly.'
+      : e.message;
+    return res.status(500).json({ error: msg });
   }
 }

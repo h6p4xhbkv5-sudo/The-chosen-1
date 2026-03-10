@@ -67,6 +67,9 @@ export default async function handler(req, res) {
     res.setHeader('Content-Type', 'application/json');
     return res.status(200).json(result);
   } catch (e) {
-    return res.status(500).json({ error: e.message });
+    const msg = /fetch|network|ECONNREFUSED|ETIMEDOUT|socket/i.test(e.message)
+      ? 'Unable to reach the database. Please try again shortly.'
+      : e.message;
+    return res.status(500).json({ error: msg });
   }
 }
