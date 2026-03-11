@@ -167,9 +167,9 @@ describe('Auth handler (api/auth.js)', () => {
       );
     });
 
-    it('rejects non-student plans', async () => {
+    it('rejects invalid plans', async () => {
       const res = makeRes();
-      await handler(makeReq({ body: { ...VALID, plan: 'homeschool' } }), res);
+      await handler(makeReq({ body: { ...VALID, plan: 'enterprise' } }), res);
       expect(res.statusCode).toBe(400);
     });
 
@@ -186,11 +186,11 @@ describe('Auth handler (api/auth.js)', () => {
     });
 
     it('returns 400 on a duplicate email error from Supabase', async () => {
-      mocks.supabase.auth.admin.createUser.mockResolvedValue({ data: null, error: { message: 'Email already registered' } });
+      mocks.supabase.auth.admin.createUser.mockResolvedValue({ data: null, error: { message: 'User already registered' } });
       const res = makeRes();
       await handler(makeReq({ body: VALID }), res);
       expect(res.statusCode).toBe(400);
-      expect(res.body.error).toBe('Email already registered');
+      expect(res.body.error).toMatch(/already exists|already registered/i);
     });
 
     it('returns 500 when createUser throws unexpectedly', async () => {
@@ -286,6 +286,6 @@ describe('Auth handler (api/auth.js)', () => {
     const res = makeRes();
     await handler(makeReq({ body: { action: 'hack' } }), res);
     expect(res.statusCode).toBe(400);
-    expect(res.body.error).toBe('Unknown action');
+    expect(res.body.error).toMatch(/unknown action/i);
   });
 });

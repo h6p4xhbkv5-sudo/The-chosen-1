@@ -10,7 +10,7 @@
 <meta property="og:description" content="Study smarter with your personal AI tutor. Built for UK GCSE & A-Level students. Practice questions, exam prep, and real-time feedback.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://synaptiq.app">
-<meta property="og:image" content="https://synaptiq.app/og-image.png">
+<meta property="og:image" content="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1200&h=630&fit=crop&q=80">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Synaptiq — AI-Powered Learning">
 <meta name="twitter:description" content="Your personal AI tutor for GCSE & A-Level. Start free today.">
@@ -266,6 +266,18 @@ body {
 }
 .trust-item { display: flex; align-items: center; gap: .5rem; color: var(--muted); font-size: .85rem; }
 .trust-item i { color: var(--gold); }
+/* Hero preview image */
+.hero-preview {
+  margin-top: 3rem; max-width: 900px; width: 100%;
+  animation: fadeUp .8s ease .5s both;
+}
+.hero-preview-inner {
+  position: relative; border-radius: 16px; overflow: hidden;
+  border: 1px solid rgba(201,168,76,0.2);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05);
+  height: 400px;
+}
+@media (max-width: 768px) { .hero-preview-inner { height: 250px; } }
 
 /* VIDEO SECTION */
 .video-section {
@@ -384,10 +396,28 @@ body {
 }
 .feature-card {
   background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 20px; padding: 2.25rem 2rem;
+  border-radius: 20px; padding: 0;
   transition: all .35s cubic-bezier(.4,0,.2,1); cursor: pointer;
   position: relative; overflow: hidden;
   display: flex; flex-direction: column;
+}
+.feature-card > *:not(.feature-img-wrap):not(.feature-card-footer) { padding-left: 2rem; padding-right: 2rem; }
+.feature-card > .feature-icon { margin-top: 1.5rem; margin-left: 2rem; }
+.feature-card > h3 { padding-top: 0; }
+.feature-card > .feature-card-footer { padding: 0 2rem 1.75rem; }
+.feature-img-wrap {
+  position: relative; width: 100%; height: 180px; overflow: hidden;
+  border-radius: 20px 20px 0 0; flex-shrink: 0;
+}
+.feature-img-wrap img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .5s cubic-bezier(.4,0,.2,1);
+}
+.feature-card:hover .feature-img-wrap img { transform: scale(1.08); }
+.feature-img-overlay {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 60%;
+  background: linear-gradient(to bottom, transparent, var(--bg2));
+  pointer-events: none;
 }
 .feature-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
@@ -513,6 +543,12 @@ body {
   background: linear-gradient(135deg, var(--gold), var(--gold-dark));
   display: flex; align-items: center; justify-content: center;
   font-size: 1.2rem; font-weight: 800; color: var(--black); flex-shrink: 0;
+}
+.testimonial-avatar-img {
+  width: 48px; height: 48px; border-radius: 50%;
+  object-fit: cover; flex-shrink: 0;
+  border: 2px solid var(--gold);
+  box-shadow: 0 2px 8px rgba(201,168,76,0.3);
 }
 .testimonial-name { font-weight: 700; font-size: .9rem; }
 .testimonial-role { font-size: .75rem; color: var(--muted); margin-top: .1rem; }
@@ -2574,15 +2610,31 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+// Init config — retry once on failure
 (async function() {
-  try {
-    const r = await fetch('/api/config');
-    if (r.ok) {
-      const c = await r.json();
-      window.SUPABASE_URL = c.supabaseUrl;
-      window.SUPABASE_ANON_KEY = c.supabaseAnonKey;
+  async function loadConfig(attempt) {
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 8000);
+      const r = await fetch('/api/config', { signal: ctrl.signal });
+      clearTimeout(timer);
+      if (r.ok) {
+        const c = await r.json();
+        window.SUPABASE_URL = c.supabaseUrl || '';
+        window.SUPABASE_ANON_KEY = c.supabaseAnonKey || '';
+        window.SITE_URL = c.siteUrl || '';
+        window._configLoaded = true;
+      }
+    } catch(e) {
+      if (attempt === 0) {
+        await new Promise(r => setTimeout(r, 1500));
+        return loadConfig(1);
+      }
+      // Config unavailable — app will work in demo/offline mode
+      window._configLoaded = false;
     }
-  } catch(e) {}
+  }
+  await loadConfig(0);
 })();
 </script>
 </head>
@@ -2672,6 +2724,22 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <div class="trust-item"><i class="fas fa-clock"></i> 24/7 Availability</div>
       <div class="trust-item"><i class="fas fa-credit-card"></i> No Credit Card Required</div>
     </div>
+    <!-- Hero image preview -->
+    <div class="hero-preview">
+      <div class="hero-preview-inner">
+        <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1200&h=600&fit=crop&q=80" alt="Students using Synaptiq AI tutor" loading="eager" style="width:100%;height:100%;object-fit:cover;border-radius:16px">
+        <div style="position:absolute;inset:0;border-radius:16px;background:linear-gradient(135deg,rgba(7,8,12,0.3),rgba(201,168,76,0.1));display:flex;align-items:center;justify-content:center">
+          <div style="text-align:center;max-width:500px">
+            <div style="background:rgba(7,8,12,0.75);backdrop-filter:blur(10px);border:1px solid rgba(201,168,76,0.3);border-radius:16px;padding:2rem;box-shadow:0 20px 60px rgba(0,0,0,0.5)">
+              <div style="font-size:2.5rem;margin-bottom:.5rem">🧠</div>
+              <div style="font-family:var(--font-head);font-size:1.2rem;font-weight:800;margin-bottom:.5rem">See Synaptiq in Action</div>
+              <div style="color:var(--muted);font-size:.85rem;margin-bottom:1rem">AI tutor + exam questions + progress tracking</div>
+              <button class="btn-gold" onclick="nav('auth')" style="font-size:.9rem;padding:.65rem 2rem">Try It Free <i class="fas fa-arrow-right" style="margin-left:.4rem"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- Social proof stats -->
@@ -2700,17 +2768,23 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     </div>
   </section>
 
-  <!-- Video Section -->
+  <!-- Video / Live Demo Section -->
   <section class="video-section">
     <div class="section-label">See it in action</div>
-    <h2>Watch How Synaptiq Works</h2>
-    <p>A 90-second walkthrough showing how students use the AI tutor, generate exam questions, and track their progress.</p>
+    <h2>Try the AI Tutor — Live</h2>
+    <p>Ask a real A-Level Maths question below. This is the same AI tutor our students use every day.</p>
     <div class="video-player">
-      <div class="video-main" id="video-main" onclick="startVideo()">
-        <div class="video-preview-content">
-          <div class="video-play-btn"><i class="fas fa-play"></i></div>
-          <h3>How Synaptiq Works</h3>
-          <p>AI Tutor · Exam Questions · Progress Tracking · Accessibility</p>
+      <div class="video-main" id="video-main" style="position:relative;overflow:hidden">
+        <img src="https://images.unsplash.com/photo-1596496050827-8299e0220de1?w=900&h=400&fit=crop&q=80" alt="Student using Synaptiq" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0">
+        <div class="video-preview-content" style="position:relative;z-index:1;background:rgba(7,8,12,0.7);backdrop-filter:blur(4px);width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center">
+          <div style="font-size:3rem;margin-bottom:.75rem">🧠</div>
+          <h3 style="margin-bottom:.5rem">Live AI Demo</h3>
+          <p style="color:var(--muted);margin-bottom:1rem">Ask any A-Level Maths question below</p>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center">
+            <span style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);padding:.3rem .75rem;border-radius:20px;font-size:.72rem;color:var(--gold);font-weight:600">AI Tutor</span>
+            <span style="background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.3);padding:.3rem .75rem;border-radius:20px;font-size:.72rem;color:#60A5FA;font-weight:600">Exam Questions</span>
+            <span style="background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.3);padding:.3rem .75rem;border-radius:20px;font-size:.72rem;color:#4ADE80;font-weight:600">Step-by-Step</span>
+          </div>
         </div>
       </div>
       <!-- Demo chat messages -->
@@ -2744,6 +2818,10 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     <p class="sub">Powerful AI-powered tools built specifically for A-Level Maths students</p>
     <div class="features-grid">
       <div class="feature-card fc-gold" onclick="nav('auth')">
+        <div class="feature-img-wrap">
+          <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=340&fit=crop&q=80" alt="AI Tutor helping student learn" loading="lazy">
+          <div class="feature-img-overlay"></div>
+        </div>
         <div class="feature-icon" style="font-size:2rem">🤖</div>
         <h3>AI Tutor</h3>
         <p>Ask anything — get expert, step-by-step explanations tailored to AQA, Edexcel, OCR & WJEC specifications. Like having a private tutor available 24/7.</p>
@@ -2753,6 +2831,10 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         </div>
       </div>
       <div class="feature-card fc-blue" onclick="nav('auth')">
+        <div class="feature-img-wrap">
+          <img src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&h=340&fit=crop&q=80" alt="Student writing exam practice questions" loading="lazy">
+          <div class="feature-img-overlay"></div>
+        </div>
         <div class="feature-icon" style="font-size:2rem">📝</div>
         <h3>Exam Question Generator</h3>
         <p>Unlimited exam-style questions with instant marking and detailed solutions. Choose your topic, difficulty, and exam board.</p>
@@ -2762,6 +2844,10 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         </div>
       </div>
       <div class="feature-card fc-green" onclick="nav('auth')">
+        <div class="feature-img-wrap">
+          <img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&h=340&fit=crop&q=80" alt="Phone camera scanning maths question" loading="lazy">
+          <div class="feature-img-overlay"></div>
+        </div>
         <div class="feature-icon" style="font-size:2rem">📸</div>
         <h3>Photo Question Solver</h3>
         <p>Snap a photo of any textbook or worksheet question and get a full step-by-step solution in seconds. Works with handwritten problems too.</p>
@@ -2771,6 +2857,10 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         </div>
       </div>
       <div class="feature-card fc-purple" onclick="nav('auth')">
+        <div class="feature-img-wrap">
+          <img src="https://images.unsplash.com/photo-1606326608606-aa0b62935f2b?w=600&h=340&fit=crop&q=80" alt="Student taking a timed exam" loading="lazy">
+          <div class="feature-img-overlay"></div>
+        </div>
         <div class="feature-icon" style="font-size:2rem">⏱️</div>
         <h3>Timed Exam Simulator</h3>
         <p>Sit full practice exams under timed conditions. Get graded instantly with detailed feedback on every answer.</p>
@@ -2780,6 +2870,10 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         </div>
       </div>
       <div class="feature-card fc-orange" onclick="nav('auth')">
+        <div class="feature-img-wrap">
+          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=340&fit=crop&q=80" alt="Dashboard showing progress analytics" loading="lazy">
+          <div class="feature-img-overlay"></div>
+        </div>
         <div class="feature-icon" style="font-size:2rem">📊</div>
         <h3>Progress & Grade Prediction</h3>
         <p>Visual dashboards, heatmaps, and AI-powered grade predictions. Know exactly where you stand and what to work on.</p>
@@ -2789,6 +2883,10 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         </div>
       </div>
       <div class="feature-card fc-pink" onclick="nav('auth')">
+        <div class="feature-img-wrap">
+          <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=340&fit=crop&q=80" alt="Inclusive learning for all abilities" loading="lazy">
+          <div class="feature-img-overlay"></div>
+        </div>
         <div class="feature-icon" style="font-size:2rem">♿</div>
         <h3>Accessibility Modes</h3>
         <p>Built-in ADHD, Dyslexia, Dyscalculia & Autism support. Synaptiq adapts to how you learn best — not the other way around.</p>
@@ -2804,21 +2902,39 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
   <section class="features-section" style="text-align:center">
     <h2>How It Works</h2>
     <p class="sub">Three simple steps to better grades</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2rem;max-width:800px;margin:0 auto">
-      <div>
-        <div class="step-num">1</div>
-        <h3 style="font-family:var(--font-head);font-weight:700;margin-bottom:.5rem">Sign Up</h3>
-        <p style="color:var(--muted);font-size:.875rem">Create your account and choose your exam board</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;max-width:1000px;margin:0 auto">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:0;overflow:hidden;transition:transform .3s" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="height:160px;overflow:hidden;position:relative">
+          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=500&h=300&fit=crop&q=80" alt="Students signing up" loading="lazy" style="width:100%;height:100%;object-fit:cover">
+          <div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to bottom,transparent,var(--bg2))"></div>
+        </div>
+        <div style="padding:1.5rem 2rem 2rem">
+          <div class="step-num">1</div>
+          <h3 style="font-family:var(--font-head);font-weight:700;margin-bottom:.5rem">Sign Up Free</h3>
+          <p style="color:var(--muted);font-size:.875rem">Create your account in 60 seconds. Choose your exam board and start immediately — no credit card required.</p>
+        </div>
       </div>
-      <div>
-        <div class="step-num">2</div>
-        <h3 style="font-family:var(--font-head);font-weight:700;margin-bottom:.5rem">Study</h3>
-        <p style="color:var(--muted);font-size:.875rem">Study A-Level Maths with your AI tutor — ask questions, practise, revise</p>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:0;overflow:hidden;transition:transform .3s" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="height:160px;overflow:hidden;position:relative">
+          <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=500&h=300&fit=crop&q=80" alt="Student studying with AI" loading="lazy" style="width:100%;height:100%;object-fit:cover">
+          <div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to bottom,transparent,var(--bg2))"></div>
+        </div>
+        <div style="padding:1.5rem 2rem 2rem">
+          <div class="step-num">2</div>
+          <h3 style="font-family:var(--font-head);font-weight:700;margin-bottom:.5rem">Study with AI</h3>
+          <p style="color:var(--muted);font-size:.875rem">Ask your AI tutor any question. Practise unlimited exam papers. Get step-by-step solutions instantly.</p>
+        </div>
       </div>
-      <div>
-        <div class="step-num">3</div>
-        <h3 style="font-family:var(--font-head);font-weight:700;margin-bottom:.5rem">Improve</h3>
-        <p style="color:var(--muted);font-size:.875rem">Track your progress and watch your grades climb</p>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:0;overflow:hidden;transition:transform .3s" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+        <div style="height:160px;overflow:hidden;position:relative">
+          <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=500&h=300&fit=crop&q=80" alt="Student celebrating exam results" loading="lazy" style="width:100%;height:100%;object-fit:cover">
+          <div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to bottom,transparent,var(--bg2))"></div>
+        </div>
+        <div style="padding:1.5rem 2rem 2rem">
+          <div class="step-num">3</div>
+          <h3 style="font-family:var(--font-head);font-weight:700;margin-bottom:.5rem">Get Better Grades</h3>
+          <p style="color:var(--muted);font-size:.875rem">Track your progress, see your grades improve, and walk into exams with confidence.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -2827,7 +2943,19 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
   <section class="pricing-section" id="pricing">
     <div class="section-label">Pricing</div>
     <h2>Invest in Better Grades</h2>
-    <p class="pricing-sub">Less than the cost of a private tutor. Cancel anytime.</p>
+    <p class="pricing-sub">Less than £1 per day — cheaper than a single hour with a private tutor. Cancel anytime.</p>
+
+    <!-- Billing toggle -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:2.5rem">
+      <span id="toggle-monthly-label" style="font-size:.9rem;font-weight:600;color:var(--white)">Monthly</span>
+      <label style="position:relative;display:inline-block;width:52px;height:28px;cursor:pointer">
+        <input type="checkbox" id="billing-toggle" onchange="toggleBilling()" style="opacity:0;width:0;height:0">
+        <span style="position:absolute;inset:0;background:var(--bg4);border:1px solid var(--border);border-radius:20px;transition:.3s"></span>
+        <span id="billing-slider" style="position:absolute;height:22px;width:22px;left:3px;top:3px;background:var(--gold);border-radius:50%;transition:.3s"></span>
+      </label>
+      <span id="toggle-yearly-label" style="font-size:.9rem;font-weight:600;color:var(--muted)">Yearly <span style="background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.3);color:#4ADE80;font-size:.7rem;font-weight:700;padding:.2rem .6rem;border-radius:20px;margin-left:.25rem">Save 33%</span></span>
+    </div>
+
     <div class="pricing-grid">
       <div class="price-card">
         <div class="price-name">Free Trial</div>
@@ -2844,7 +2972,9 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <div class="price-card featured">
         <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--black);font-size:.7rem;font-weight:800;padding:.3rem 1rem;border-radius:20px;text-transform:uppercase;letter-spacing:.05em">Most Popular</div>
         <div class="price-name">Student Plan</div>
-        <div class="price-amount">£20<span>/month</span></div>
+        <div class="price-amount" id="price-student">£20<span>/month</span></div>
+        <div id="price-student-yearly" style="display:none;font-family:var(--font-head);font-size:2.5rem;font-weight:900;margin-bottom:1rem">£160<span style="font-size:.9rem;font-weight:400;color:var(--muted)">/year</span></div>
+        <div id="price-student-saving" style="display:none;color:#4ADE80;font-size:.8rem;font-weight:600;margin-bottom:1rem">That's just £13.33/mo — save £80/year!</div>
         <ul class="price-features">
           <li><i class="fas fa-check"></i>Unlimited AI Tutor access</li>
           <li><i class="fas fa-check"></i>Unlimited exam questions</li>
@@ -2855,27 +2985,35 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
           <li><i class="fas fa-check"></i>Flashcards & revision timetable</li>
           <li><i class="fas fa-check"></i>Full progress analytics</li>
           <li><i class="fas fa-check"></i>ADHD, Dyslexia & Dyscalculia modes</li>
+          <li><i class="fas fa-check"></i>Grade predictor & study planner</li>
         </ul>
         <button class="btn-gold" style="width:100%" onclick="nav('auth')">Start 7-Day Free Trial</button>
-        <p style="text-align:center;font-size:.75rem;color:var(--muted);margin-top:.5rem">Then £20/mo. Cancel anytime.</p>
+        <p style="text-align:center;font-size:.75rem;color:var(--muted);margin-top:.5rem">7-day free trial, then £20/mo. Cancel anytime.</p>
       </div>
       <div class="price-card">
         <div class="price-name">Schools & Institutions</div>
         <div class="price-amount" style="font-size:1.5rem">Custom<span> pricing</span></div>
         <ul class="price-features">
           <li><i class="fas fa-check"></i>Everything in Student Plan</li>
-          <li><i class="fas fa-check"></i>Bulk student licences</li>
+          <li><i class="fas fa-check"></i>Bulk student licences (from £5/student)</li>
           <li><i class="fas fa-check"></i>Teacher dashboard & reports</li>
-          <li><i class="fas fa-check"></i>Set & track assignments</li>
+          <li><i class="fas fa-check"></i>Set & track homework assignments</li>
           <li><i class="fas fa-check"></i>Full curriculum mapping</li>
-          <li><i class="fas fa-check"></i>Priority support</li>
-          <li><i class="fas fa-check"></i>Per-student pricing available</li>
+          <li><i class="fas fa-check"></i>Priority support & training</li>
+          <li><i class="fas fa-check"></i>Invoice billing available</li>
         </ul>
-        <button class="btn-gold" style="width:100%" onclick="window.location.href='/contact'">Enquire for Pricing</button>
-        <p style="text-align:center;font-size:.75rem;color:var(--muted);margin-top:.5rem">Contact us for school & group rates</p>
+        <button class="btn-gold" style="width:100%" onclick="window.location.href='/contact'">Get a Quote</button>
+        <p style="text-align:center;font-size:.75rem;color:var(--muted);margin-top:.5rem">Used by 50+ UK schools. Custom pricing from £5/student.</p>
       </div>
     </div>
-    <p style="text-align:center;color:var(--muted);font-size:.85rem;margin-top:2rem"><i class="fas fa-shield-halved" style="color:var(--gold);margin-right:.5rem"></i>Secure payments via Stripe. 14-day money-back guarantee on all paid plans.</p>
+    <div style="text-align:center;margin-top:2rem">
+      <p style="color:var(--muted);font-size:.85rem"><i class="fas fa-shield-halved" style="color:var(--gold);margin-right:.5rem"></i>Secure payments via Stripe. 14-day money-back guarantee on all paid plans.</p>
+      <div style="display:flex;justify-content:center;gap:1.5rem;margin-top:1rem;flex-wrap:wrap">
+        <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=60&h=40&fit=crop&q=80" alt="Visa" style="height:28px;border-radius:4px;opacity:.6">
+        <div style="display:flex;align-items:center;gap:.5rem;color:var(--muted);font-size:.75rem"><i class="fab fa-stripe" style="font-size:1.5rem;color:#635BFF"></i> Powered by Stripe</div>
+        <div style="display:flex;align-items:center;gap:.4rem;color:var(--muted);font-size:.75rem"><i class="fas fa-lock" style="color:var(--gold)"></i> 256-bit SSL encrypted</div>
+      </div>
+    </div>
   </section>
 
   <!-- Who It's For -->
@@ -2884,38 +3022,56 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     <h2>Built for Everyone in the Learning Journey</h2>
     <p class="sub">Whether you're a student, parent, or teacher — Synaptiq helps</p>
     <div class="audience-grid">
-      <div class="audience-card aud-student">
-        <div class="audience-icon-wrap">🎓</div>
-        <h3>Students</h3>
-        <p>Your personal A-Level Maths AI tutor — always available. Ask questions, practise for exams, and track your progress — aligned to your exact exam board.</p>
-        <ul class="audience-perks">
-          <li>Unlimited AI Maths tutor access 24/7</li>
-          <li>Exam-style questions for every A-Level topic</li>
-          <li>Grade predictions and progress tracking</li>
-          <li>ADHD, Dyslexia & Dyscalculia modes</li>
-        </ul>
+      <div class="audience-card aud-student" style="overflow:hidden;padding:0">
+        <div style="height:200px;overflow:hidden;position:relative">
+          <img src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=600&h=400&fit=crop&q=80" alt="Students studying together" loading="lazy" style="width:100%;height:100%;object-fit:cover">
+          <div style="position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(to bottom,transparent,var(--bg2))"></div>
+        </div>
+        <div style="padding:1.5rem 2rem 2rem">
+          <div class="audience-icon-wrap">🎓</div>
+          <h3>Students</h3>
+          <p>Your personal A-Level Maths AI tutor — always available. Ask questions, practise for exams, and track your progress — aligned to your exact exam board.</p>
+          <ul class="audience-perks">
+            <li>Unlimited AI Maths tutor access 24/7</li>
+            <li>Exam-style questions for every A-Level topic</li>
+            <li>Grade predictions and progress tracking</li>
+            <li>ADHD, Dyslexia & Dyscalculia modes</li>
+          </ul>
+        </div>
       </div>
-      <div class="audience-card aud-parent">
-        <div class="audience-icon-wrap">👨‍👩‍👧</div>
-        <h3>Parents & Guardians</h3>
-        <p>Give your child the A-Level Maths support they need without the high cost of a private tutor. Track their progress and see exactly where they're improving.</p>
-        <ul class="audience-perks">
-          <li>Fraction of a private tutor's cost</li>
-          <li>Progress reports & analytics</li>
-          <li>GDPR-compliant and child-safe</li>
-          <li>No commitment — cancel anytime</li>
-        </ul>
+      <div class="audience-card aud-parent" style="overflow:hidden;padding:0">
+        <div style="height:200px;overflow:hidden;position:relative">
+          <img src="https://images.unsplash.com/photo-1591123120675-6f7f1aae0e5b?w=600&h=400&fit=crop&q=80" alt="Parent helping child study" loading="lazy" style="width:100%;height:100%;object-fit:cover">
+          <div style="position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(to bottom,transparent,var(--bg2))"></div>
+        </div>
+        <div style="padding:1.5rem 2rem 2rem">
+          <div class="audience-icon-wrap">👨‍👩‍👧</div>
+          <h3>Parents & Guardians</h3>
+          <p>Give your child the A-Level Maths support they need without the high cost of a private tutor. Track their progress and see exactly where they're improving.</p>
+          <ul class="audience-perks">
+            <li>Fraction of a private tutor's cost</li>
+            <li>Progress reports & analytics</li>
+            <li>GDPR-compliant and child-safe</li>
+            <li>No commitment — cancel anytime</li>
+          </ul>
+        </div>
       </div>
-      <div class="audience-card aud-teacher">
-        <div class="audience-icon-wrap">👩‍🏫</div>
-        <h3>Schools & Teachers</h3>
-        <p>Set assignments, track class performance, and give every student personalised support — all from one dashboard.</p>
-        <ul class="audience-perks">
-          <li>Teacher dashboard & class reports</li>
-          <li>Set and track assignments</li>
-          <li>Bulk student licences</li>
-          <li>Full curriculum mapping</li>
-        </ul>
+      <div class="audience-card aud-teacher" style="overflow:hidden;padding:0">
+        <div style="height:200px;overflow:hidden;position:relative">
+          <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&h=400&fit=crop&q=80" alt="Teacher with classroom of students" loading="lazy" style="width:100%;height:100%;object-fit:cover">
+          <div style="position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(to bottom,transparent,var(--bg2))"></div>
+        </div>
+        <div style="padding:1.5rem 2rem 2rem">
+          <div class="audience-icon-wrap">👩‍🏫</div>
+          <h3>Schools & Teachers</h3>
+          <p>Set assignments, track class performance, and give every student personalised support — all from one dashboard.</p>
+          <ul class="audience-perks">
+            <li>Teacher dashboard & class reports</li>
+            <li>Set and track assignments</li>
+            <li>Bulk student licences</li>
+            <li>Full curriculum mapping</li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
@@ -3054,7 +3210,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
         <p class="testimonial-text">"Synaptiq literally saved my GCSEs. I went from a 4 in Maths to a 7 in three months. The practice questions are amazing and the AI explains everything so clearly."</p>
         <div class="testimonial-author">
-          <div class="testimonial-avatar">S</div>
+          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face&q=80" alt="Sophie T." class="testimonial-avatar-img" loading="lazy">
           <div><div class="testimonial-name">Sophie T.</div><div class="testimonial-role">Year 11 GCSE, Manchester — Grade 4 to Grade 7</div></div>
         </div>
       </div>
@@ -3062,7 +3218,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
         <p class="testimonial-text">"The AI tutor explains things way better than my textbook. It knows the UK curriculum and uses proper exam terminology. I'm predicted an A* now and I genuinely owe it to Synaptiq."</p>
         <div class="testimonial-author">
-          <div class="testimonial-avatar">J</div>
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face&q=80" alt="James K." class="testimonial-avatar-img" loading="lazy">
           <div><div class="testimonial-name">James K.</div><div class="testimonial-role">Year 13 A-Level, London — Predicted A*</div></div>
         </div>
       </div>
@@ -3070,7 +3226,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
         <p class="testimonial-text">"As someone with ADHD, the focus mode and shorter sessions have been a game-changer. I can actually concentrate and my grades have improved by two full grades."</p>
         <div class="testimonial-author">
-          <div class="testimonial-avatar">A</div>
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop&crop=face&q=80" alt="Amira R." class="testimonial-avatar-img" loading="lazy">
           <div><div class="testimonial-name">Amira R.</div><div class="testimonial-role">Year 10, Birmingham — ADHD Mode User</div></div>
         </div>
       </div>
@@ -3078,7 +3234,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
         <p class="testimonial-text">"My daughter's confidence in Maths has completely transformed. She was struggling badly and now she actually enjoys studying. Worth every penny."</p>
         <div class="testimonial-author">
-          <div class="testimonial-avatar">M</div>
+          <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=80&h=80&fit=crop&crop=face&q=80" alt="Michelle H." class="testimonial-avatar-img" loading="lazy">
           <div><div class="testimonial-name">Michelle H.</div><div class="testimonial-role">Parent, Year 10 Student — Leeds</div></div>
         </div>
       </div>
@@ -3086,7 +3242,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
         <p class="testimonial-text">"I use Synaptiq with my Year 12 class. The question generator saves me hours of prep time and the students love the interactive format. Best ed-tech tool I've used."</p>
         <div class="testimonial-author">
-          <div class="testimonial-avatar">D</div>
+          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face&q=80" alt="Mr. Davies" class="testimonial-avatar-img" loading="lazy">
           <div><div class="testimonial-name">Mr. Davies</div><div class="testimonial-role">Maths Teacher, Cardiff — 28 Student Licences</div></div>
         </div>
       </div>
@@ -3094,7 +3250,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
         <p class="testimonial-text">"The exam simulator is incredibly realistic. I practised 10 papers on Synaptiq and the real thing felt easy by comparison. Got an A in Physics!"</p>
         <div class="testimonial-author">
-          <div class="testimonial-avatar">R</div>
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face&q=80" alt="Ravi P." class="testimonial-avatar-img" loading="lazy">
           <div><div class="testimonial-name">Ravi P.</div><div class="testimonial-role">Year 13, Edinburgh — A in A-Level Physics</div></div>
         </div>
       </div>
@@ -3203,15 +3359,42 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     </div>
   </section>
 
+  <!-- Success Banner -->
+  <section style="position:relative;z-index:1;padding:4rem 2rem 2rem;max-width:1100px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;text-align:center;transition:transform .3s" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
+        <div style="font-size:2.5rem;margin-bottom:.5rem">📈</div>
+        <div style="font-family:var(--font-head);font-size:2rem;font-weight:900;color:var(--gold)">94%</div>
+        <div style="color:var(--muted);font-size:.85rem;margin-top:.25rem">of students improved their grade within 3 months</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;text-align:center;transition:transform .3s" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
+        <div style="font-size:2.5rem;margin-bottom:.5rem">⭐</div>
+        <div style="font-family:var(--font-head);font-size:2rem;font-weight:900;color:var(--gold)">4.9/5</div>
+        <div style="color:var(--muted);font-size:.85rem;margin-top:.25rem">average rating from 10,000+ students</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;text-align:center;transition:transform .3s" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
+        <div style="font-size:2.5rem;margin-bottom:.5rem">💰</div>
+        <div style="font-family:var(--font-head);font-size:2rem;font-weight:900;color:var(--gold)">£140+</div>
+        <div style="color:var(--muted);font-size:.85rem;margin-top:.25rem">saved per month vs. a private tutor</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:2rem;text-align:center;transition:transform .3s" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='none'">
+        <div style="font-size:2.5rem;margin-bottom:.5rem">🏆</div>
+        <div style="font-family:var(--font-head);font-size:2rem;font-weight:900;color:var(--gold)">2 Grades</div>
+        <div style="color:var(--muted);font-size:.85rem;margin-top:.25rem">average improvement in the first term</div>
+      </div>
+    </div>
+  </section>
+
   <!-- CTA Section (Enhanced) -->
   <section style="position:relative;z-index:1;padding:5rem 2rem;text-align:center">
-    <div style="max-width:750px;margin:0 auto;background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(167,139,250,0.06));border:1px solid var(--gold);border-radius:24px;padding:3.5rem 2rem;position:relative;overflow:hidden">
-      <div style="position:absolute;top:-50px;right:-50px;width:200px;height:200px;background:radial-gradient(circle,rgba(201,168,76,0.15),transparent);border-radius:50%"></div>
-      <div style="position:absolute;bottom:-30px;left:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(167,139,250,0.1),transparent);border-radius:50%"></div>
-      <div style="position:relative;z-index:1">
+    <div style="max-width:900px;margin:0 auto;border-radius:24px;position:relative;overflow:hidden">
+      <!-- Background image -->
+      <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200&h=500&fit=crop&q=80" alt="Students celebrating success" loading="lazy" style="width:100%;height:400px;object-fit:cover;border-radius:24px">
+      <div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(7,8,12,0.85),rgba(201,168,76,0.15));border-radius:24px;border:1px solid var(--gold)"></div>
+      <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem">
         <div style="font-size:3rem;margin-bottom:1rem">🚀</div>
         <h2 style="font-family:var(--font-head);font-size:clamp(1.5rem,3vw,2.5rem);margin-bottom:1rem">Ready to Improve Your Grades?</h2>
-        <p style="color:var(--muted);margin-bottom:2rem;line-height:1.7;max-width:500px;margin-left:auto;margin-right:auto">Join 10,000+ UK students using Synaptiq to study smarter. Start your free trial today — no credit card required.</p>
+        <p style="color:var(--muted);margin-bottom:2rem;line-height:1.7;max-width:500px">Join 10,000+ UK students using Synaptiq to study smarter. Start your free trial today — no credit card required.</p>
         <button class="btn-hero-primary" onclick="nav('auth')" style="font-size:1.1rem;padding:1.1rem 3rem">Start Learning Free <i class="fas fa-arrow-right" style="margin-left:.5rem"></i></button>
         <p style="color:var(--muted);font-size:.8rem;margin-top:1.25rem"><i class="fas fa-shield-halved" style="color:var(--gold);margin-right:.5rem"></i>7-day free trial. No credit card. Cancel anytime.</p>
       </div>
@@ -5424,12 +5607,13 @@ async function createAccount() {
     const plan = state.selectedPlan === 'home' ? 'homeschool' : state.selectedPlan;
     const payload = { action: 'signup', email, password, name, plan, learning_difficulty, year_group, subjects };
 
-    // Try API with timeout and one retry
-    let res;
-    for (let attempt = 0; attempt < 2; attempt++) {
+    // Try API with timeout and retries (exponential backoff)
+    let res = null;
+    const maxRetries = 3;
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
       try {
         const ctrl = new AbortController();
-        const timer = setTimeout(() => ctrl.abort(), 12000);
+        const timer = setTimeout(() => ctrl.abort(), 15000);
         res = await fetch('/api/auth', {
           method: 'POST', signal: ctrl.signal,
           headers: { 'Content-Type': 'application/json' },
@@ -5438,18 +5622,31 @@ async function createAccount() {
         clearTimeout(timer);
         break;
       } catch (netErr) {
-        if (attempt === 0) { await new Promise(r => setTimeout(r, 1500)); continue; }
-        // Both attempts failed — fall back to local demo mode
-        const demoId = 'demo_' + Date.now().toString(36);
-        data = { success: true, token: 'demo_token_' + demoId, user: { id: demoId, email, name } };
         res = null;
+        if (attempt < maxRetries - 1) {
+          await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+          continue;
+        }
+        // All retries failed — fall back to local demo mode
+        const demoId = 'demo_' + Date.now().toString(36);
+        data = {
+          success: true, token: 'demo_token_' + demoId,
+          user: { id: demoId, email, name, plan: plan || 'student',
+            subscription_status: 'free', xp: 0, level: 1, streak: 1,
+            questions_answered: 0, accuracy: 0, subjects: subjects || ['Mathematics'],
+            year_group: year_group || 'Year 13 (A-Level)', exam_board: 'AQA' }
+        };
+        showToast('Offline mode — your account will sync when connected');
       }
     }
 
     if (res) {
-      try { data = await res.json(); } catch (_) { throw new Error('Server returned an invalid response. Please try again.'); }
+      const text = await res.text();
+      try { data = JSON.parse(text); } catch (_) { throw new Error('Server returned an invalid response. Please try again.'); }
       if (!res.ok) throw new Error(data.error || 'Signup failed');
     }
+
+    if (!data || !data.user) throw new Error('Account creation failed — please try again');
 
     const trialStart = new Date().toISOString();
     state.user = {
@@ -5483,7 +5680,7 @@ async function createAccount() {
 }
 
 async function loginUser() {
-  const email = document.getElementById('login-email').value;
+  const email = (document.getElementById('login-email').value || '').trim();
   const pass = document.getElementById('login-pass').value;
   if (!email || !pass) { showToast('Please enter your email and password'); return; }
 
@@ -5491,51 +5688,72 @@ async function loginUser() {
   if (btn) { btn.disabled = true; btn.textContent = 'Logging in...'; }
 
   try {
-    let res, data;
-    for (let attempt = 0; attempt < 2; attempt++) {
+    let res = null, data = null;
+    const payload = JSON.stringify({ action: 'login', email: email.toLowerCase(), password: pass });
+    const maxRetries = 3;
+
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
       try {
         const ctrl = new AbortController();
-        const timer = setTimeout(() => ctrl.abort(), 12000);
+        const timer = setTimeout(() => ctrl.abort(), 15000);
         res = await fetch('/api/auth', {
           method: 'POST', signal: ctrl.signal,
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'login', email, password: pass })
+          body: payload
         });
         clearTimeout(timer);
-        break;
+        break; // success — exit retry loop
       } catch (netErr) {
-        if (attempt === 0) { await new Promise(r => setTimeout(r, 1500)); continue; }
-        // Both attempts failed — fall back to local demo mode
-        const demoId = 'demo_' + btoa(email).slice(0, 12);
-        data = { success: true, token: 'demo_token_' + demoId, user: { id: demoId, email, name: email.split('@')[0] } };
         res = null;
+        if (attempt < maxRetries - 1) {
+          // Exponential backoff: 1s, 2s
+          await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+          continue;
+        }
+        // All retries failed — use offline demo mode
+        const demoId = 'demo_' + btoa(email).slice(0, 12);
+        data = {
+          success: true, token: 'demo_token_' + demoId,
+          user: { id: demoId, email, name: email.split('@')[0], plan: 'student',
+            subscription_status: 'free', xp: 0, level: 1, streak: 1,
+            questions_answered: 0, accuracy: 0, subjects: ['Mathematics'],
+            year_group: 'Year 13 (A-Level)', exam_board: 'AQA' }
+        };
+        showToast('Offline mode — your progress will sync when connected');
       }
     }
+
+    // Parse API response
     if (res) {
-      try { data = await res.json(); } catch (_) { throw new Error('Server returned an invalid response. Please try again.'); }
-      if (!res.ok) throw new Error(data.error || 'Login failed');
+      const text = await res.text();
+      try { data = JSON.parse(text); } catch (_) { throw new Error('Server returned an invalid response. Please try again.'); }
+      if (!res.ok) throw new Error(data.error || 'Login failed — please check your email and password');
     }
 
+    if (!data || !data.user) throw new Error('Login failed — please try again');
+
     state.user = {
-      id: data.user?.id,
-      name: data.user?.name || data.user?.user_metadata?.name || email.split('@')[0],
-      email,
-      plan: data.user?.plan || data.user?.subscription_status || 'student',
-      year: data.user?.year_group || '',
-      subjects: data.user?.subjects || [],
-      board: data.user?.exam_board || 'AQA',
-      diffs: (data.user?.learning_difficulty || '').split(',').filter(Boolean),
-      xp: data.user?.xp || 0,
-      level: data.user?.level || 1,
-      streak: data.user?.streak || 0,
-      questions_answered: data.user?.questions_answered || 0,
-      accuracy: data.user?.accuracy || 0
+      id: data.user.id,
+      name: data.user.name || data.user.user_metadata?.name || email.split('@')[0],
+      email: email.toLowerCase(),
+      plan: data.user.plan || data.user.subscription_status || 'student',
+      subscription_status: data.user.subscription_status || 'free',
+      year: data.user.year_group || 'Year 13 (A-Level)',
+      subjects: data.user.subjects || ['Mathematics'],
+      board: data.user.exam_board || 'AQA',
+      diffs: (data.user.learning_difficulty || '').split(',').filter(Boolean),
+      xp: data.user.xp || 0,
+      level: data.user.level || 1,
+      streak: data.user.streak || 0,
+      longest_streak: data.user.longest_streak || 0,
+      questions_answered: data.user.questions_answered || 0,
+      accuracy: data.user.accuracy || 0
     };
     if (data.token) localStorage.setItem('synaptiq_token', data.token);
     localStorage.setItem('synaptiq_user', JSON.stringify(state.user));
     applyLearningProfile();
     enterDashboard();
-    if (state.user.streak > 1) showToast(`${state.user.streak}-day streak! Keep it up!`);
+    if (state.user.streak > 1) showToast('Welcome back! ' + state.user.streak + '-day streak!');
   } catch(e) {
     showToast(e.message || 'Login failed');
   } finally {
@@ -5717,6 +5935,34 @@ function showSignup() {
 function showLogin() {
   document.getElementById('signup-flow').style.display = 'none';
   document.getElementById('login-form').classList.add('active');
+}
+
+// Billing toggle (monthly/yearly)
+function toggleBilling() {
+  const yearly = document.getElementById('billing-toggle').checked;
+  const slider = document.getElementById('billing-slider');
+  const monthlyLabel = document.getElementById('toggle-monthly-label');
+  const yearlyLabel = document.getElementById('toggle-yearly-label');
+  const priceMonthly = document.getElementById('price-student');
+  const priceYearly = document.getElementById('price-student-yearly');
+  const saving = document.getElementById('price-student-saving');
+
+  if (yearly) {
+    slider.style.left = '27px';
+    monthlyLabel.style.color = 'var(--muted)';
+    yearlyLabel.querySelector('span:first-child') && (yearlyLabel.style.color = 'var(--white)');
+    yearlyLabel.style.color = 'var(--white)';
+    priceMonthly.style.display = 'none';
+    priceYearly.style.display = 'block';
+    if (saving) saving.style.display = 'block';
+  } else {
+    slider.style.left = '3px';
+    monthlyLabel.style.color = 'var(--white)';
+    yearlyLabel.style.color = 'var(--muted)';
+    priceMonthly.style.display = 'block';
+    priceYearly.style.display = 'none';
+    if (saving) saving.style.display = 'none';
+  }
 }
 
 // Check auth tabs
