@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — Synaptiq | AI-Powered Learning for UK Students</title>
+<meta name="description" content="Synaptiq pricing plans for A-Level Maths. Start with a free 7-day trial. Student plan at £20/month. School and institutional pricing available.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --gold: #C9A84C; --gold-light: #E8C96A; --gold-dark: #A07830;
+  --black: #07080C; --bg: #08090E; --bg1: #0A0C12; --bg2: #0D0F18; --bg3: #121520; --bg4: #181C2A;
+  --white: #F0EEF8; --muted: #6B7394; --border: rgba(255,255,255,0.07);
+  --green: #4ADE80; --blue: #60A5FA; --purple: #A78BFA;
+  --radius: 12px; --shadow: 0 8px 32px rgba(0,0,0,0.4);
+  --font-body: 'DM Sans', sans-serif; --font-head: 'Syne', sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); background: var(--bg); color: var(--white); min-height: 100vh; overflow-x: hidden; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg1); }
+::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 3px; }
+
+/* Nav */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: rgba(7,8,12,0.92); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem; height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo { font-family: var(--font-head); font-size: 1.5rem; font-weight: 900; color: var(--white); cursor: pointer; text-decoration: none; }
+.nav-logo span { color: var(--gold); }
+.nav-links { display: flex; gap: .25rem; align-items: center; }
+.nav-links a { color: var(--muted); font-size: .875rem; font-weight: 500; padding: .5rem .75rem; border-radius: 8px; cursor: pointer; text-decoration: none; transition: all .2s; }
+.nav-links a:hover, .nav-links a.active { color: var(--white); background: var(--bg4); }
+.nav-right { display: flex; gap: .75rem; align-items: center; }
+.btn { padding: .6rem 1.25rem; border-radius: 8px; font-size: .875rem; font-weight: 600; cursor: pointer; transition: all .2s; border: none; text-decoration: none; display: inline-flex; align-items: center; }
+.btn-outline { background: transparent; border: 1px solid var(--border); color: var(--white); }
+.btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+.btn-gold { background: var(--gold); color: var(--black); }
+.btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+/* Hero */
+.pricing-hero {
+  padding: 8rem 2rem 4rem; text-align: center;
+  background: linear-gradient(180deg, var(--black), var(--bg));
+  position: relative; overflow: hidden;
+}
+.pricing-hero::before {
+  content: ''; position: absolute; top: -200px; right: -100px;
+  width: 600px; height: 600px; border-radius: 50%;
+  background: var(--gold); filter: blur(150px); opacity: 0.06;
+}
+.section-label {
+  display: inline-block; background: rgba(201,168,76,0.1);
+  border: 1px solid var(--border); border-radius: 20px;
+  padding: .3rem .9rem; font-size: .75rem; font-weight: 700;
+  color: var(--gold); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 1rem;
+}
+.pricing-hero h1 { font-family: var(--font-head); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; margin-bottom: 1rem; position: relative; z-index: 1; }
+.pricing-hero h1 em { font-style: normal; color: var(--gold); }
+.pricing-hero p { color: var(--muted); max-width: 500px; margin: 0 auto; line-height: 1.7; font-size: 1.1rem; position: relative; z-index: 1; }
+
+/* Pricing Grid */
+.pricing-container { max-width: 1100px; margin: 0 auto; padding: 0 2rem 5rem; }
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 3rem; }
+.price-card {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 20px; padding: 2.5rem 2rem; position: relative;
+  transition: all .3s; overflow: hidden;
+}
+.price-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: var(--border); border-radius: 20px 20px 0 0;
+}
+.price-card:hover { border-color: rgba(201,168,76,0.3); transform: translateY(-4px); box-shadow: var(--shadow); }
+.price-card.featured {
+  border-color: var(--gold); background: linear-gradient(180deg, rgba(201,168,76,0.08), var(--bg2));
+}
+.price-card.featured::before { background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+.popular-badge {
+  position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+  background: var(--gold); color: var(--black); font-size: .7rem;
+  font-weight: 800; padding: .3rem 1rem; border-radius: 0 0 12px 12px;
+  text-transform: uppercase; letter-spacing: .05em;
+}
+.price-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; }
+.price-amount { font-family: var(--font-head); font-size: 3rem; font-weight: 900; margin-bottom: .5rem; }
+.price-amount span { font-size: 1rem; font-weight: 400; color: var(--muted); }
+.price-desc { color: var(--muted); font-size: .875rem; margin-bottom: 2rem; line-height: 1.6; }
+.price-features { list-style: none; margin-bottom: 2rem; }
+.price-features li {
+  display: flex; align-items: flex-start; gap: .75rem;
+  font-size: .9rem; padding: .5rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.price-features li:last-child { border-bottom: none; }
+.price-features li i { color: var(--gold); margin-top: .15rem; flex-shrink: 0; font-size: .8rem; }
+.price-btn {
+  display: block; width: 100%; padding: 1rem; border-radius: 12px;
+  font-size: 1rem; font-weight: 700; text-align: center;
+  cursor: pointer; transition: all .3s; border: none; text-decoration: none;
+}
+.price-btn-primary { background: var(--gold); color: var(--black); }
+.price-btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,168,76,0.3); }
+.price-btn-secondary { background: var(--bg3); color: var(--white); border: 1px solid var(--border); }
+.price-btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+/* Guarantee */
+.guarantee-bar {
+  text-align: center; padding: 2rem; background: var(--bg2);
+  border: 1px solid var(--border); border-radius: 16px;
+  margin-bottom: 4rem;
+}
+.guarantee-bar i { color: var(--gold); margin-right: .5rem; }
+
+/* FAQ */
+.faq-section { max-width: 800px; margin: 0 auto; padding-bottom: 5rem; }
+.faq-section h2 { font-family: var(--font-head); font-size: clamp(1.5rem, 3vw, 2.5rem); text-align: center; margin-bottom: 2rem; }
+.faq-item {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 16px; margin-bottom: 1rem; overflow: hidden;
+}
+.faq-q {
+  padding: 1.25rem 1.5rem; display: flex; align-items: center;
+  justify-content: space-between; cursor: pointer;
+  font-weight: 600; font-size: .95rem; transition: all .2s; gap: 1rem;
+}
+.faq-q:hover { color: var(--gold); }
+.faq-q i { transition: transform .3s; color: var(--gold); font-size: .8rem; flex-shrink: 0; }
+.faq-item.open .faq-q i { transform: rotate(180deg); }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height .4s ease, padding .3s ease; padding: 0 1.5rem; color: var(--muted); font-size: .9rem; line-height: 1.8; }
+.faq-item.open .faq-a { max-height: 400px; padding: 0 1.5rem 1.25rem; }
+
+/* Footer */
+footer {
+  background: var(--bg2); border-top: 1px solid var(--border);
+  padding: 3rem 2rem 2rem; text-align: center;
+}
+footer p { color: var(--muted); font-size: .8rem; }
+footer a { color: var(--gold); text-decoration: none; }
+
+/* Mobile */
+.hamburger { display: none; background: none; border: none; cursor: pointer; padding: .5rem; flex-direction: column; gap: 5px; }
+.hamburger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: all .3s; }
+.hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+.mobile-menu-overlay { display: none; position: fixed; inset: 0; z-index: 999; background: rgba(7,8,12,0.96); backdrop-filter: blur(20px); flex-direction: column; align-items: center; justify-content: center; gap: 1rem; padding: 2rem; }
+.mobile-menu-overlay.active { display: flex; }
+.mobile-menu-overlay a { color: var(--white); font-family: var(--font-head); font-size: 1.5rem; font-weight: 700; padding: .75rem 2rem; border-radius: 12px; cursor: pointer; text-decoration: none; transition: all .2s; }
+.mobile-menu-overlay a:hover { color: var(--gold); }
+
+@media(max-width: 768px) {
+  .hamburger { display: flex; }
+  .nav-links, .nav-right .btn-outline { display: none !important; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin-left: auto; margin-right: auto; }
+  .pricing-hero { padding: 7rem 1.5rem 3rem; }
+  .pricing-container { padding: 0 1rem 3rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo">Synapti<span>q</span></a>
+  <button class="hamburger" id="hamburger" onclick="document.getElementById('mobile-menu').classList.toggle('active');this.classList.toggle('active')">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links">
+    <a href="/">Home</a>
+    <a href="/#features">Features</a>
+    <a href="/pricing" class="active">Pricing</a>
+    <a href="/contact">Contact</a>
+  </div>
+  <div class="nav-right">
+    <a class="btn btn-outline" href="/">Log In</a>
+    <a class="btn btn-gold" href="/">Sign Up Free</a>
+  </div>
+</nav>
+
+<div class="mobile-menu-overlay" id="mobile-menu">
+  <a href="/">Home</a>
+  <a href="/#features">Features</a>
+  <a href="/pricing">Pricing</a>
+  <a href="/contact">Contact</a>
+</div>
+
+<section class="pricing-hero">
+  <div class="section-label">Pricing</div>
+  <h1>Invest in <em>Better Grades</em></h1>
+  <p>Less than the cost of a single private tutor session. Try free for 7 days — no credit card required.</p>
+</section>
+
+<div class="pricing-container">
+  <div class="pricing-grid">
+    <!-- Free Trial -->
+    <div class="price-card">
+      <div class="price-name">Free Trial</div>
+      <div class="price-amount">£0<span>/7 days</span></div>
+      <div class="price-desc">Try everything free — no commitment</div>
+      <ul class="price-features">
+        <li><i class="fas fa-check"></i>5 AI Tutor questions per day</li>
+        <li><i class="fas fa-check"></i>Basic practice questions</li>
+        <li><i class="fas fa-check"></i>Progress tracking</li>
+        <li><i class="fas fa-check"></i>A-Level & GCSE Maths</li>
+        <li><i class="fas fa-check"></i>No credit card required</li>
+      </ul>
+      <a href="/" class="price-btn price-btn-secondary">Try Free for 7 Days</a>
+    </div>
+
+    <!-- Student Plan (Featured) -->
+    <div class="price-card featured">
+      <div class="popular-badge">Most Popular</div>
+      <div class="price-name">Student Plan</div>
+      <div class="price-amount">£20<span>/month</span></div>
+      <div class="price-desc">Everything you need to get top grades</div>
+      <ul class="price-features">
+        <li><i class="fas fa-check"></i><strong>Unlimited</strong> AI Tutor access</li>
+        <li><i class="fas fa-check"></i><strong>Unlimited</strong> exam-style questions</li>
+        <li><i class="fas fa-check"></i>Timed exam simulator</li>
+        <li><i class="fas fa-check"></i>Photo question solver</li>
+        <li><i class="fas fa-check"></i>All exam boards (AQA, Edexcel, OCR, MEI)</li>
+        <li><i class="fas fa-check"></i>Diagnostic placement test</li>
+        <li><i class="fas fa-check"></i>Flashcards & revision timetable</li>
+        <li><i class="fas fa-check"></i>Full progress analytics</li>
+        <li><i class="fas fa-check"></i>ADHD, Dyslexia & Dyscalculia modes</li>
+        <li><i class="fas fa-check"></i>Essay marker & mind maps</li>
+      </ul>
+      <a href="/" class="price-btn price-btn-primary">Start 7-Day Free Trial</a>
+      <p style="text-align:center;font-size:.75rem;color:var(--muted);margin-top:.75rem">Then £20/mo. Cancel anytime.</p>
+    </div>
+
+    <!-- Schools -->
+    <div class="price-card">
+      <div class="price-name">Schools & Institutions</div>
+      <div class="price-amount" style="font-size:2rem">Custom<span> pricing</span></div>
+      <div class="price-desc">Empower every student in your school</div>
+      <ul class="price-features">
+        <li><i class="fas fa-check"></i>Everything in Student Plan</li>
+        <li><i class="fas fa-check"></i>Bulk student licences</li>
+        <li><i class="fas fa-check"></i>Teacher dashboard & reports</li>
+        <li><i class="fas fa-check"></i>Set & track assignments</li>
+        <li><i class="fas fa-check"></i>Full curriculum mapping</li>
+        <li><i class="fas fa-check"></i>Priority support</li>
+        <li><i class="fas fa-check"></i>Per-student pricing available</li>
+        <li><i class="fas fa-check"></i>Dedicated account manager</li>
+      </ul>
+      <a href="/contact" class="price-btn price-btn-secondary">Enquire for Pricing</a>
+      <p style="text-align:center;font-size:.75rem;color:var(--muted);margin-top:.75rem">Contact us for school & group rates</p>
+    </div>
+  </div>
+
+  <div class="guarantee-bar">
+    <i class="fas fa-shield-halved"></i>
+    <strong>14-day money-back guarantee</strong> on all paid plans. Secure payments via Stripe. Cancel anytime — no questions asked.
+  </div>
+
+  <div class="faq-section">
+    <h2>Pricing FAQ</h2>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can I cancel at any time? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-a">Yes — you can cancel your subscription at any time from your account settings. You'll continue to have access until the end of your current billing period. No cancellation fees or hidden charges.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Do I need a credit card for the free trial? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-a">No! The 7-day free trial requires no credit card. You only enter payment details if you choose to upgrade after the trial ends.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is there a family or sibling discount? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-a">We're working on a family plan. In the meantime, contact us and we can offer a discount for multiple students from the same household.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What payment methods do you accept? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-a">We accept all major credit and debit cards (Visa, Mastercard, Amex) via Stripe. Apple Pay and Google Pay are also supported.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How does school pricing work? <i class="fas fa-chevron-down"></i></div>
+      <div class="faq-a">School pricing is based on the number of students. We offer significant discounts for bulk licences. Contact us via the enquiry form and we'll put together a custom quote for your school.</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2026 Synaptiq Ltd. All rights reserved. <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a> &middot; <a href="/cookies">Cookies</a></p>
+</footer>
+
+</body>
+</html>

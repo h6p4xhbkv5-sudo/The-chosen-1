@@ -6,6 +6,7 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1.js" },
+    { "src": "/pricing", "dest": "/pricing.html" },
     { "src": "/admin", "dest": "/admin.html" },
     { "src": "/privacy", "dest": "/privacy-policy.html" },
     { "src": "/terms", "dest": "/terms.html" },

@@ -1602,7 +1602,106 @@ body.mode-adhd .adhd-break { display: block; }
 .mob-nav-btn.active i { 
   filter: drop-shadow(0 0 6px rgba(201,168,76,0.6));
 }
+/* ═══════════════════════════════════════
+   MOBILE HAMBURGER MENU
+═══════════════════════════════════════ */
+.hamburger {
+  display: none; background: none; border: none;
+  cursor: pointer; padding: .5rem; z-index: 1001;
+  flex-direction: column; gap: 5px;
+}
+.hamburger span {
+  display: block; width: 24px; height: 2px;
+  background: var(--white); border-radius: 2px;
+  transition: all .3s ease;
+}
+.hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+.mobile-menu-overlay {
+  display: none; position: fixed; inset: 0; z-index: 999;
+  background: rgba(7,8,12,0.96); backdrop-filter: blur(20px);
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 1rem; padding: 2rem;
+}
+.mobile-menu-overlay.active { display: flex; }
+.mobile-menu-overlay a {
+  color: var(--white); font-family: var(--font-head);
+  font-size: 1.5rem; font-weight: 700;
+  padding: .75rem 2rem; border-radius: 12px;
+  cursor: pointer; text-decoration: none;
+  transition: all .2s; text-align: center;
+}
+.mobile-menu-overlay a:hover { color: var(--gold); background: var(--bg3); }
+.mobile-menu-overlay .mobile-menu-cta {
+  margin-top: 1rem; padding: 1rem 3rem;
+  background: var(--gold); color: var(--black);
+  font-weight: 800; border-radius: 12px;
+  font-size: 1.1rem; border: none; cursor: pointer;
+}
+
+/* FAQ Section */
+.faq-section { position: relative; z-index: 1; padding: 5rem 2rem; background: var(--bg2); }
+.faq-section h2 { font-family: var(--font-head); font-size: clamp(1.8rem, 4vw, 3rem); text-align: center; margin-bottom: .75rem; }
+.faq-section .sub { text-align: center; color: var(--muted); margin-bottom: 3rem; }
+.faq-list { max-width: 800px; margin: 0 auto; }
+.faq-item {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 16px; margin-bottom: 1rem;
+  overflow: hidden; transition: all .3s;
+}
+.faq-item:hover { border-color: rgba(201,168,76,0.3); }
+.faq-q {
+  padding: 1.25rem 1.5rem; display: flex;
+  align-items: center; justify-content: space-between;
+  cursor: pointer; font-weight: 600; font-size: .95rem;
+  transition: all .2s; gap: 1rem;
+}
+.faq-q:hover { color: var(--gold); }
+.faq-q i { transition: transform .3s; color: var(--gold); font-size: .8rem; flex-shrink: 0; }
+.faq-item.open .faq-q i { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0; overflow: hidden;
+  transition: max-height .4s ease, padding .3s ease;
+  padding: 0 1.5rem;
+  color: var(--muted); font-size: .9rem; line-height: 1.8;
+}
+.faq-item.open .faq-a { max-height: 400px; padding: 0 1.5rem 1.25rem; }
+
+/* Comparison Banner */
+.compare-banner {
+  position: relative; z-index: 1; padding: 5rem 2rem;
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+}
+.compare-table {
+  max-width: 900px; margin: 0 auto; border-radius: 20px;
+  overflow: hidden; border: 1px solid var(--border);
+  background: var(--bg2);
+}
+.compare-table table { width: 100%; border-collapse: collapse; }
+.compare-table th {
+  background: var(--bg3); padding: 1rem 1.5rem;
+  font-size: .85rem; font-weight: 700;
+  text-align: center; border-bottom: 1px solid var(--border);
+  color: var(--muted); text-transform: uppercase; letter-spacing: .05em;
+}
+.compare-table th:first-child { text-align: left; }
+.compare-table th.synaptiq-col { color: var(--gold); }
+.compare-table td {
+  padding: .875rem 1.5rem; border-bottom: 1px solid var(--border);
+  font-size: .9rem; text-align: center;
+}
+.compare-table td:first-child { text-align: left; font-weight: 600; color: var(--white); }
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-check { color: var(--gold); font-size: 1.1rem; }
+.compare-cross { color: var(--muted); opacity: .4; font-size: .9rem; }
+
+/* Animated counter */
+@keyframes countUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
 @media(max-width: 768px) {
+  .hamburger { display: flex; }
   #mobile-nav { display: block; }
   .sidebar { display: none !important; }
   #page-dashboard.active { padding-bottom: 70px; }
@@ -1623,7 +1722,6 @@ body.mode-adhd .adhd-break { display: block; }
   .hero h1 { font-size: 2rem; }
   .auth-box { padding: 1.5rem; margin: 1rem; }
   .difficulty-grid { grid-template-columns: 1fr 1fr; }
-  /* New sections — mobile */
   .audience-grid { grid-template-columns: 1fr !important; }
   .testimonials-grid { grid-template-columns: 1fr !important; }
   .features-grid { grid-template-columns: 1fr !important; }
@@ -1635,10 +1733,22 @@ body.mode-adhd .adhd-break { display: block; }
   .trust-bar { gap: .75rem; }
   .trust-item { font-size: .78rem; }
   .hero-actions { flex-direction: column; align-items: stretch; }
-  .btn-hero-primary, .btn-hero-secondary { width: 100%; text-align: center; }
+  .btn-hero-primary, .btn-hero-secondary, .btn-ghost { width: 100%; text-align: center; }
   .msg-row { max-width: 95%; }
   .msg { max-width: 100%; }
   .msg-avatar { display: none; }
+  .compare-table { overflow-x: auto; }
+  .compare-table table { min-width: 500px; }
+  .faq-q { font-size: .875rem; }
+  footer > div:first-child { grid-template-columns: 1fr !important; }
+  .video-section { padding: 3rem 1rem; }
+  .features-section { padding: 3rem 1rem; }
+  .pricing-section { padding: 3rem 1rem; }
+  .faq-section { padding: 3rem 1rem; }
+  .compare-banner { padding: 3rem 1rem; }
+  .testimonials-section { padding: 3rem 1rem; }
+  .audience-section { padding: 3rem 1rem; }
+  .subjects-section { padding: 3rem 1rem; }
 }
 
 /* ═══════════════════════════════════════
@@ -2488,6 +2598,9 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 <!-- ═══════════════════════ NAVIGATION ═══════════════════════ -->
 <nav id="nav">
   <div class="nav-logo" onclick="nav('home')">Synapti<span>q</span></div>
+  <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </button>
   <div class="nav-links" id="public-nav">
     <a onclick="nav('home')">Home</a>
     <a onclick="scrollTo('#features')">Features</a>
@@ -2529,6 +2642,17 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
   </div>
 </nav>
 
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu-overlay" id="mobile-menu">
+  <a onclick="nav('home');closeMobileMenu()">Home</a>
+  <a onclick="scrollTo('#features');closeMobileMenu()">Features</a>
+  <a onclick="scrollTo('#for-who');closeMobileMenu()">Who It's For</a>
+  <a onclick="scrollTo('#pricing');closeMobileMenu()">Pricing</a>
+  <a onclick="scrollTo('#testimonials');closeMobileMenu()">Reviews</a>
+  <a href="/contact" onclick="closeMobileMenu()">Contact</a>
+  <button class="mobile-menu-cta" onclick="nav('auth');closeMobileMenu()">Start Learning Free</button>
+</div>
+
 <!-- ═══════════════════════ HOME PAGE ═══════════════════════ -->
 <div id="page-home" class="page active">
 
@@ -2546,16 +2670,33 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <div class="trust-item"><i class="fas fa-shield-halved"></i> GDPR Compliant</div>
       <div class="trust-item"><i class="fas fa-universal-access"></i> ADHD & Dyslexia Friendly</div>
       <div class="trust-item"><i class="fas fa-clock"></i> 24/7 Availability</div>
+      <div class="trust-item"><i class="fas fa-credit-card"></i> No Credit Card Required</div>
     </div>
   </section>
 
   <!-- Social proof stats -->
-  <section style="position:relative;z-index:1;padding:2rem;max-width:900px;margin:0 auto">
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;text-align:center">
-      <div><div style="font-family:var(--font-head);font-size:2rem;font-weight:800;color:var(--gold)">10K+</div><div style="color:var(--muted);font-size:.8rem">Active Students</div></div>
-      <div><div style="font-family:var(--font-head);font-size:2rem;font-weight:800;color:var(--gold)">2M+</div><div style="color:var(--muted);font-size:.8rem">Questions Generated</div></div>
-      <div><div style="font-family:var(--font-head);font-size:2rem;font-weight:800;color:var(--gold)">94%</div><div style="color:var(--muted);font-size:.8rem">Report Grade Improvement</div></div>
-      <div><div style="font-family:var(--font-head);font-size:2rem;font-weight:800;color:var(--gold)">4.9/5</div><div style="color:var(--muted);font-size:.8rem">Student Rating</div></div>
+  <section class="stats-section">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-icon"><i class="fas fa-users"></i></div>
+        <div class="stat-num">10,000+</div>
+        <div class="stat-label">Active Students</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i class="fas fa-file-lines"></i></div>
+        <div class="stat-num">2M+</div>
+        <div class="stat-label">Questions Generated</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+        <div class="stat-num">94%</div>
+        <div class="stat-label">Grade Improvement</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i class="fas fa-star"></i></div>
+        <div class="stat-num">4.9/5</div>
+        <div class="stat-label">Student Rating</div>
+      </div>
     </div>
   </section>
 
@@ -2600,39 +2741,62 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
   <section class="features-section" id="features">
     <div class="section-label">Features</div>
     <h2>Everything You Need to Succeed</h2>
-    <p class="sub">Powerful tools built specifically for A-Level Maths students</p>
+    <p class="sub">Powerful AI-powered tools built specifically for A-Level Maths students</p>
     <div class="features-grid">
-      <div class="feature-card" onclick="nav('auth')">
+      <div class="feature-card fc-gold" onclick="nav('auth')">
         <div class="feature-icon" style="font-size:2rem">🤖</div>
         <h3>AI Tutor</h3>
-        <p>Ask anything — get expert explanations tailored to AQA, Edexcel, OCR & WJEC specifications</p>
+        <p>Ask anything — get expert, step-by-step explanations tailored to AQA, Edexcel, OCR & WJEC specifications. Like having a private tutor available 24/7.</p>
+        <div class="feature-card-footer">
+          <span class="feature-tag"><i class="fas fa-bolt"></i> Unlimited</span>
+          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
       </div>
-      <div class="feature-card" onclick="nav('auth')">
+      <div class="feature-card fc-blue" onclick="nav('auth')">
         <div class="feature-icon" style="font-size:2rem">📝</div>
         <h3>Exam Question Generator</h3>
-        <p>Unlimited exam-style questions at Foundation, Higher & A-Level with instant marking</p>
+        <p>Unlimited exam-style questions with instant marking and detailed solutions. Choose your topic, difficulty, and exam board.</p>
+        <div class="feature-card-footer">
+          <span class="feature-tag"><i class="fas fa-infinity"></i> Unlimited</span>
+          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
       </div>
-      <div class="feature-card" onclick="nav('auth')">
+      <div class="feature-card fc-green" onclick="nav('auth')">
         <div class="feature-icon" style="font-size:2rem">📸</div>
         <h3>Photo Question Solver</h3>
-        <p>Snap a photo of any question and get a step-by-step solution in seconds</p>
+        <p>Snap a photo of any textbook or worksheet question and get a full step-by-step solution in seconds. Works with handwritten problems too.</p>
+        <div class="feature-card-footer">
+          <span class="feature-tag"><i class="fas fa-camera"></i> Instant</span>
+          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
       </div>
-      <div class="feature-card" onclick="nav('auth')">
+      <div class="feature-card fc-purple" onclick="nav('auth')">
+        <div class="feature-icon" style="font-size:2rem">⏱️</div>
+        <h3>Timed Exam Simulator</h3>
+        <p>Sit full practice exams under timed conditions. Get graded instantly with detailed feedback on every answer.</p>
+        <div class="feature-card-footer">
+          <span class="feature-tag"><i class="fas fa-clock"></i> Realistic</span>
+          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
+      </div>
+      <div class="feature-card fc-orange" onclick="nav('auth')">
         <div class="feature-icon" style="font-size:2rem">📊</div>
-        <h3>Progress Tracking</h3>
-        <p>Visual dashboards, heatmaps, and grade predictions for every maths topic</p>
+        <h3>Progress & Grade Prediction</h3>
+        <p>Visual dashboards, heatmaps, and AI-powered grade predictions. Know exactly where you stand and what to work on.</p>
+        <div class="feature-card-footer">
+          <span class="feature-tag"><i class="fas fa-chart-bar"></i> Smart</span>
+          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
       </div>
-      <div class="feature-card" onclick="nav('auth')">
-        <div class="feature-icon" style="font-size:2rem">📐</div>
-        <h3>Formula Sheets & Geometry</h3>
-        <p>Interactive formula sheets and geometry tools — everything you need for the exam</p>
-      </div>
-      <div class="feature-card" onclick="nav('auth')">
+      <div class="feature-card fc-pink" onclick="nav('auth')">
         <div class="feature-icon" style="font-size:2rem">♿</div>
         <h3>Accessibility Modes</h3>
-        <p>Built-in ADHD, Dyslexia & Dyscalculia support — adapts to how you learn best</p>
+        <p>Built-in ADHD, Dyslexia, Dyscalculia & Autism support. Synaptiq adapts to how you learn best — not the other way around.</p>
+        <div class="feature-card-footer">
+          <span class="feature-tag"><i class="fas fa-universal-access"></i> Inclusive</span>
+          <div class="feature-card-arrow"><i class="fas fa-arrow-right"></i></div>
+        </div>
       </div>
-
     </div>
   </section>
 
@@ -2714,86 +2878,400 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
     <p style="text-align:center;color:var(--muted);font-size:.85rem;margin-top:2rem"><i class="fas fa-shield-halved" style="color:var(--gold);margin-right:.5rem"></i>Secure payments via Stripe. 14-day money-back guarantee on all paid plans.</p>
   </section>
 
-  <!-- Testimonials -->
-  <section class="features-section" style="text-align:center">
-    <div class="section-label">Reviews</div>
-    <h2>Students Love Synaptiq</h2>
-    <p class="sub">Rated 4.9/5 by over 10,000 students across the UK</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;text-align:left">
-      <div class="card" style="padding:1.5rem">
-        <div style="color:#FBBF24;margin-bottom:.75rem;font-size:.85rem"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-        <p style="font-style:italic;color:var(--muted);font-size:.9rem;margin-bottom:1rem;line-height:1.7">"Synaptiq literally saved my GCSEs. I went from a 4 in Maths to a 7 in three months. The practice questions are amazing."</p>
-        <div style="font-weight:700;font-size:.85rem">Sophie T.</div>
-        <div style="color:var(--muted);font-size:.75rem">Year 11 GCSE, Manchester — Grade 4 to Grade 7</div>
+  <!-- Who It's For -->
+  <section class="audience-section" id="for-who">
+    <div class="section-label">Who It's For</div>
+    <h2>Built for Everyone in the Learning Journey</h2>
+    <p class="sub">Whether you're a student, parent, or teacher — Synaptiq helps</p>
+    <div class="audience-grid">
+      <div class="audience-card aud-student">
+        <div class="audience-icon-wrap">🎓</div>
+        <h3>Students</h3>
+        <p>Your personal A-Level Maths AI tutor — always available. Ask questions, practise for exams, and track your progress — aligned to your exact exam board.</p>
+        <ul class="audience-perks">
+          <li>Unlimited AI Maths tutor access 24/7</li>
+          <li>Exam-style questions for every A-Level topic</li>
+          <li>Grade predictions and progress tracking</li>
+          <li>ADHD, Dyslexia & Dyscalculia modes</li>
+        </ul>
       </div>
-      <div class="card" style="padding:1.5rem">
-        <div style="color:#FBBF24;margin-bottom:.75rem;font-size:.85rem"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-        <p style="font-style:italic;color:var(--muted);font-size:.9rem;margin-bottom:1rem;line-height:1.7">"The AI tutor explains things way better than my textbook. It knows the UK curriculum and uses proper exam terminology. Genuinely incredible."</p>
-        <div style="font-weight:700;font-size:.85rem">James K.</div>
-        <div style="color:var(--muted);font-size:.75rem">Year 13 A-Level, London — Predicted A*</div>
+      <div class="audience-card aud-parent">
+        <div class="audience-icon-wrap">👨‍👩‍👧</div>
+        <h3>Parents & Guardians</h3>
+        <p>Give your child the A-Level Maths support they need without the high cost of a private tutor. Track their progress and see exactly where they're improving.</p>
+        <ul class="audience-perks">
+          <li>Fraction of a private tutor's cost</li>
+          <li>Progress reports & analytics</li>
+          <li>GDPR-compliant and child-safe</li>
+          <li>No commitment — cancel anytime</li>
+        </ul>
       </div>
-      <div class="card" style="padding:1.5rem">
-        <div style="color:#FBBF24;margin-bottom:.75rem;font-size:.85rem"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-        <p style="font-style:italic;color:var(--muted);font-size:.9rem;margin-bottom:1rem;line-height:1.7">"As someone with ADHD, the focus mode and shorter sessions have been a game-changer. I can actually concentrate and my grades show it."</p>
-        <div style="font-weight:700;font-size:.85rem">Amira R.</div>
-        <div style="color:var(--muted);font-size:.75rem">Year 10, Birmingham — ADHD Mode user</div>
+      <div class="audience-card aud-teacher">
+        <div class="audience-icon-wrap">👩‍🏫</div>
+        <h3>Schools & Teachers</h3>
+        <p>Set assignments, track class performance, and give every student personalised support — all from one dashboard.</p>
+        <ul class="audience-perks">
+          <li>Teacher dashboard & class reports</li>
+          <li>Set and track assignments</li>
+          <li>Bulk student licences</li>
+          <li>Full curriculum mapping</li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <!-- CTA Section -->
+  <!-- A-Level Maths Curriculum -->
+  <section class="subjects-section" id="topics">
+    <div class="section-label">Full Curriculum</div>
+    <h2>Every A-Level Maths Chapter Covered</h2>
+    <p class="sub">Pure 1 & 2, Statistics 1 & 2, Mechanics 1 & 2 — complete coverage</p>
+
+    <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem">
+      <!-- Pure Year 1 -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:2rem;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#60A5FA,#93C5FD)"></div>
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
+          <div style="width:48px;height:48px;border-radius:14px;background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.25);display:flex;align-items:center;justify-content:center;font-size:1.3rem">📘</div>
+          <div>
+            <div style="font-weight:800;font-size:1.05rem">Pure Mathematics 1</div>
+            <div style="color:var(--muted);font-size:.78rem">Year 12 — 8 Chapters</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.5rem">
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#60A5FA;font-weight:700;font-size:.75rem;min-width:22px">1</span>Algebraic Expressions & Surds</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#60A5FA;font-weight:700;font-size:.75rem;min-width:22px">2</span>Quadratics</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#60A5FA;font-weight:700;font-size:.75rem;min-width:22px">3</span>Equations & Inequalities</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#60A5FA;font-weight:700;font-size:.75rem;min-width:22px">4</span>Graphs & Transformations</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#60A5FA;font-weight:700;font-size:.75rem;min-width:22px">5</span>Coordinate Geometry</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#60A5FA;font-weight:700;font-size:.75rem;min-width:22px">6</span>Trigonometry</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#60A5FA;font-weight:700;font-size:.75rem;min-width:22px">7</span>Polynomials & Binomial Expansion</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0"><span style="color:#60A5FA;font-weight:700;font-size:.75rem;min-width:22px">8</span>Exponentials & Logarithms</div>
+        </div>
+      </div>
+
+      <!-- Pure Year 2 -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:2rem;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#A78BFA,#C4B5FD)"></div>
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
+          <div style="width:48px;height:48px;border-radius:14px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.25);display:flex;align-items:center;justify-content:center;font-size:1.3rem">📗</div>
+          <div>
+            <div style="font-weight:800;font-size:1.05rem">Pure Mathematics 2</div>
+            <div style="color:var(--muted);font-size:.78rem">Year 13 — 6 Chapters</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.5rem">
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#A78BFA;font-weight:700;font-size:.75rem;min-width:22px">9</span>Further Trigonometry</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#A78BFA;font-weight:700;font-size:.75rem;min-width:22px">10</span>Differentiation (Advanced)</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#A78BFA;font-weight:700;font-size:.75rem;min-width:22px">11</span>Integration (Advanced)</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#A78BFA;font-weight:700;font-size:.75rem;min-width:22px">12</span>Parametric Equations</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#A78BFA;font-weight:700;font-size:.75rem;min-width:22px">13</span>Vectors</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0"><span style="color:#A78BFA;font-weight:700;font-size:.75rem;min-width:22px">14</span>Proof</div>
+        </div>
+      </div>
+
+      <!-- Stats 1 -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:2rem;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#4ADE80,#86EFAC)"></div>
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
+          <div style="width:48px;height:48px;border-radius:14px;background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.25);display:flex;align-items:center;justify-content:center;font-size:1.3rem">📊</div>
+          <div>
+            <div style="font-weight:800;font-size:1.05rem">Statistics 1</div>
+            <div style="color:var(--muted);font-size:.78rem">Year 12 — 4 Chapters</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.5rem">
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#4ADE80;font-weight:700;font-size:.75rem;min-width:28px">S1</span>Statistical Sampling & Data Collection</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#4ADE80;font-weight:700;font-size:.75rem;min-width:28px">S2</span>Data Presentation & Interpretation</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#4ADE80;font-weight:700;font-size:.75rem;min-width:28px">S3</span>Probability</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0"><span style="color:#4ADE80;font-weight:700;font-size:.75rem;min-width:28px">S4</span>Statistical Distributions</div>
+        </div>
+      </div>
+
+      <!-- Stats 2 -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:2rem;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#34D399,#6EE7B7)"></div>
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
+          <div style="width:48px;height:48px;border-radius:14px;background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.25);display:flex;align-items:center;justify-content:center;font-size:1.3rem">📉</div>
+          <div>
+            <div style="font-weight:800;font-size:1.05rem">Statistics 2</div>
+            <div style="color:var(--muted);font-size:.78rem">Year 13 — 3 Chapters</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.5rem">
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#34D399;font-weight:700;font-size:.75rem;min-width:28px">S5</span>Regression, Correlation & Hypothesis Testing</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#34D399;font-weight:700;font-size:.75rem;min-width:28px">S6</span>Normal Distribution</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0"><span style="color:#34D399;font-weight:700;font-size:.75rem;min-width:28px">S7</span>Hypothesis Testing (Normal)</div>
+        </div>
+      </div>
+
+      <!-- Mechanics 1 -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:2rem;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#FB923C,#FDBA74)"></div>
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
+          <div style="width:48px;height:48px;border-radius:14px;background:rgba(251,146,60,0.12);border:1px solid rgba(251,146,60,0.25);display:flex;align-items:center;justify-content:center;font-size:1.3rem">⚙️</div>
+          <div>
+            <div style="font-weight:800;font-size:1.05rem">Mechanics 1</div>
+            <div style="color:var(--muted);font-size:.78rem">Year 12 — 3 Chapters</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.5rem">
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#FB923C;font-weight:700;font-size:.75rem;min-width:28px">M1</span>Kinematics (SUVAT Equations)</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#FB923C;font-weight:700;font-size:.75rem;min-width:28px">M2</span>Forces & Newton's Laws</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0"><span style="color:#FB923C;font-weight:700;font-size:.75rem;min-width:28px">M3</span>Variable Acceleration</div>
+        </div>
+      </div>
+
+      <!-- Mechanics 2 -->
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:2rem;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#F472B6,#F9A8D4)"></div>
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem">
+          <div style="width:48px;height:48px;border-radius:14px;background:rgba(244,114,182,0.12);border:1px solid rgba(244,114,182,0.25);display:flex;align-items:center;justify-content:center;font-size:1.3rem">🚀</div>
+          <div>
+            <div style="font-weight:800;font-size:1.05rem">Mechanics 2</div>
+            <div style="color:var(--muted);font-size:.78rem">Year 13 — 2 Chapters</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.5rem">
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0;border-bottom:1px solid rgba(255,255,255,0.03)"><span style="color:#F472B6;font-weight:700;font-size:.75rem;min-width:28px">M4</span>Moments</div>
+          <div style="display:flex;align-items:center;gap:.75rem;font-size:.88rem;padding:.45rem 0"><span style="color:#F472B6;font-weight:700;font-size:.75rem;min-width:28px">M5</span>Projectiles & Further Kinematics</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:2.5rem">
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:1.5rem"><i class="fas fa-graduation-cap" style="color:var(--gold);margin-right:.5rem"></i>Aligned to AQA, Edexcel, OCR & WJEC A-Level Maths specifications</p>
+      <button class="btn-hero-primary" onclick="nav('auth')" style="padding:.875rem 2.5rem">Start Revising Free <i class="fas fa-arrow-right" style="margin-left:.5rem"></i></button>
+    </div>
+  </section>
+
+  <!-- Testimonials (Enhanced) -->
+  <section class="testimonials-section" id="testimonials">
+    <div class="section-label">Reviews</div>
+    <h2>Students Love Synaptiq</h2>
+    <p class="sub">Rated 4.9/5 by over 10,000 students across the UK</p>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p class="testimonial-text">"Synaptiq literally saved my GCSEs. I went from a 4 in Maths to a 7 in three months. The practice questions are amazing and the AI explains everything so clearly."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">S</div>
+          <div><div class="testimonial-name">Sophie T.</div><div class="testimonial-role">Year 11 GCSE, Manchester — Grade 4 to Grade 7</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p class="testimonial-text">"The AI tutor explains things way better than my textbook. It knows the UK curriculum and uses proper exam terminology. I'm predicted an A* now and I genuinely owe it to Synaptiq."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">J</div>
+          <div><div class="testimonial-name">James K.</div><div class="testimonial-role">Year 13 A-Level, London — Predicted A*</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p class="testimonial-text">"As someone with ADHD, the focus mode and shorter sessions have been a game-changer. I can actually concentrate and my grades have improved by two full grades."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">A</div>
+          <div><div class="testimonial-name">Amira R.</div><div class="testimonial-role">Year 10, Birmingham — ADHD Mode User</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p class="testimonial-text">"My daughter's confidence in Maths has completely transformed. She was struggling badly and now she actually enjoys studying. Worth every penny."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">M</div>
+          <div><div class="testimonial-name">Michelle H.</div><div class="testimonial-role">Parent, Year 10 Student — Leeds</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p class="testimonial-text">"I use Synaptiq with my Year 12 class. The question generator saves me hours of prep time and the students love the interactive format. Best ed-tech tool I've used."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">D</div>
+          <div><div class="testimonial-name">Mr. Davies</div><div class="testimonial-role">Maths Teacher, Cardiff — 28 Student Licences</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+        <p class="testimonial-text">"The exam simulator is incredibly realistic. I practised 10 papers on Synaptiq and the real thing felt easy by comparison. Got an A in Physics!"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">R</div>
+          <div><div class="testimonial-name">Ravi P.</div><div class="testimonial-role">Year 13, Edinburgh — A in A-Level Physics</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison: Synaptiq vs Private Tutor -->
+  <section class="compare-banner">
+    <div style="text-align:center;margin-bottom:3rem">
+      <div class="section-label">Why Synaptiq?</div>
+      <h2 style="font-family:var(--font-head);font-size:clamp(1.8rem,4vw,3rem);margin-bottom:.75rem">Synaptiq vs. Traditional Tutoring</h2>
+      <p style="color:var(--muted);max-width:500px;margin:0 auto">All the benefits of a private tutor — at a fraction of the cost</p>
+    </div>
+    <div class="compare-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="synaptiq-col">Synaptiq</th>
+            <th>Private Tutor</th>
+            <th>Textbook</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Available 24/7</td>
+            <td><span class="compare-check"><i class="fas fa-check-circle"></i></span></td>
+            <td><span class="compare-cross"><i class="fas fa-times"></i></span></td>
+            <td><span class="compare-check"><i class="fas fa-check-circle"></i></span></td>
+          </tr>
+          <tr>
+            <td>Personalised to you</td>
+            <td><span class="compare-check"><i class="fas fa-check-circle"></i></span></td>
+            <td><span class="compare-check"><i class="fas fa-check-circle"></i></span></td>
+            <td><span class="compare-cross"><i class="fas fa-times"></i></span></td>
+          </tr>
+          <tr>
+            <td>Unlimited questions</td>
+            <td><span class="compare-check"><i class="fas fa-check-circle"></i></span></td>
+            <td><span class="compare-cross"><i class="fas fa-times"></i></span></td>
+            <td><span class="compare-cross"><i class="fas fa-times"></i></span></td>
+          </tr>
+          <tr>
+            <td>Instant feedback</td>
+            <td><span class="compare-check"><i class="fas fa-check-circle"></i></span></td>
+            <td><span class="compare-cross"><i class="fas fa-times"></i></span></td>
+            <td><span class="compare-cross"><i class="fas fa-times"></i></span></td>
+          </tr>
+          <tr>
+            <td>Progress tracking</td>
+            <td><span class="compare-check"><i class="fas fa-check-circle"></i></span></td>
+            <td><span class="compare-cross"><i class="fas fa-times"></i></span></td>
+            <td><span class="compare-cross"><i class="fas fa-times"></i></span></td>
+          </tr>
+          <tr>
+            <td>Accessibility modes</td>
+            <td><span class="compare-check"><i class="fas fa-check-circle"></i></span></td>
+            <td><span class="compare-cross"><i class="fas fa-times"></i></span></td>
+            <td><span class="compare-cross"><i class="fas fa-times"></i></span></td>
+          </tr>
+          <tr>
+            <td>Monthly cost</td>
+            <td><strong style="color:var(--gold)">£20/mo</strong></td>
+            <td><span style="color:var(--muted)">£160–£400/mo</span></td>
+            <td><span style="color:var(--muted)">£15–£30 one-off</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section" id="faq">
+    <div class="section-label">FAQ</div>
+    <h2>Frequently Asked Questions</h2>
+    <p class="sub">Everything you need to know about Synaptiq</p>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What does Synaptiq cover? <i class="fas fa-chevron-down"></i></div>
+        <div class="faq-a">Synaptiq covers the complete A-Level Mathematics specification — Pure Maths (Year 1 & Year 2), Statistics, and Mechanics. Every topic from Algebra and Surds through to Integration, Vectors, Hypothesis Testing, and Projectiles. All content is aligned to AQA, Edexcel, OCR, and WJEC exam boards.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is the free trial really free? <i class="fas fa-chevron-down"></i></div>
+        <div class="faq-a">Yes! The 7-day free trial gives you full access to all features — no credit card required. You can cancel at any time before the trial ends and you won't be charged a penny.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How does the AI Maths tutor work? <i class="fas fa-chevron-down"></i></div>
+        <div class="faq-a">Synaptiq uses advanced AI trained specifically on the A-Level Maths curriculum. You can ask any maths question and get a detailed, step-by-step explanation with full working — just like a private tutor. The AI knows your exam board, shows proper mathematical notation, and adapts to your level.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is my data safe? <i class="fas fa-chevron-down"></i></div>
+        <div class="faq-a">Absolutely. Synaptiq is fully GDPR-compliant and all data is processed and stored securely within the UK/EU. We never sell your data. You can request deletion of all your data at any time from your settings.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can I use Synaptiq on my phone? <i class="fas fa-chevron-down"></i></div>
+        <div class="faq-a">Yes! Synaptiq is fully responsive and works beautifully on phones, tablets, and desktop computers. You can study anywhere — on the bus, in the library, or at home.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What accessibility features are available? <i class="fas fa-chevron-down"></i></div>
+        <div class="faq-a">Synaptiq includes dedicated modes for ADHD (focus mode, shorter sessions), Dyslexia (special fonts, spacing, audio read-aloud), Dyscalculia (visual maths, number lines), and Autism Spectrum (predictable structure, literal explanations). These can be enabled during signup or at any time from your settings.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Do you offer school licences? <i class="fas fa-chevron-down"></i></div>
+        <div class="faq-a">Yes! We offer bulk school licences with teacher dashboards, assignment tracking, and class analytics. Contact us at the pricing section or via our contact page for a custom quote.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section (Enhanced) -->
   <section style="position:relative;z-index:1;padding:5rem 2rem;text-align:center">
-    <div style="max-width:700px;margin:0 auto;background:linear-gradient(135deg,rgba(201,168,76,0.1),rgba(201,168,76,0.02));border:1px solid var(--gold);border-radius:24px;padding:3rem 2rem">
-      <h2 style="font-family:var(--font-head);font-size:clamp(1.5rem,3vw,2.2rem);margin-bottom:1rem">Ready to Improve Your Grades?</h2>
-      <p style="color:var(--muted);margin-bottom:2rem;line-height:1.7">Join 10,000+ UK students using Synaptiq to study smarter. Start your free trial today — no credit card required.</p>
-      <button class="btn-hero-primary" onclick="nav('auth')" style="font-size:1.1rem;padding:1.1rem 3rem">Start Learning Free <i class="fas fa-arrow-right" style="margin-left:.5rem"></i></button>
-      <p style="color:var(--muted);font-size:.8rem;margin-top:1rem">7-day free trial. No obligation.</p>
+    <div style="max-width:750px;margin:0 auto;background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(167,139,250,0.06));border:1px solid var(--gold);border-radius:24px;padding:3.5rem 2rem;position:relative;overflow:hidden">
+      <div style="position:absolute;top:-50px;right:-50px;width:200px;height:200px;background:radial-gradient(circle,rgba(201,168,76,0.15),transparent);border-radius:50%"></div>
+      <div style="position:absolute;bottom:-30px;left:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(167,139,250,0.1),transparent);border-radius:50%"></div>
+      <div style="position:relative;z-index:1">
+        <div style="font-size:3rem;margin-bottom:1rem">🚀</div>
+        <h2 style="font-family:var(--font-head);font-size:clamp(1.5rem,3vw,2.5rem);margin-bottom:1rem">Ready to Improve Your Grades?</h2>
+        <p style="color:var(--muted);margin-bottom:2rem;line-height:1.7;max-width:500px;margin-left:auto;margin-right:auto">Join 10,000+ UK students using Synaptiq to study smarter. Start your free trial today — no credit card required.</p>
+        <button class="btn-hero-primary" onclick="nav('auth')" style="font-size:1.1rem;padding:1.1rem 3rem">Start Learning Free <i class="fas fa-arrow-right" style="margin-left:.5rem"></i></button>
+        <p style="color:var(--muted);font-size:.8rem;margin-top:1.25rem"><i class="fas fa-shield-halved" style="color:var(--gold);margin-right:.5rem"></i>7-day free trial. No credit card. Cancel anytime.</p>
+      </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer style="background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2rem 2rem;position:relative;z-index:1">
-    <div style="max-width:1000px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2rem">
+  <footer style="background:var(--bg2);border-top:1px solid var(--border);padding:4rem 2rem 2rem;position:relative;z-index:1">
+    <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:2.5fr 1fr 1fr 1fr 1fr;gap:2rem;margin-bottom:2.5rem">
       <div>
-        <div style="font-family:var(--font-head);font-size:1.3rem;font-weight:800;margin-bottom:.75rem">Synapti<span style="color:var(--gold)">q</span></div>
-        <p style="color:var(--muted);font-size:.85rem;line-height:1.7;max-width:280px">AI-powered A-Level Maths tutor built for UK students. AQA, Edexcel, OCR & WJEC support.</p>
-        <p style="color:var(--muted);font-size:.75rem;margin-top:1rem"><i class="fas fa-map-marker-alt" style="color:var(--gold);margin-right:.5rem"></i>Made in the UK</p>
-      </div>
-      <div>
-        <div style="font-weight:700;font-size:.85rem;margin-bottom:.75rem;color:var(--white)">Product</div>
-        <div style="display:flex;flex-direction:column;gap:.5rem;font-size:.85rem">
-          <a onclick="scrollTo('#features')" style="color:var(--muted);text-decoration:none;cursor:pointer">Features</a>
-          <a onclick="scrollTo('#pricing')" style="color:var(--muted);text-decoration:none;cursor:pointer">Pricing</a>
-          <a href="/contact" style="color:var(--muted);text-decoration:none">Support</a>
+        <div style="font-family:var(--font-head);font-size:1.5rem;font-weight:900;margin-bottom:1rem">Synapti<span style="color:var(--gold)">q</span></div>
+        <p style="color:var(--muted);font-size:.85rem;line-height:1.7;max-width:300px">AI-powered A-Level Maths tutor built for UK students. AQA, Edexcel, OCR & WJEC support.</p>
+        <div style="display:flex;gap:1rem;margin-top:1.25rem;align-items:center">
+          <span style="color:var(--muted);font-size:.75rem"><i class="fas fa-map-marker-alt" style="color:var(--gold);margin-right:.4rem"></i>Made in the UK</span>
+          <span style="color:var(--muted);font-size:.75rem"><i class="fas fa-lock" style="color:var(--gold);margin-right:.4rem"></i>GDPR Compliant</span>
         </div>
       </div>
       <div>
-        <div style="font-weight:700;font-size:.85rem;margin-bottom:.75rem;color:var(--white)">Legal</div>
-        <div style="display:flex;flex-direction:column;gap:.5rem;font-size:.85rem">
-          <a href="/privacy" style="color:var(--muted);text-decoration:none">Privacy Policy</a>
-          <a href="/terms" style="color:var(--muted);text-decoration:none">Terms & Conditions</a>
-          <a href="/cookies" style="color:var(--muted);text-decoration:none">Cookie Policy</a>
+        <div style="font-weight:700;font-size:.85rem;margin-bottom:1rem;color:var(--white)">Product</div>
+        <div style="display:flex;flex-direction:column;gap:.6rem;font-size:.85rem">
+          <a onclick="scrollTo('#features')" style="color:var(--muted);text-decoration:none;cursor:pointer;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">Features</a>
+          <a href="/pricing" style="color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">Pricing</a>
+          <a onclick="scrollTo('#testimonials')" style="color:var(--muted);text-decoration:none;cursor:pointer;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">Reviews</a>
+          <a onclick="scrollTo('#faq')" style="color:var(--muted);text-decoration:none;cursor:pointer;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">FAQ</a>
         </div>
       </div>
       <div>
-        <div style="font-weight:700;font-size:.85rem;margin-bottom:.75rem;color:var(--white)">Subjects</div>
-        <div style="display:flex;flex-direction:column;gap:.5rem;font-size:.85rem">
-          <span style="color:var(--muted)">Maths, Physics, Chemistry</span>
-          <span style="color:var(--muted)">Biology, English, History</span>
-          <span style="color:var(--muted)">Computer Science & more</span>
+        <div style="font-weight:700;font-size:.85rem;margin-bottom:1rem;color:var(--white)">Support</div>
+        <div style="display:flex;flex-direction:column;gap:.6rem;font-size:.85rem">
+          <a href="/contact" style="color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">Contact Us</a>
+          <a onclick="scrollTo('#faq')" style="color:var(--muted);text-decoration:none;cursor:pointer;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">Help Centre</a>
+          <a onclick="nav('auth')" style="color:var(--muted);text-decoration:none;cursor:pointer;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">For Schools</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:700;font-size:.85rem;margin-bottom:1rem;color:var(--white)">Legal</div>
+        <div style="display:flex;flex-direction:column;gap:.6rem;font-size:.85rem">
+          <a href="/privacy" style="color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">Privacy Policy</a>
+          <a href="/terms" style="color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">Terms of Service</a>
+          <a href="/cookies" style="color:var(--muted);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--muted)'">Cookie Policy</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-weight:700;font-size:.85rem;margin-bottom:1rem;color:var(--white)">Subjects</div>
+        <div style="display:flex;flex-direction:column;gap:.6rem;font-size:.85rem">
+          <span style="color:var(--muted)">Maths</span>
+          <span style="color:var(--muted)">Sciences</span>
+          <span style="color:var(--muted)">English & Humanities</span>
+          <span style="color:var(--muted)">Languages & more</span>
         </div>
       </div>
     </div>
-    <div style="border-top:1px solid var(--border);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;max-width:1000px;margin:0 auto">
+    <div style="border-top:1px solid var(--border);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;max-width:1100px;margin:0 auto">
       <p style="color:var(--muted);font-size:.75rem">&copy; 2026 Synaptiq Ltd. All rights reserved.</p>
-      <div style="display:flex;gap:.5rem;align-items:center">
-        <span style="color:var(--muted);font-size:.75rem">AQA</span>
-        <span style="color:var(--border);font-size:.75rem">|</span>
-        <span style="color:var(--muted);font-size:.75rem">Edexcel</span>
-        <span style="color:var(--border);font-size:.75rem">|</span>
-        <span style="color:var(--muted);font-size:.75rem">OCR</span>
-        <span style="color:var(--border);font-size:.75rem">|</span>
-        <span style="color:var(--muted);font-size:.75rem">WJEC</span>
+      <div style="display:flex;gap:.75rem;align-items:center">
+        <span style="color:var(--muted);font-size:.72rem;background:var(--bg3);padding:.3rem .6rem;border-radius:6px;border:1px solid var(--border)">AQA</span>
+        <span style="color:var(--muted);font-size:.72rem;background:var(--bg3);padding:.3rem .6rem;border-radius:6px;border:1px solid var(--border)">Edexcel</span>
+        <span style="color:var(--muted);font-size:.72rem;background:var(--bg3);padding:.3rem .6rem;border-radius:6px;border:1px solid var(--border)">OCR</span>
+        <span style="color:var(--muted);font-size:.72rem;background:var(--bg3);padding:.3rem .6rem;border-radius:6px;border:1px solid var(--border)">WJEC</span>
+        <span style="color:var(--muted);font-size:.72rem;background:var(--bg3);padding:.3rem .6rem;border-radius:6px;border:1px solid var(--border)">SQA</span>
       </div>
     </div>
   </footer>
@@ -4774,6 +5252,32 @@ async function startCheckoutFlow(plan) {
 // ═══════════════════════════════════════
 // NAVIGATION
 // ═══════════════════════════════════════
+// Mobile menu
+function toggleMobileMenu() {
+  const menu = document.getElementById('mobile-menu');
+  const btn = document.getElementById('hamburger');
+  menu.classList.toggle('active');
+  btn.classList.toggle('active');
+  document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : '';
+}
+function closeMobileMenu() {
+  const menu = document.getElementById('mobile-menu');
+  const btn = document.getElementById('hamburger');
+  menu.classList.remove('active');
+  btn.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// FAQ toggle
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const wasOpen = item.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  // Toggle clicked
+  if (!wasOpen) item.classList.add('open');
+}
+
 function nav(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   const el = document.getElementById('page-' + page);
