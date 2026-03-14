@@ -3485,9 +3485,9 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
             <div class="plan-tag">7-day free trial</div>
           </div>
         </div>
-        <div class="form-group"><label>Full Name</label><input type="text" id="reg-name" placeholder="Your full name"></div>
-        <div class="form-group"><label>Email</label><input type="email" id="reg-email" placeholder="you@email.com"></div>
-        <div class="form-group"><label>Password</label><input type="password" id="reg-pass" placeholder="Min. 8 characters"></div>
+        <div class="form-group"><label>Full Name</label><input type="text" id="reg-name" placeholder="Your full name" onkeydown="if(event.key==='Enter')document.getElementById('reg-email').focus()"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="reg-email" placeholder="you@email.com" onkeydown="if(event.key==='Enter')document.getElementById('reg-pass').focus()"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="reg-pass" placeholder="Min. 8 characters" onkeydown="if(event.key==='Enter')nextStep(1)"></div>
         <button class="btn-full" onclick="nextStep(1)">Continue →</button>
       </div>
 
@@ -3586,8 +3586,8 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         <button class="auth-tab" onclick="showSignup()">Sign Up</button>
         <button class="auth-tab active">Log In</button>
       </div>
-      <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@email.com"></div>
-      <div class="form-group"><label>Password</label><input type="password" id="login-pass" placeholder="Your password"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="login-email" placeholder="you@email.com" onkeydown="if(event.key==='Enter')document.getElementById('login-pass').focus()"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="login-pass" placeholder="Your password" onkeydown="if(event.key==='Enter')loginUser()"></div>
       <button class="btn-full" onclick="loginUser()">Log In →</button>
       <p style="text-align:center;margin-top:.75rem;font-size:.8rem"><a onclick="resetPassword()" style="color:var(--gold);cursor:pointer">Forgot your password?</a></p>
       <p style="text-align:center;margin-top:.5rem;font-size:.8rem;color:var(--muted)">Don't have an account? <a onclick="showSignup()" style="color:var(--gold);cursor:pointer">Sign up free</a></p>
@@ -5473,6 +5473,16 @@ function nav(page) {
     document.getElementById('user-menu').style.display = 'none';
     document.getElementById('a11y-bar').style.display = 'none';
     document.getElementById('xp-badge').style.display = 'none';
+    // Reset auth forms to signup view by default
+    document.getElementById('signup-flow').style.display = 'block';
+    document.getElementById('login-form').classList.remove('active');
+    // Reset signup steps to step 1
+    document.querySelectorAll('.auth-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step1').classList.add('active');
+    for (let i = 1; i <= 4; i++) {
+      const dot = document.getElementById('dot' + i);
+      if (dot) dot.classList.toggle('active', i === 1);
+    }
   }
 
   if (page === 'home' && !state.user) {
@@ -5516,7 +5526,8 @@ function showDash(sub) {
 function selectPlan(p) {
   state.selectedPlan = p;
   document.getElementById('plan-student').classList.toggle('selected', p === 'student');
-  document.getElementById('plan-home').classList.toggle('selected', p === 'home');
+  const homeEl = document.getElementById('plan-home');
+  if (homeEl) homeEl.classList.toggle('selected', p === 'home');
 }
 
 function toggleDiff(d) {
@@ -5604,7 +5615,7 @@ async function createAccount() {
 
   try {
     let data;
-    const plan = state.selectedPlan === 'home' ? 'homeschool' : state.selectedPlan;
+    const plan = 'student';
     const payload = { action: 'signup', email, password, name, plan, learning_difficulty, year_group, subjects };
 
     // Try API with timeout and retries (exponential backoff)
@@ -5736,8 +5747,9 @@ async function loginUser() {
       id: data.user.id,
       name: data.user.name || data.user.user_metadata?.name || email.split('@')[0],
       email: email.toLowerCase(),
-      plan: data.user.plan || data.user.subscription_status || 'student',
+      plan: data.user.plan || 'student',
       subscription_status: data.user.subscription_status || 'free',
+      trial_started_at: data.user.created_at || localStorage.getItem('synaptiq_trial_start') || new Date().toISOString(),
       year: data.user.year_group || 'Year 13 (A-Level)',
       subjects: data.user.subjects || ['Mathematics'],
       board: data.user.exam_board || 'AQA',
@@ -5750,6 +5762,7 @@ async function loginUser() {
       accuracy: data.user.accuracy || 0
     };
     if (data.token) localStorage.setItem('synaptiq_token', data.token);
+    localStorage.setItem('synaptiq_trial_start', state.user.trial_started_at);
     localStorage.setItem('synaptiq_user', JSON.stringify(state.user));
     applyLearningProfile();
     enterDashboard();
@@ -6004,9 +6017,13 @@ document.addEventListener('DOMContentLoaded', () => {
           applyLearningProfile();
           enterDashboard();
         } else {
-          // Token expired — clean up but don't enter dashboard
+          // Token expired — clean up and redirect to login
           localStorage.removeItem('synaptiq_token');
-          if (saved) { state.user = JSON.parse(saved); applyLearningProfile(); }
+          localStorage.removeItem('synaptiq_user');
+          state.user = null;
+          nav('auth');
+          showLogin();
+          showToast('Session expired — please log in again');
         }
       } else if (saved) {
         state.user = JSON.parse(saved);
