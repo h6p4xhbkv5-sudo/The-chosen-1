@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI Lessons — Lumina AI</title>
+<title>AI Lessons — Synaptiq</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -118,12 +118,12 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
 
 <div id="auth-overlay">
   <div style="font-size:2rem;color:var(--gold)">✦</div>
-  <div style="font-weight:700;font-size:1.1rem">Lumina AI</div>
+  <div style="font-weight:700;font-size:1.1rem">Synaptiq</div>
   <div style="color:var(--muted);font-size:.875rem">Loading your lessons...</div>
 </div>
 
 <nav class="nav">
-  <a class="nav-brand" href="/"><span>✦</span> Lumina AI</a>
+  <a class="nav-brand" href="/"><span>✦</span> Synaptiq</a>
   <a class="nav-back" href="/">← Back to Dashboard</a>
 </nav>
 
@@ -343,7 +343,7 @@ async function startLesson() {
   btn.disabled = true;
   btn.textContent = '✦ Generating lesson...';
   output.className = 'lesson-output show';
-  output.innerHTML = `<div class="loading-msg"><div class="dot-pulse"><span></span><span></span><span></span></div>Lumina AI is preparing your ${subject} lesson on "${topicFocus}"...</div>`;
+  output.innerHTML = `<div class="loading-msg"><div class="dot-pulse"><span></span><span></span><span></span></div>Synaptiq is preparing your ${subject} lesson on "${topicFocus}"...</div>`;
 
   const levelLabel = level === 'alevel' ? 'A-Level' : 'GCSE';
   const modeGuides = {

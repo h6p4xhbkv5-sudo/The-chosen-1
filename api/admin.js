@@ -39,7 +39,7 @@ export default async function handler(req, res) {
   }
 
   if (action === 'users') {
-    const page = 1;
+    const page = parseInt(req.query?.page || req.body?.page, 10) || 1;
     const limit = 50;
     const from = (page - 1) * limit;
     const to = from + limit - 1;

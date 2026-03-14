@@ -3892,7 +3892,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         <div class="card">
           <div class="card-header"><span class="card-title">➕ Add New Cards</span></div>
           <div class="card-body">
-            <p style="font-size:.875rem;color:var(--muted);margin-bottom:1rem">Ask Lumina AI to generate flashcards for any topic, or add your own.</p>
+            <p style="font-size:.875rem;color:var(--muted);margin-bottom:1rem">Ask Synaptiq to generate flashcards for any topic, or add your own.</p>
             <button class="btn btn-gold" style="width:100%;margin-bottom:.75rem" onclick="generateSRCard()">✦ AI Generate Card</button>
             <button class="btn btn-outline" style="width:100%" onclick="openAddSRCard()">✏️ Add Manually</button>
           </div>
@@ -7227,7 +7227,7 @@ async function demoAsk(text) {
   chat.appendChild(typRow);
   chat.scrollTop = 99999;
   try {
-    const sys = 'You are Lumina AI, a friendly UK GCSE and A-Level tutor. Give a clear, helpful, well-structured answer in 3-5 sentences. Use simple language. This is a homepage demo — impress the user with how clear and helpful you are. Do not mention you are Claude.';
+    const sys = 'You are Synaptiq, a friendly UK GCSE and A-Level tutor. Give a clear, helpful, well-structured answer in 3-5 sentences. Use simple language. This is a homepage demo — impress the user with how clear and helpful you are. Do not mention you are Claude.';
     const data = await callClaude([{ role: 'user', content: text }], sys);
     const reply = getReply(data);
     typRow.remove();
@@ -7260,7 +7260,7 @@ async function demoAsk(text) {
     errAv.textContent = '✦';
     const errMsg = document.createElement('div');
     errMsg.className = 'msg bot';
-    errMsg.textContent = 'Sign up for a free account to chat with Lumina AI!';
+    errMsg.textContent = 'Sign up for a free account to chat with Synaptiq!';
     errRow.appendChild(errAv);
     errRow.appendChild(errMsg);
     chat.appendChild(errRow);
@@ -8978,7 +8978,7 @@ function exportEssayFeedback() {
   const marks = document.getElementById('essay-marks-label').textContent;
   const feedback = document.getElementById('essay-feedback-text').textContent;
   const improve = document.getElementById('essay-improve-text').textContent;
-  const content = `LUMINA AI — ESSAY FEEDBACK\n${'='.repeat(40)}\n${grade} | ${marks}\n\nFEEDBACK:\n${feedback}\n\nHOW TO IMPROVE:\n${improve}`;
+  const content = `SYNAPTIQ — ESSAY FEEDBACK\n${'='.repeat(40)}\n${grade} | ${marks}\n\nFEEDBACK:\n${feedback}\n\nHOW TO IMPROVE:\n${improve}`;
   const blob = new Blob([content], { type: 'text/plain' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
   a.download = 'synaptiq-essay-feedback.txt'; a.click();
@@ -10118,8 +10118,10 @@ async function checkExistingSession() {
   if (session) {
     const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
     if (profile) {
-      state.user = { ...session.user, ...profile, token: session.access_token };
+      state.user = { ...session.user, ...profile };
       state.user.name = profile.name;
+      try { localStorage.setItem('synaptiq_token', session.access_token); } catch(e) {}
+      try { localStorage.setItem('synaptiq_user', JSON.stringify(state.user)); } catch(e) {}
       enterDashboard();
     }
   }
@@ -10144,9 +10146,10 @@ async function realLogin(email, password) {
   const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
   if (error) { showAuthError('Invalid email or password'); showAuthLoading(false); return; }
   const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', data.user.id).single();
-  state.user = { ...data.user, ...profile, token: data.session.access_token };
+  state.user = { ...data.user, ...profile };
   state.user.name = profile?.name || email.split('@')[0];
   try { localStorage.setItem('synaptiq_token', data.session.access_token); } catch(e) {}
+  try { localStorage.setItem('synaptiq_user', JSON.stringify(state.user)); } catch(e) {}
   showAuthLoading(false);
   enterDashboard();
 }
@@ -10185,7 +10188,7 @@ function showAuthSuccess(msg) { const el = document.querySelector('.auth-success
 const _v10OrigLogin = window.handleLogin;
 window.handleLogin = function() {
   const email = document.getElementById('login-email')?.value || '';
-  const password = document.getElementById('login-password')?.value || '';
+  const password = document.getElementById('login-pass')?.value || '';
   if (!email) { showAuthError('Please enter your email'); return; }
   if (supabaseClient) { realLogin(email, password); }
   else { if (_v10OrigLogin) _v10OrigLogin(); }
@@ -10813,7 +10816,7 @@ window.addEventListener('DOMContentLoaded', () => {
       const overlay = document.createElement('div');
       overlay.id = 'auth-loading-overlay';
       overlay.style.cssText = 'position:fixed;inset:0;background:var(--black,#0A0C12);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem';
-      overlay.innerHTML = '<div style="font-size:2rem">✦</div><div style="color:#C9A84C;font-weight:700;letter-spacing:.1em">LUMINA AI</div><div style="color:#666;font-size:.875rem">Loading your dashboard...</div>';
+      overlay.innerHTML = '<div style="font-size:2rem">✦</div><div style="color:#C9A84C;font-weight:700;letter-spacing:.1em">SYNAPTIQ</div><div style="color:#666;font-size:.875rem">Loading your dashboard...</div>';
       document.body.appendChild(overlay);
       // Remove overlay after dashboard loads or on timeout
       setTimeout(() => { overlay.remove(); }, 4000);
@@ -11809,6 +11812,6 @@ if (_v12OrigTutorSend) {
   };
 }
 
-console.log('✦ Lumina AI v12 — Spaced Repetition + Curriculum active');
+console.log('✦ Synaptiq v12 — Spaced Repetition + Curriculum active');
 </script>
 </body>

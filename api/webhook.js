@@ -52,7 +52,7 @@ export default async function handler(req, res) {
           subscription_id: data.subscription
         }).eq('email', email);
         if (updateErr) console.error('Webhook profile update failed:', updateErr.message);
-        await sendEmail(email, 'payment_confirmed', { plan });
+        await sendEmail(email, 'payment_confirmed', { stats: { plan } });
         break;
       }
 
@@ -74,7 +74,7 @@ export default async function handler(req, res) {
         }).eq('stripe_customer_id', customerId);
         if (updateErr) console.error('Webhook past_due update failed:', updateErr.message);
         if (profile?.email) {
-          await sendEmail(profile.email, 'payment_failed', { name: profile.name });
+          await sendEmail(profile.email, 'payment_failed', { name: profile.name, stats: {} });
         }
         break;
       }
@@ -99,9 +99,9 @@ export default async function handler(req, res) {
   return res.status(200).json({ received: true });
 }
 
-async function sendEmail(to, type, data) {
+async function sendEmail(to, type, { name, stats } = {}) {
   if (!process.env.RESEND_API_KEY) return;
-  const payload = { type, to, data };
+  const payload = { type, email: to, name: name || '', stats: stats || {} };
   await fetch(`${process.env.SITE_URL}/api/email`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
