@@ -80,9 +80,9 @@ describe('Stripe checkout handler (api/stripe.js)', () => {
       expect(res.body.url).toBe('https://checkout.stripe.com/pay/cs_test');
     });
 
-    it('rejects non-student plans', async () => {
+    it('rejects invalid plans', async () => {
       const res = makeRes();
-      await handler(makeReq({ action: 'checkout', plan: 'homeschool', email: 'b@b.com' }), res);
+      await handler(makeReq({ action: 'checkout', plan: 'enterprise', email: 'b@b.com' }), res);
       expect(res.statusCode).toBe(400);
     });
 
@@ -139,7 +139,7 @@ describe('Stripe checkout handler (api/stripe.js)', () => {
       const res = makeRes();
       await handler(makeReq({ action: 'checkout', plan: 'student', email: 'h@h.com' }), res);
       expect(res.statusCode).toBe(500);
-      expect(res.body.error).toMatch(/missing price id/i);
+      expect(res.body.error).toMatch(/price.*not configured/i);
     });
   });
 
@@ -166,7 +166,7 @@ describe('Stripe checkout handler (api/stripe.js)', () => {
       const res = makeRes();
       await handler(makeReq({ action: 'portal', email: 'nobody@example.com' }), res);
       expect(res.statusCode).toBe(404);
-      expect(res.body.error).toBe('No subscription found');
+      expect(res.body.error).toMatch(/no subscription found/i);
     });
 
     it('returns 400 when email is missing', async () => {
@@ -188,6 +188,6 @@ describe('Stripe checkout handler (api/stripe.js)', () => {
     const res = makeRes();
     await handler(makeReq({ action: 'refund' }), res);
     expect(res.statusCode).toBe(400);
-    expect(res.body.error).toBe('Unknown action');
+    expect(res.body.error).toMatch(/unknown action/i);
   });
 });

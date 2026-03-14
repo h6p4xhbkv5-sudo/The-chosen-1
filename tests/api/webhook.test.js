@@ -67,7 +67,7 @@ function makeRes() {
 }
 
 function fakeEvent(type, obj) {
-  return { type, data: { object: obj } };
+  return { id: 'evt_test_' + Date.now(), type, data: { object: obj } };
 }
 
 // ─── Tests ───────────────────────────────────────────────────────────────────

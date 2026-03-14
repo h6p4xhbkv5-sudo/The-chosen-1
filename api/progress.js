@@ -61,7 +61,7 @@ export default async function handler(req, res) {
       questions_add: total || 0
     });
 
-    // Log activity
+    // Log activity (upsert to avoid race condition on concurrent requests)
     const today = new Date().toISOString().split('T')[0];
     const { data: existing } = await supabase.from('activity_log')
       .select('*').eq('user_id', user.id).eq('date', today).single();
@@ -72,12 +72,12 @@ export default async function handler(req, res) {
         xp_earned: existing.xp_earned + (xpEarned || 0)
       }).eq('id', existing.id);
     } else {
-      await supabase.from('activity_log').insert({
+      await supabase.from('activity_log').upsert({
         user_id: user.id,
         date: today,
         questions_done: total || 0,
         xp_earned: xpEarned || 0
-      });
+      }, { onConflict: 'user_id,date' });
     }
 
     return res.status(200).json({ success: true });

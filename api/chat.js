@@ -1,9 +1,14 @@
+import { applyHeaders, isRateLimited, getIp } from './_lib.js';
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', process.env.SITE_URL || '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  applyHeaders(res, 'POST, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
+
+  const ip = getIp(req);
+  if (isRateLimited(`${ip}:chat`, 30, 60_000)) {
+    return res.status(429).json({ error: 'Too many requests — please try again later' });
+  }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'ANTHROPIC_API_KEY not configured. Add it to your Vercel environment variables.' });

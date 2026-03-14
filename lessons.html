@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI Lessons — Lumina AI</title>
+<title>AI Lessons — Synaptiq</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -118,12 +118,12 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
 
 <div id="auth-overlay">
   <div style="font-size:2rem;color:var(--gold)">✦</div>
-  <div style="font-weight:700;font-size:1.1rem">Lumina AI</div>
+  <div style="font-weight:700;font-size:1.1rem">Synaptiq</div>
   <div style="color:var(--muted);font-size:.875rem">Loading your lessons...</div>
 </div>
 
 <nav class="nav">
-  <a class="nav-brand" href="/"><span>✦</span> Lumina AI</a>
+  <a class="nav-brand" href="/"><span>✦</span> Synaptiq</a>
   <a class="nav-back" href="/">← Back to Dashboard</a>
 </nav>
 
@@ -141,7 +141,6 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
         <label>Level</label>
         <select id="l-level" onchange="updateSubjects()">
           <option value="alevel" selected>A-Level</option>
-          <option value="gcse">GCSE</option>
         </select>
       </div>
       <div class="form-group">
@@ -188,14 +187,6 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
 <script>
 // ─── Curriculum Data ───────────────────────────────────
 const CURRICULUM = {
-  gcse: {
-    Mathematics: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
-      'Number':['Place value & rounding','Fractions, decimals & percentages','Indices & surds','Standard form','Ratio & proportion','Bounds & error'],
-      'Algebra':['Expressions & formulae','Linear equations','Quadratics','Simultaneous equations','Sequences (nth term)','Inequalities','Functions & graphs','Iteration'],
-      'Geometry':['Angles & parallel lines','Circles (arc, sector, tangent)','Transformations','Vectors','Pythagoras & trigonometry','Mensuration','Constructions & loci','Similarity & congruence'],
-      'Statistics & Probability':['Data representation','Averages & spread','Scatter diagrams','Sampling methods','Probability (single, combined, tree diagrams)']
-    }}
-  },
   alevel: {
     Mathematics: { boards:['AQA','Edexcel','OCR','MEI'], topics:{
       'Pure — Algebra':['Proof & surds','Quadratics & polynomials','Binomial expansion','Partial fractions','Parametric equations'],
@@ -205,12 +196,6 @@ const CURRICULUM = {
       'Pure — Vectors':['3D vectors','Dot product','Lines & planes'],
       'Statistics':['Binomial & normal distributions','Hypothesis testing','Regression & correlation'],
       'Mechanics':['SUVAT in 2D','Forces & Newton\'s laws','Moments & equilibrium','Projectiles','Work, energy & power']
-    }},
-    'Further Mathematics': { boards:['AQA','Edexcel','OCR','MEI'], topics:{
-      'Further Pure':['Complex numbers','Matrices','Further calculus','Proof by induction'],
-      'Further Statistics':['Continuous probability distributions','Chi-squared tests'],
-      'Further Mechanics':['Circular motion','Impulse & momentum','Simple harmonic motion'],
-      'Decision Mathematics':['Graph theory','Dijkstra & Prim algorithms','Linear programming']
     }}
   }
 };
@@ -247,7 +232,7 @@ async function initAuth() {
 }
 
 async function callClaude(messages, system) {
-  const body = { model:'claude-opus-4-6', max_tokens:3000, messages };
+  const body = { max_tokens:3000, messages };
   if (system) body.system = system;
   const headers = { 'Content-Type':'application/json' };
   if (currentUser?.token) headers['Authorization'] = 'Bearer ' + currentUser.token;
@@ -343,7 +328,7 @@ async function startLesson() {
   btn.disabled = true;
   btn.textContent = '✦ Generating lesson...';
   output.className = 'lesson-output show';
-  output.innerHTML = `<div class="loading-msg"><div class="dot-pulse"><span></span><span></span><span></span></div>Lumina AI is preparing your ${subject} lesson on "${topicFocus}"...</div>`;
+  output.innerHTML = `<div class="loading-msg"><div class="dot-pulse"><span></span><span></span><span></span></div>Synaptiq is preparing your ${subject} lesson on "${topicFocus}"...</div>`;
 
   const levelLabel = level === 'alevel' ? 'A-Level' : 'GCSE';
   const modeGuides = {
@@ -432,9 +417,9 @@ function renderQuiz(rawText, subject, topic, level, board) {
 
   questions.forEach((q, i) => {
     html += `<div class="lesson-quiz" id="quiz-${i}">
-      <div class="quiz-q">${i+1}. ${q.question}</div>
+      <div class="quiz-q">${i+1}. ${sanitizeHTML(q.question)}</div>
       <div class="quiz-options">${q.options.map((opt, j) =>
-        `<button class="quiz-opt" onclick="checkAnswer(${i},${j},${q.correct},'${encodeURIComponent(q.explanation||'')}')">${opt}</button>`
+        `<button class="quiz-opt" onclick="checkAnswer(${i},${j},${q.correct},'${encodeURIComponent(q.explanation||'')}')">${sanitizeHTML(opt)}</button>`
       ).join('')}</div>
       <div class="quiz-feedback" id="qfb-${i}"></div>
     </div>`;
@@ -456,9 +441,10 @@ function checkAnswer(qIdx, chosenIdx, correctIdx, explanationEnc) {
   opts.forEach(o => o.disabled = true);
   const fb = document.getElementById('qfb-' + qIdx);
   const explanation = decodeURIComponent(explanationEnc);
+  const safeExplanation = sanitizeHTML(explanation);
   fb.innerHTML = chosenIdx === correctIdx
-    ? `<span style="color:var(--green)">✅ Correct!</span> ${explanation}`
-    : `<span style="color:var(--pink)">❌ Incorrect.</span> ${explanation}`;
+    ? `<span style="color:var(--green)">✅ Correct!</span> ${safeExplanation}`
+    : `<span style="color:var(--pink)">❌ Incorrect.</span> ${safeExplanation}`;
   fb.classList.add('show');
   // Update score display
   const answered = (window._quizAnswered || []).filter(Boolean).length;
@@ -467,6 +453,11 @@ function checkAnswer(qIdx, chosenIdx, correctIdx, explanationEnc) {
     const scoreDiv = document.getElementById('quiz-score');
     if (scoreDiv) { scoreDiv.style.display = 'block'; document.getElementById('score-val').textContent = window._quizScore; }
   }
+}
+
+function sanitizeHTML(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 initAuth();

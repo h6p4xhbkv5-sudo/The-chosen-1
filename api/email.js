@@ -98,7 +98,7 @@ export default async function handler(req, res) {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${resendKey}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          from: 'Lumina AI <hello@luminaai.co.uk>',
+          from: 'Synaptiq <hello@synaptiq.co.uk>',
           to: email,
           subject: template.subject,
           html: template.html

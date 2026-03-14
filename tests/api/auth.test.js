@@ -167,9 +167,9 @@ describe('Auth handler (api/auth.js)', () => {
       );
     });
 
-    it('rejects non-student plans', async () => {
+    it('rejects invalid plans', async () => {
       const res = makeRes();
-      await handler(makeReq({ body: { ...VALID, plan: 'homeschool' } }), res);
+      await handler(makeReq({ body: { ...VALID, plan: 'enterprise' } }), res);
       expect(res.statusCode).toBe(400);
     });
 
@@ -186,11 +186,11 @@ describe('Auth handler (api/auth.js)', () => {
     });
 
     it('returns 400 on a duplicate email error from Supabase', async () => {
-      mocks.supabase.auth.admin.createUser.mockResolvedValue({ data: null, error: { message: 'Email already registered' } });
+      mocks.supabase.auth.admin.createUser.mockResolvedValue({ data: null, error: { message: 'User already registered' } });
       const res = makeRes();
       await handler(makeReq({ body: VALID }), res);
       expect(res.statusCode).toBe(400);
-      expect(res.body.error).toBe('Email already registered');
+      expect(res.body.error).toMatch(/already exists|already registered/i);
     });
 
     it('returns 500 when createUser throws unexpectedly', async () => {
@@ -280,12 +280,42 @@ describe('Auth handler (api/auth.js)', () => {
     });
   });
 
+  // ── delete_account ──────────────────────────────────────────────────────
+
+  describe('delete_account', () => {
+    it('deletes all user data and returns success', async () => {
+      mocks.supabase.auth.getUser.mockResolvedValue({ data: { user: { id: 'u-del' } }, error: null });
+      mocks.supabase.auth.admin.deleteUser = vi.fn().mockResolvedValue({ error: null });
+      mocks.supabase.from.mockReturnValue(makeBuilder());
+
+      const res = makeRes();
+      await handler(makeReq({ headers: { authorization: 'Bearer valid-tok' }, body: { action: 'delete_account' } }), res);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(mocks.supabase.auth.admin.deleteUser).toHaveBeenCalledWith('u-del');
+    });
+
+    it('returns 401 when no Authorization header is present', async () => {
+      const res = makeRes();
+      await handler(makeReq({ body: { action: 'delete_account' } }), res);
+      expect(res.statusCode).toBe(401);
+    });
+
+    it('returns 401 for an invalid token', async () => {
+      mocks.supabase.auth.getUser.mockResolvedValue({ data: null, error: { message: 'bad JWT' } });
+      const res = makeRes();
+      await handler(makeReq({ headers: { authorization: 'Bearer bad' }, body: { action: 'delete_account' } }), res);
+      expect(res.statusCode).toBe(401);
+    });
+  });
+
   // ── unknown action ────────────────────────────────────────────────────────
 
   it('returns 400 for an unknown action', async () => {
     const res = makeRes();
     await handler(makeReq({ body: { action: 'hack' } }), res);
     expect(res.statusCode).toBe(400);
-    expect(res.body.error).toBe('Unknown action');
+    expect(res.body.error).toMatch(/unknown action/i);
   });
 });

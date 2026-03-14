@@ -147,9 +147,9 @@ describe('Email handler (api/email.js)', () => {
       expect(JSON.parse(fetchMock.mock.calls[0][1].body).to).toBe('g@g.com');
     });
 
-    it('always sends from hello@luminaai.co.uk', async () => {
+    it('always sends from hello@synaptiq.co.uk', async () => {
       await handler(makeReq({ type: 'weekly', email: 'h@h.com', name: 'Hank', stats: {} }), makeRes());
-      expect(JSON.parse(fetchMock.mock.calls[0][1].body).from).toBe('Lumina AI <hello@luminaai.co.uk>');
+      expect(JSON.parse(fetchMock.mock.calls[0][1].body).from).toBe('Synaptiq <hello@synaptiq.co.uk>');
     });
 
     it('returns 500 when the Resend call throws', async () => {

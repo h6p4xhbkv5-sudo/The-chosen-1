@@ -50,6 +50,16 @@ export function isRateLimited(key, max = 30, windowMs = 60_000) {
   return entry.count > max;
 }
 
+// Clean up expired rate limit entries every 5 minutes to prevent memory growth
+if (!process.env.VITEST) {
+  setInterval(() => {
+    const now = Date.now();
+    for (const [key, entry] of store) {
+      if (now > entry.resetAt) store.delete(key);
+    }
+  }, 5 * 60_000).unref();
+}
+
 /** Extract the caller's real IP from Vercel/proxy headers. */
 export function getIp(req) {
   return (

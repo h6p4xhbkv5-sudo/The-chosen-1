@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Question Paper Generator — Lumina AI</title>
+<title>Question Paper Generator — Synaptiq</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -93,12 +93,12 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
 
 <div id="auth-overlay">
   <div style="font-size:2rem;color:var(--gold)">✦</div>
-  <div style="font-weight:700;font-size:1.1rem">Lumina AI</div>
+  <div style="font-weight:700;font-size:1.1rem">Synaptiq</div>
   <div style="color:var(--muted);font-size:.875rem">Checking your session...</div>
 </div>
 
 <nav class="nav">
-  <a class="nav-brand" href="/"><span>✦</span> Lumina AI</a>
+  <a class="nav-brand" href="/"><span>✦</span> Synaptiq</a>
   <a class="nav-back" href="/">← Back to Dashboard</a>
 </nav>
 
@@ -131,8 +131,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
         <div class="form-group">
           <label>Level</label>
           <select id="q-level">
-            <option>Foundation GCSE</option><option>Higher GCSE</option>
-            <option>AS Level</option><option>A-Level</option>
+            <option>AS Level</option><option selected>A-Level</option>
           </select>
         </div>
         <div class="form-group">
@@ -162,7 +161,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
         <label>Specific Topics (optional)</label>
         <input type="text" id="q-topics" placeholder="e.g. Quadratics, Pythagoras, Trigonometry">
       </div>
-      <button class="btn-gold" id="gen-btn" onclick="generateQuestions()">✦ Generate with Lumina AI</button>
+      <button class="btn-gold" id="gen-btn" onclick="generateQuestions()">✦ Generate with Synaptiq</button>
     </div>
 
     <!-- OUTPUT -->
@@ -208,7 +207,7 @@ async function initAuth() {
 }
 
 async function callClaude(messages, system) {
-  const body = { model:'claude-opus-4-6', max_tokens:2000, messages };
+  const body = { max_tokens:2000, messages };
   if (system) body.system = system;
   const headers = { 'Content-Type':'application/json' };
   if (currentUser?.token) headers['Authorization'] = 'Bearer ' + currentUser.token;
@@ -245,7 +244,7 @@ async function generateQuestions() {
 
   btn.disabled = true;
   btn.textContent = '✦ Generating...';
-  output.innerHTML = `<div class="loading-msg"><div class="dot-pulse"><span></span><span></span><span></span></div>Lumina AI is generating your ${num} ${sub} questions...</div>`;
+  output.innerHTML = `<div class="loading-msg"><div class="dot-pulse"><span></span><span></span><span></span></div>Synaptiq is generating your ${num} ${sub} questions...</div>`;
 
   const sys = `You are an expert UK exam question writer specialising in ${board} ${level} ${sub}.
 Generate exactly ${num} exam-style questions for ${grade} target.
@@ -277,8 +276,8 @@ ONLY return the JSON array, nothing else.`;
     questions.forEach((q, i) => {
       html += `<div class="question-block">
         <div class="question-num">Question ${i+1} <span class="marks-badge">${q.marks||3} marks</span></div>
-        <div class="question-text">${q.question}</div>
-        ${q.hint ? `<div style="font-size:.8rem;color:var(--gold);margin-bottom:.75rem">💡 Hint: ${q.hint}</div>` : ''}
+        <div class="question-text">${sanitizeHTML(q.question)}</div>
+        ${q.hint ? `<div style="font-size:.8rem;color:var(--gold);margin-bottom:.75rem">💡 Hint: ${sanitizeHTML(q.hint)}</div>` : ''}
         <div class="answer-space" contenteditable="true" spellcheck="true">Click here to write your answer...</div>
       </div>`;
     });
@@ -286,10 +285,15 @@ ONLY return the JSON array, nothing else.`;
     output.innerHTML = html;
     showToast('✦ Questions generated!');
   } catch(e) {
-    output.innerHTML = `<div style="background:var(--bg3);border-radius:12px;padding:1.5rem;color:var(--muted)">⚠️ ${e.message || 'Error generating questions. Please try again.'}</div>`;
+    output.innerHTML = `<div style="background:var(--bg3);border-radius:12px;padding:1.5rem;color:var(--muted)">⚠️ ${sanitizeHTML(e.message || 'Error generating questions. Please try again.')}</div>`;
   }
   btn.disabled = false;
-  btn.textContent = '✦ Generate with Lumina AI';
+  btn.textContent = '✦ Generate with Synaptiq';
+}
+
+function sanitizeHTML(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 // Init on load

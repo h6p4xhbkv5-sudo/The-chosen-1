@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { applyHeaders, isRateLimited, getIp } from './_lib.js';
 
 let supabase = null;
 if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
@@ -7,10 +8,13 @@ if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
 
 export default async function handler(req, res) {
   if (!supabase) return res.status(503).json({ error: 'Database not configured' });
-  res.setHeader('Access-Control-Allow-Origin', process.env.SITE_URL || '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-admin-key');
+  applyHeaders(res, 'POST, GET, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(200).end();
+
+  const ip = getIp(req);
+  if (isRateLimited(`${ip}:admin`, 5, 60_000)) {
+    return res.status(429).json({ error: 'Too many requests' });
+  }
 
   const adminKey = req.headers['x-admin-key'];
   if (adminKey !== process.env.ADMIN_SECRET_KEY) {
@@ -35,7 +39,7 @@ export default async function handler(req, res) {
   }
 
   if (action === 'users') {
-    const page = 1;
+    const page = parseInt(req.query?.page || req.body?.page, 10) || 1;
     const limit = 50;
     const from = (page - 1) * limit;
     const to = from + limit - 1;
