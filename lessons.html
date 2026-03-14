@@ -141,7 +141,6 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
         <label>Level</label>
         <select id="l-level" onchange="updateSubjects()">
           <option value="alevel" selected>A-Level</option>
-          <option value="gcse">GCSE</option>
         </select>
       </div>
       <div class="form-group">
@@ -188,14 +187,6 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
 <script>
 // ─── Curriculum Data ───────────────────────────────────
 const CURRICULUM = {
-  gcse: {
-    Mathematics: { boards:['AQA','Edexcel','OCR','WJEC'], topics:{
-      'Number':['Place value & rounding','Fractions, decimals & percentages','Indices & surds','Standard form','Ratio & proportion','Bounds & error'],
-      'Algebra':['Expressions & formulae','Linear equations','Quadratics','Simultaneous equations','Sequences (nth term)','Inequalities','Functions & graphs','Iteration'],
-      'Geometry':['Angles & parallel lines','Circles (arc, sector, tangent)','Transformations','Vectors','Pythagoras & trigonometry','Mensuration','Constructions & loci','Similarity & congruence'],
-      'Statistics & Probability':['Data representation','Averages & spread','Scatter diagrams','Sampling methods','Probability (single, combined, tree diagrams)']
-    }}
-  },
   alevel: {
     Mathematics: { boards:['AQA','Edexcel','OCR','MEI'], topics:{
       'Pure — Algebra':['Proof & surds','Quadratics & polynomials','Binomial expansion','Partial fractions','Parametric equations'],
@@ -205,12 +196,6 @@ const CURRICULUM = {
       'Pure — Vectors':['3D vectors','Dot product','Lines & planes'],
       'Statistics':['Binomial & normal distributions','Hypothesis testing','Regression & correlation'],
       'Mechanics':['SUVAT in 2D','Forces & Newton\'s laws','Moments & equilibrium','Projectiles','Work, energy & power']
-    }},
-    'Further Mathematics': { boards:['AQA','Edexcel','OCR','MEI'], topics:{
-      'Further Pure':['Complex numbers','Matrices','Further calculus','Proof by induction'],
-      'Further Statistics':['Continuous probability distributions','Chi-squared tests'],
-      'Further Mechanics':['Circular motion','Impulse & momentum','Simple harmonic motion'],
-      'Decision Mathematics':['Graph theory','Dijkstra & Prim algorithms','Linear programming']
     }}
   }
 };
