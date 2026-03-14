@@ -33,6 +33,7 @@ export default async function handler(req, res) {
   if (!name || !name.trim()) return res.status(400).json({ error: 'Name is required' });
   if (!email || !EMAIL_RE.test(email)) return res.status(400).json({ error: 'Valid email is required' });
   if (!message || message.trim().length < 10) return res.status(400).json({ error: 'Message must be at least 10 characters' });
+  if (message.length > 5000) return res.status(400).json({ error: 'Message must be under 5000 characters' });
   if (category && !CATEGORIES.includes(category)) return res.status(400).json({ error: 'Invalid category' });
 
   const safeCategory = category || 'General support';
@@ -55,7 +56,7 @@ export default async function handler(req, res) {
       <h3>Message</h3>
       <p style="white-space:pre-wrap">${htmlEscape(message)}</p>
       <hr>
-      <p style="color:#888;font-size:12px">Sent from Lumina AI contact form</p>
+      <p style="color:#888;font-size:12px">Sent from Synaptiq contact form</p>
     `;
 
     const r = await fetch('https://api.resend.com/emails', {
@@ -65,7 +66,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Lumina AI <hello@luminaai.co.uk>',
+        from: 'Synaptiq <hello@luminaai.co.uk>',
         to: 'support@luminaai.co.uk',
         reply_to: email,
         subject: `[${safeCategory}] Message from ${name}`,

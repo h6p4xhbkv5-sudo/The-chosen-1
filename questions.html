@@ -277,8 +277,8 @@ ONLY return the JSON array, nothing else.`;
     questions.forEach((q, i) => {
       html += `<div class="question-block">
         <div class="question-num">Question ${i+1} <span class="marks-badge">${q.marks||3} marks</span></div>
-        <div class="question-text">${q.question}</div>
-        ${q.hint ? `<div style="font-size:.8rem;color:var(--gold);margin-bottom:.75rem">💡 Hint: ${q.hint}</div>` : ''}
+        <div class="question-text">${sanitizeHTML(q.question)}</div>
+        ${q.hint ? `<div style="font-size:.8rem;color:var(--gold);margin-bottom:.75rem">💡 Hint: ${sanitizeHTML(q.hint)}</div>` : ''}
         <div class="answer-space" contenteditable="true" spellcheck="true">Click here to write your answer...</div>
       </div>`;
     });
@@ -286,10 +286,15 @@ ONLY return the JSON array, nothing else.`;
     output.innerHTML = html;
     showToast('✦ Questions generated!');
   } catch(e) {
-    output.innerHTML = `<div style="background:var(--bg3);border-radius:12px;padding:1.5rem;color:var(--muted)">⚠️ ${e.message || 'Error generating questions. Please try again.'}</div>`;
+    output.innerHTML = `<div style="background:var(--bg3);border-radius:12px;padding:1.5rem;color:var(--muted)">⚠️ ${sanitizeHTML(e.message || 'Error generating questions. Please try again.')}</div>`;
   }
   btn.disabled = false;
   btn.textContent = '✦ Generate with Lumina AI';
+}
+
+function sanitizeHTML(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 // Init on load

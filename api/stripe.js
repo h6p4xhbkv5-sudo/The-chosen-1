@@ -72,7 +72,7 @@ export default async function handler(req, res) {
   } catch (e) {
     const msg = /fetch|network|ECONNREFUSED|ETIMEDOUT|socket/i.test(e.message)
       ? 'Payment service temporarily unavailable. Please try again shortly.'
-      : e.message;
+      : 'Payment processing error. Please try again or contact support.';
     return res.status(500).json({ error: msg });
   }
 }

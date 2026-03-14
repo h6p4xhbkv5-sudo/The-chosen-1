@@ -54,6 +54,7 @@ export default async function handler(req, res) {
       .select()
       .single();
     if (updateErr) return res.status(400).json({ error: updateErr.message });
+    if (!data) return res.status(404).json({ error: 'Note not found' });
     return res.status(200).json({ note: data });
   }
 

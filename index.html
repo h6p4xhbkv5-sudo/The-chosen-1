@@ -6910,7 +6910,7 @@ ONLY return the JSON array, nothing else.${a11y ? '\n\nIMPORTANT accessibility n
     incrementQuestionCount();
     showToast('✦ Questions generated!');
   } catch (e) {
-    qContainer.innerHTML = `<div class="msg bot" style="max-width:100%">⚠️ Error: ${e.message}</div>`;
+    qContainer.innerHTML = `<div class="msg bot" style="max-width:100%">⚠️ Error: ${sanitizeHTML(e.message)}</div>`;
   }
 }
 
@@ -6952,7 +6952,7 @@ Use UK marking conventions. Award partial marks where appropriate.`;
         const fb = document.createElement('div');
         fb.className = 'answer-feedback';
         fb.style.cssText = `margin-top:.5rem;padding:.75rem;border-radius:8px;font-size:.85rem;background:${r.correct ? 'rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3)' : 'rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3)'}`;
-        fb.innerHTML = `<strong>${r.correct ? '✅' : '❌'} ${r.marksAwarded}/${r.marksTotal} marks</strong><br>${r.feedback || ''}`;
+        fb.innerHTML = `<strong>${r.correct ? '✅' : '❌'} ${r.marksAwarded}/${r.marksTotal} marks</strong><br>${sanitizeHTML(r.feedback || '')}`;
         block.appendChild(fb);
       }
     });
@@ -7040,7 +7040,7 @@ ${getA11yInstructions()}`;
     body.innerHTML = getReply(data);
     addXP(15);
   } catch (e) {
-    body.innerHTML = `<p style="color:var(--red)">⚠️ ${e.message}</p>`;
+    body.innerHTML = `<p style="color:var(--red)">⚠️ ${sanitizeHTML(e.message)}</p>`;
   }
 }
 
@@ -7091,7 +7091,7 @@ async function downloadMyData() {
   const btn = document.getElementById('download-data-btn');
   if (btn) { btn.disabled = true; btn.textContent = 'Preparing…'; }
   try {
-    const token = state.token;
+    const token = localStorage.getItem('synaptiq_token');
     if (!token) { showToast('⚠️ Please log in first'); return; }
     const res = await fetch('/api/export', { headers: { Authorization: 'Bearer ' + token } });
     if (!res.ok) { const d = await res.json(); showToast('⚠️ ' + (d.error || 'Export failed')); return; }
@@ -7119,12 +7119,12 @@ async function deleteMyAccount() {
   const btn = document.getElementById('delete-account-btn');
   if (btn) { btn.disabled = true; btn.textContent = 'Deleting…'; }
   try {
-    const token = state.token;
+    const token = localStorage.getItem('synaptiq_token');
     if (!token) { showToast('⚠️ Please log in first'); return; }
     const res = await fetch('/api/auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-      body: JSON.stringify({ action: 'delete' }),
+      body: JSON.stringify({ action: 'delete_account' }),
     });
     const data = await res.json();
     if (!res.ok) { showToast('⚠️ ' + (data.error || 'Deletion failed')); return; }
@@ -10213,7 +10213,7 @@ window.sendPasswordReset = function() {
 // ─── SAVE PROGRESS TO SUPABASE ───────────────────────
 async function saveProgressDB(subject, topic, correct, total, xpEarned) {
   if (!supabaseClient || !state.user?.id) return;
-  const token = state.user.token;
+  const token = localStorage.getItem('synaptiq_token');
   await fetch('/api/progress', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },

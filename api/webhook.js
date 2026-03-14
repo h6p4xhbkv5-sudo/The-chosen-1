@@ -35,55 +35,66 @@ export default async function handler(req, res) {
 
   const data = event.data.object;
 
-  switch (event.type) {
-    case 'checkout.session.completed': {
-      const email = data.customer_email;
-      const plan = data.metadata?.plan || 'student';
-      await supabase.from('profiles').update({
-        plan,
-        subscription_status: 'active',
-        stripe_customer_id: data.customer,
-        subscription_id: data.subscription
-      }).eq('email', email);
-      // Send confirmation email via internal endpoint
-      await sendEmail(email, 'payment_confirmed', { plan });
-      break;
-    }
+  // Idempotency: skip duplicate events
+  const { data: existing } = await supabase.from('processed_webhooks')
+    .select('event_id').eq('event_id', event.id).single();
+  if (existing) return res.status(200).json({ received: true, duplicate: true });
 
-    case 'invoice.payment_succeeded': {
-      const customerId = data.customer;
-      await supabase.from('profiles').update({
-        subscription_status: 'active'
-      }).eq('stripe_customer_id', customerId);
-      break;
-    }
-
-    case 'invoice.payment_failed': {
-      const customerId = data.customer;
-      // Idempotency: record webhook processing
-      await supabase.from('processed_webhooks').insert({ event_id: event.id });
-      // Look up profile
-      const { data: profile } = await supabase.from('profiles')
-        .select('email,name').eq('stripe_customer_id', customerId).single();
-      // Update status
-      await supabase.from('profiles').update({
-        subscription_status: 'past_due'
-      }).eq('stripe_customer_id', customerId);
-      if (profile?.email) {
-        await sendEmail(profile.email, 'payment_failed', { name: profile.name });
+  try {
+    switch (event.type) {
+      case 'checkout.session.completed': {
+        const email = data.customer_email;
+        const plan = data.metadata?.plan || 'student';
+        const { error: updateErr } = await supabase.from('profiles').update({
+          plan,
+          subscription_status: 'active',
+          stripe_customer_id: data.customer,
+          subscription_id: data.subscription
+        }).eq('email', email);
+        if (updateErr) console.error('Webhook profile update failed:', updateErr.message);
+        await sendEmail(email, 'payment_confirmed', { plan });
+        break;
       }
-      break;
-    }
 
-    case 'customer.subscription.deleted': {
-      const customerId = data.customer;
-      await supabase.from('profiles').update({
-        subscription_status: 'cancelled',
-        plan: 'free'
-      }).eq('stripe_customer_id', customerId);
-      break;
+      case 'invoice.payment_succeeded': {
+        const customerId = data.customer;
+        const { error: updateErr } = await supabase.from('profiles').update({
+          subscription_status: 'active'
+        }).eq('stripe_customer_id', customerId);
+        if (updateErr) console.error('Webhook status update failed:', updateErr.message);
+        break;
+      }
+
+      case 'invoice.payment_failed': {
+        const customerId = data.customer;
+        const { data: profile } = await supabase.from('profiles')
+          .select('email,name').eq('stripe_customer_id', customerId).single();
+        const { error: updateErr } = await supabase.from('profiles').update({
+          subscription_status: 'past_due'
+        }).eq('stripe_customer_id', customerId);
+        if (updateErr) console.error('Webhook past_due update failed:', updateErr.message);
+        if (profile?.email) {
+          await sendEmail(profile.email, 'payment_failed', { name: profile.name });
+        }
+        break;
+      }
+
+      case 'customer.subscription.deleted': {
+        const customerId = data.customer;
+        const { error: updateErr } = await supabase.from('profiles').update({
+          subscription_status: 'cancelled',
+          plan: 'free'
+        }).eq('stripe_customer_id', customerId);
+        if (updateErr) console.error('Webhook cancellation update failed:', updateErr.message);
+        break;
+      }
     }
+  } catch (e) {
+    console.error('Webhook processing error:', e.message);
   }
+
+  // Record event for idempotency
+  try { await supabase.from('processed_webhooks').insert({ event_id: event.id }); } catch (_) {}
 
   return res.status(200).json({ received: true });
 }
