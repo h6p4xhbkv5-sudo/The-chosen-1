@@ -208,7 +208,7 @@ async function initAuth() {
 }
 
 async function callClaude(messages, system) {
-  const body = { model:'claude-opus-4-6', max_tokens:2000, messages };
+  const body = { max_tokens:2000, messages };
   if (system) body.system = system;
   const headers = { 'Content-Type':'application/json' };
   if (currentUser?.token) headers['Authorization'] = 'Bearer ' + currentUser.token;

@@ -63,7 +63,7 @@ export default async function handler(req, res) {
 
     await Promise.all(fetches);
 
-    res.setHeader('Content-Disposition', `attachment; filename="lumina-data-export-${Date.now()}.json"`);
+    res.setHeader('Content-Disposition', `attachment; filename="synaptiq-data-export-${Date.now()}.json"`);
     res.setHeader('Content-Type', 'application/json');
     return res.status(200).json(result);
   } catch (e) {
