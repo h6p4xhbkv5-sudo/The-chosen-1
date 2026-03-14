@@ -2608,35 +2608,6 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 }
 
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-// Init config — retry once on failure
-(async function() {
-  async function loadConfig(attempt) {
-    try {
-      const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 8000);
-      const r = await fetch('/api/config', { signal: ctrl.signal });
-      clearTimeout(timer);
-      if (r.ok) {
-        const c = await r.json();
-        window.SUPABASE_URL = c.supabaseUrl || '';
-        window.SUPABASE_ANON_KEY = c.supabaseAnonKey || '';
-        window.SITE_URL = c.siteUrl || '';
-        window._configLoaded = true;
-      }
-    } catch(e) {
-      if (attempt === 0) {
-        await new Promise(r => setTimeout(r, 1500));
-        return loadConfig(1);
-      }
-      // Config unavailable — app will work in demo/offline mode
-      window._configLoaded = false;
-    }
-  }
-  await loadConfig(0);
-})();
-</script>
 </head>
 <body>
 
@@ -9948,11 +9919,24 @@ function shareViaEmail() {
 }
 
 // ─── PASSWORD RESET ───────────────────────────────────
-function sendPasswordReset() {
+async function sendPasswordReset() {
   const email = document.getElementById('reset-email').value.trim();
   if (!email || !email.includes('@')) { showToast('Please enter a valid email'); return; }
-  document.getElementById('reset-confirm').style.display = 'block';
-  // In production, this would call a backend endpoint
+  try {
+    const res = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'reset', email })
+    });
+    if (res.ok) {
+      document.getElementById('reset-confirm').style.display = 'block';
+    } else {
+      const d = await res.json().catch(() => ({}));
+      showToast(d.error || 'Could not send reset email');
+    }
+  } catch(e) {
+    document.getElementById('reset-confirm').style.display = 'block';
+  }
 }
 
 // ─── WELSH LANGUAGE ───────────────────────────────────
@@ -10069,171 +10053,22 @@ window.sendTutor = function() {
   if (_v9TutorSend) _v9TutorSend();
 };
 
-// Zero all stats on first login for new users
-const _v9PrevLogin = window.handleLogin;
-window.handleLogin = function() {
-  if (_v9PrevLogin) _v9PrevLogin();
-  // Ensure stats display as zero for new users
-  const u = state.user;
-  if (u && (u.questions === undefined || u.questions === 847)) {
-    u.questions = 0; u.accuracy = 0; u.streak = 0; u.topics = 0; u.xp = 0; u.level = 1;
-    try { localStorage.setItem('synaptiq_user', JSON.stringify(u)); } catch(e) {}
-  }
-};
 
 
 </script>
 <script>
-// ════════════════════════════════════════════════════
-// LUMINA AI V10 — ALL NEW FEATURES + REAL AUTH
-// ════════════════════════════════════════════════════
-
-// ─── SUPABASE AUTH ───────────────────────────────────
-const SUPABASE_URL = window.SUPABASE_URL || '';
-const SUPABASE_ANON = window.SUPABASE_ANON_KEY || '';
-let supabaseClient = null;
-
-function initSupabase() {
-  if (SUPABASE_URL && SUPABASE_ANON && window.supabase) {
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-    
-    checkExistingSession();
-  }
-}
-
-async function checkExistingSession() {
-  if (!supabaseClient) return;
-  try {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    if (session) {
-      const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
-      if (profile) {
-        state.user = { ...session.user, ...profile };
-        state.user.name = profile.name;
-        try { localStorage.setItem('synaptiq_token', session.access_token); } catch(e) {}
-        try { localStorage.setItem('synaptiq_user', JSON.stringify(state.user)); } catch(e) {}
-        enterDashboard();
-      }
-    }
-  } catch(e) {
-    // Supabase unreachable — silently continue, page-load verify will handle it
-  }
-}
-
-async function realSignup(name, email, password, plan) {
-  if (!supabaseClient) return fallbackSignup(name, email, plan);
-  showAuthLoading(true);
-  try {
-    const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { data: { name, plan } } });
-    if (error) { showAuthError(error.message); showAuthLoading(false); return; }
-    // Create profile
-    await supabaseClient.from('profiles').insert({ id: data.user.id, name, email, plan: plan||'student', xp:0, level:1, streak:0, questions_answered:0, accuracy:0 });
-    // Welcome email
-    await fetch('/api/email', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ type:'welcome', email, name }) }).catch(()=>{});
-    showAuthSuccess('Account created! Check your email to verify your account.');
-    showAuthLoading(false);
-  } catch(e) {
-    showAuthLoading(false);
-    showAuthError('Connection error — please try again');
-  }
-}
-
-async function realLogin(email, password) {
-  if (!supabaseClient) return fallbackLogin(email);
-  showAuthLoading(true);
-  try {
-    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-    if (error) { showAuthError('Invalid email or password'); showAuthLoading(false); return; }
-    const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', data.user.id).single();
-    state.user = { ...data.user, ...(profile || {}) };
-    state.user.name = profile?.name || email.split('@')[0];
-    try { localStorage.setItem('synaptiq_token', data.session.access_token); } catch(e) {}
-    try { localStorage.setItem('synaptiq_user', JSON.stringify(state.user)); } catch(e) {}
-    showAuthLoading(false);
-    enterDashboard();
-  } catch(e) {
-    showAuthLoading(false);
-    // Supabase client failed — fall back to API-based login
-    loginUser();
-  }
-}
-
-async function realLogout() {
-  if (supabaseClient) await supabaseClient.auth.signOut();
-  try { localStorage.removeItem('synaptiq_token'); } catch(e) {}
-  state.user = null;
-  location.reload();
-}
-
-async function realResetPassword(email) {
-  if (!supabaseClient) { document.getElementById('reset-confirm').style.display='block'; return; }
-  const { error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/reset' });
-  if (error) { showToast('⚠️ ' + error.message); return; }
-  document.getElementById('reset-confirm').style.display = 'block';
-}
-
-// Fallback (localStorage) when Supabase not configured
-function fallbackSignup(name, email, plan) {
-  state.user = { name, email, plan:plan||'student', xp:0, level:1, streak:0, questions_answered:0 };
-  try { localStorage.setItem('synaptiq_user', JSON.stringify(state.user)); } catch(e) {}
-  enterDashboard();
-}
-function fallbackLogin(email) {
-  try { const u = localStorage.getItem('synaptiq_user'); if(u) { state.user = JSON.parse(u); enterDashboard(); return; } } catch(e) {}
-  state.user = { name: email.split('@')[0], email, xp:0, level:1, streak:0 };
-  enterDashboard();
-}
-
-function showAuthLoading(on) { document.querySelectorAll('.auth-form').forEach(f => f.classList.toggle('auth-loading', on)); }
-function showAuthError(msg) { const el = document.querySelector('.auth-error'); if(el) { el.textContent = '⚠️ ' + msg; el.style.display='block'; } }
-function showAuthSuccess(msg) { const el = document.querySelector('.auth-success'); if(el) { el.textContent = '✅ ' + msg; el.style.display='block'; } }
-
-// Override existing login/signup handlers
-const _v10OrigLogin = window.handleLogin;
-window.handleLogin = function() {
-  const email = document.getElementById('login-email')?.value || '';
-  const password = document.getElementById('login-pass')?.value || '';
-  if (!email) { showAuthError('Please enter your email'); return; }
-  if (supabaseClient) { realLogin(email, password); }
-  else { if (_v10OrigLogin) _v10OrigLogin(); }
-};
-
-const _v10OrigSignup = window.handleSignup;
-window.handleSignup = function() {
-  const name = document.getElementById('signup-name')?.value || '';
-  const email = document.getElementById('signup-email')?.value || '';
-  const password = document.getElementById('signup-password')?.value || '';
-  const plan = document.getElementById('signup-plan')?.value || 'student';
-  if (!name || !email) { showAuthError('Please fill in all fields'); return; }
-  if (password && password.length < 8) { showAuthError('Password must be at least 8 characters'); return; }
-  if (supabaseClient) { realSignup(name, email, password, plan); }
-  else { if (_v10OrigSignup) _v10OrigSignup(); else fallbackSignup(name, email, plan); }
-};
-
-// Override password reset
-window.sendPasswordReset = function() {
-  const email = document.getElementById('reset-email').value.trim();
-  if (!email) { showToast('Please enter your email'); return; }
-  realResetPassword(email);
-};
-
-// ─── SAVE PROGRESS TO SUPABASE ───────────────────────
+// ─── SAVE PROGRESS ───────────────────────────────────
 async function saveProgressDB(subject, topic, correct, total, xpEarned) {
-  if (!supabaseClient || !state.user?.id) return;
+  if (!state.user?.id) return;
   const token = localStorage.getItem('synaptiq_token');
-  await fetch('/api/progress', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-    body: JSON.stringify({ subject, topic, correct, total, xpEarned })
-  }).catch(() => {});
-  // Track mistakes
-  if (correct < total) {
-    await supabaseClient.from('mistakes').upsert({
-      user_id: state.user.id, subject, topic,
-      question: `${subject} — ${topic}`,
-      count: 1, last_seen: new Date().toISOString()
-    }, { onConflict: 'user_id,subject,topic,question', ignoreDuplicates: false }).catch(() => {});
-  }
+  if (!token) return;
+  try {
+    await fetch('/api/progress', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ subject, topic, correct, total, xpEarned })
+    });
+  } catch(_) {}
 }
 
 // ─── PHOTO QUESTION ──────────────────────────────────
@@ -10800,36 +10635,16 @@ window.showDash = function(sub) {
 const _v10PrevEnter = window.enterDashboard;
 window.enterDashboard = function() {
   if (_v10PrevEnter) _v10PrevEnter();
-  // Save progress to Supabase whenever XP is earned
+  // Save progress via API whenever XP is earned
   const _origAddXP = window.addXP;
   if (_origAddXP && !window._xpPatched) {
     window._xpPatched = true;
     window.addXP = function(amount, msg) {
       _origAddXP(amount, msg);
-      if (supabaseClient && state.user?.id) saveProgressDB(state.subject||'General', 'session', 0, 0, amount).catch(()=>{});
+      if (state.user?.id) saveProgressDB(state.subject||'General', 'session', 0, 0, amount).catch(()=>{});
     };
   }
 };
-
-// ─── INIT ─────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-  // If there's a stored token, show a loading overlay to prevent flash of login screen
-  try {
-    const hasToken = localStorage.getItem('synaptiq_token');
-    if (hasToken) {
-      const overlay = document.createElement('div');
-      overlay.id = 'auth-loading-overlay';
-      overlay.style.cssText = 'position:fixed;inset:0;background:var(--black,#0A0C12);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem';
-      overlay.innerHTML = '<div style="font-size:2rem">✦</div><div style="color:#C9A84C;font-weight:700;letter-spacing:.1em">SYNAPTIQ</div><div style="color:#666;font-size:.875rem">Loading your dashboard...</div>';
-      document.body.appendChild(overlay);
-      // Remove overlay after dashboard loads or on timeout
-      setTimeout(() => { overlay.remove(); }, 4000);
-      window._authOverlay = overlay;
-    }
-  } catch(e) {}
-  // Small delay to let Supabase CDN load
-  setTimeout(initSupabase, 500);
-});
 
 
 </script>
@@ -11640,7 +11455,7 @@ if ('serviceWorker' in navigator) {
 window.addEventListener('online', () => showToast('Back online!'));
 window.addEventListener('offline', () => showToast('You are offline — some features unavailable'));
 window.addEventListener('unhandledrejection', (e) => {
-  if (e.reason?.message) showToast('⚠️ ' + e.reason.message.slice(0, 80));
+  // Suppress raw error toasts — individual handlers show user-friendly messages
   e.preventDefault();
 });
 

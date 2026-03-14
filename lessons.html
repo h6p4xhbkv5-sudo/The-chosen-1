@@ -183,7 +183,6 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
 
 <div class="toast" id="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 // ─── Curriculum Data ───────────────────────────────────
 const CURRICULUM = {
@@ -201,30 +200,20 @@ const CURRICULUM = {
 };
 
 // ─── Auth ──────────────────────────────────────────────
-const SUPABASE_URL = window.SUPABASE_URL || '';
-const SUPABASE_ANON = window.SUPABASE_ANON_KEY || '';
-let supabaseClient = null;
 let currentUser = null;
 let selectedTopic = null;
 let selectedSubtopic = null;
 let selectedMode = 'full';
 
 async function initAuth() {
-  if (SUPABASE_URL && SUPABASE_ANON && window.supabase) {
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    if (session) { currentUser = { token: session.access_token, ...session.user }; }
-  }
-  if (!currentUser) {
-    try {
-      const token = localStorage.getItem('synaptiq_token');
-      if (token) currentUser = { token };
-      else {
-        const saved = localStorage.getItem('synaptiq_user');
-        if (saved) currentUser = JSON.parse(saved);
-      }
-    } catch(e) {}
-  }
+  try {
+    const token = localStorage.getItem('synaptiq_token');
+    if (token) currentUser = { token };
+    else {
+      const saved = localStorage.getItem('synaptiq_user');
+      if (saved) currentUser = JSON.parse(saved);
+    }
+  } catch(e) {}
   const overlay = document.getElementById('auth-overlay');
   if (!currentUser) { window.location.href = '/'; return; }
   overlay.remove();

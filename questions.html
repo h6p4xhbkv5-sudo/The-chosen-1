@@ -176,26 +176,11 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
 
 <div class="toast" id="toast"></div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-const SUPABASE_URL = window.SUPABASE_URL || '';
-const SUPABASE_ANON = window.SUPABASE_ANON_KEY || '';
-let supabaseClient = null;
 let currentUser = null;
 
 async function initAuth() {
   const overlay = document.getElementById('auth-overlay');
-  // Try Supabase first
-  if (SUPABASE_URL && SUPABASE_ANON && window.supabase) {
-    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    if (session) {
-      currentUser = { token: session.access_token, ...session.user };
-      overlay.remove();
-      return;
-    }
-  }
-  // Fallback: check localStorage token
   try {
     const token = localStorage.getItem('synaptiq_token');
     if (token) { currentUser = { token }; overlay.remove(); return; }
