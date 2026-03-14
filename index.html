@@ -10103,44 +10103,59 @@ function initSupabase() {
 
 async function checkExistingSession() {
   if (!supabaseClient) return;
-  const { data: { session } } = await supabaseClient.auth.getSession();
-  if (session) {
-    const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
-    if (profile) {
-      state.user = { ...session.user, ...profile };
-      state.user.name = profile.name;
-      try { localStorage.setItem('synaptiq_token', session.access_token); } catch(e) {}
-      try { localStorage.setItem('synaptiq_user', JSON.stringify(state.user)); } catch(e) {}
-      enterDashboard();
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session) {
+      const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', session.user.id).single();
+      if (profile) {
+        state.user = { ...session.user, ...profile };
+        state.user.name = profile.name;
+        try { localStorage.setItem('synaptiq_token', session.access_token); } catch(e) {}
+        try { localStorage.setItem('synaptiq_user', JSON.stringify(state.user)); } catch(e) {}
+        enterDashboard();
+      }
     }
+  } catch(e) {
+    // Supabase unreachable — silently continue, page-load verify will handle it
   }
 }
 
 async function realSignup(name, email, password, plan) {
   if (!supabaseClient) return fallbackSignup(name, email, plan);
   showAuthLoading(true);
-  const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { data: { name, plan } } });
-  if (error) { showAuthError(error.message); showAuthLoading(false); return; }
-  // Create profile
-  await supabaseClient.from('profiles').insert({ id: data.user.id, name, email, plan: plan||'student', xp:0, level:1, streak:0, questions_answered:0, accuracy:0 });
-  // Welcome email
-  await fetch('/api/email', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ type:'welcome', email, name }) }).catch(()=>{});
-  showAuthSuccess('Account created! Check your email to verify your account.');
-  showAuthLoading(false);
+  try {
+    const { data, error } = await supabaseClient.auth.signUp({ email, password, options: { data: { name, plan } } });
+    if (error) { showAuthError(error.message); showAuthLoading(false); return; }
+    // Create profile
+    await supabaseClient.from('profiles').insert({ id: data.user.id, name, email, plan: plan||'student', xp:0, level:1, streak:0, questions_answered:0, accuracy:0 });
+    // Welcome email
+    await fetch('/api/email', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ type:'welcome', email, name }) }).catch(()=>{});
+    showAuthSuccess('Account created! Check your email to verify your account.');
+    showAuthLoading(false);
+  } catch(e) {
+    showAuthLoading(false);
+    showAuthError('Connection error — please try again');
+  }
 }
 
 async function realLogin(email, password) {
   if (!supabaseClient) return fallbackLogin(email);
   showAuthLoading(true);
-  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-  if (error) { showAuthError('Invalid email or password'); showAuthLoading(false); return; }
-  const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', data.user.id).single();
-  state.user = { ...data.user, ...profile };
-  state.user.name = profile?.name || email.split('@')[0];
-  try { localStorage.setItem('synaptiq_token', data.session.access_token); } catch(e) {}
-  try { localStorage.setItem('synaptiq_user', JSON.stringify(state.user)); } catch(e) {}
-  showAuthLoading(false);
-  enterDashboard();
+  try {
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error) { showAuthError('Invalid email or password'); showAuthLoading(false); return; }
+    const { data: profile } = await supabaseClient.from('profiles').select('*').eq('id', data.user.id).single();
+    state.user = { ...data.user, ...(profile || {}) };
+    state.user.name = profile?.name || email.split('@')[0];
+    try { localStorage.setItem('synaptiq_token', data.session.access_token); } catch(e) {}
+    try { localStorage.setItem('synaptiq_user', JSON.stringify(state.user)); } catch(e) {}
+    showAuthLoading(false);
+    enterDashboard();
+  } catch(e) {
+    showAuthLoading(false);
+    // Supabase client failed — fall back to API-based login
+    loginUser();
+  }
 }
 
 async function realLogout() {
