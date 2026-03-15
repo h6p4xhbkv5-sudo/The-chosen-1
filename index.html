@@ -11993,6 +11993,11 @@ function initTeacher() {
   renderTeacherChapters();
 }
 
+// Fix unescaped LaTeX backslashes in Claude's JSON output (e.g. \frac → \\frac)
+function fixJsonLatex(str) {
+  return str.replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
+}
+
 async function teachChapter(mk, idx, btn) {
   document.querySelectorAll('.teacher-chapter-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
@@ -12024,7 +12029,7 @@ Include at least 3 objectives, 2 worked examples (≥3 steps each), 3 practice q
   try {
     const data = await callClaude([{ role: 'user', content: `Teach me: ${chapter} (${mod.label}, ${mod.year})` }], sys);
     let raw = getReply(data).replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
-    const lesson = JSON.parse(raw);
+    const lesson = JSON.parse(fixJsonLatex(raw));
     renderTeacherLesson(chapter, mod.year, lesson, box);
   } catch (e) {
     box.innerHTML = `<div style="padding:2rem;color:var(--red)">⚠️ Could not generate lesson: ${e.message}</div>`;
