@@ -2607,6 +2607,46 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
   * { color: black !important; background: white !important; border-color: #ccc !important; }
 }
 
+/* ── AI TEACHER ── */
+.teacher-layout{display:grid;grid-template-columns:260px 1fr;height:calc(100vh - 64px);overflow:hidden}
+.teacher-sidebar{overflow-y:auto;border-right:1px solid var(--bg3);padding:1rem 0;background:var(--bg1)}
+.teacher-tabs{display:flex;gap:.25rem;padding:0 .75rem .75rem;flex-wrap:wrap}
+.teacher-tab{background:var(--bg3);border:none;color:var(--muted);padding:.35rem .7rem;border-radius:6px;cursor:pointer;font-size:.75rem;transition:.15s}
+.teacher-tab.active{background:var(--gold);color:#000;font-weight:600}
+.teacher-chapter-btn{display:block;width:100%;text-align:left;background:none;border:none;color:var(--muted);padding:.6rem 1rem;cursor:pointer;font-size:.85rem;border-left:3px solid transparent;transition:all .15s;line-height:1.4}
+.teacher-chapter-btn:hover{color:var(--white);background:var(--bg2)}
+.teacher-chapter-btn.active{color:var(--gold);border-left-color:var(--gold);background:rgba(201,168,76,0.08)}
+.teacher-content{overflow-y:auto;padding:2rem}
+.teacher-placeholder{text-align:center;padding:4rem 2rem;color:var(--muted)}
+.teacher-placeholder i{font-size:3rem;margin-bottom:1rem;display:block;color:var(--gold)}
+.lesson-year-badge{display:inline-block;background:rgba(201,168,76,0.15);color:var(--gold);border:1px solid rgba(201,168,76,0.3);border-radius:20px;padding:.25rem .75rem;font-size:.75rem;font-weight:600;margin-bottom:.5rem}
+.lesson-section{margin-bottom:2rem}
+.lesson-section h3{color:var(--gold);font-size:1rem;border-bottom:1px solid var(--bg3);padding-bottom:.5rem;margin-bottom:1rem}
+.lesson-section ul{padding-left:1.25rem}
+.lesson-section li{margin-bottom:.4rem;color:var(--muted);line-height:1.7}
+.worked-example{background:var(--bg2);border:1px solid var(--bg3);border-radius:10px;padding:1.25rem;margin:.75rem 0}
+.worked-example .ex-problem{font-weight:600;color:var(--white);margin-bottom:.75rem}
+.teacher-worked-step{padding:.35rem 0;color:var(--muted);border-bottom:1px solid var(--bg3);font-size:.9rem;line-height:1.6}
+.teacher-worked-step:last-child{border:none}
+.practice-q{background:var(--bg2);border:1px solid var(--bg3);border-radius:10px;padding:1.25rem;margin:.5rem 0}
+.practice-q .q-text{color:var(--white);font-weight:600;margin-bottom:.75rem}
+.show-answer-btn{background:none;border:1px solid var(--gold);color:var(--gold);padding:.3rem .8rem;border-radius:6px;cursor:pointer;font-size:.8rem;margin-top:.5rem;transition:.15s}
+.show-answer-btn:hover{background:rgba(201,168,76,0.1)}
+.teacher-q-answer{display:none;margin-top:.75rem;padding:.75rem;background:rgba(201,168,76,0.06);border-radius:6px;color:var(--muted);font-size:.9rem;line-height:1.7}
+.teacher-q-answer.visible{display:block}
+.key-formulas-box{background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:1.25rem}
+.key-formula-item{color:var(--gold);padding:.35rem 0;border-bottom:1px solid rgba(201,168,76,0.1);font-size:.95rem}
+.key-formula-item:last-child{border:none}
+.lesson-loading{text-align:center;padding:3rem;color:var(--muted)}
+.lesson-spin{width:40px;height:40px;border:3px solid var(--bg3);border-top-color:var(--gold);border-radius:50%;animation:lspin 1s linear infinite;margin:0 auto 1rem}
+@keyframes lspin{to{transform:rotate(360deg)}}
+
+/* ── ADMIN GLOBAL RESOURCES ── */
+.admin-toggle{display:flex;align-items:center;gap:.75rem;padding:.75rem;background:var(--bg2);border:1px solid var(--bg3);border-radius:8px;margin-bottom:1rem;cursor:pointer}
+.admin-toggle input[type=checkbox]{accent-color:var(--gold);width:18px;height:18px}
+.global-resource-item{display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem;background:var(--bg2);border:1px solid var(--bg3);border-radius:8px;margin-bottom:.5rem}
+.global-resource-item .gr-badge{font-size:.7rem;padding:.2rem .5rem;border-radius:10px;font-weight:600;background:rgba(201,168,76,0.15);color:var(--gold)}
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -3617,6 +3657,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <div class="sidebar-item active" id="si-home" onclick="showDash('home')"><i class="fas fa-house"></i>Dashboard</div>
       <div class="sidebar-section-label">LEARN</div>
       <div class="sidebar-item" id="si-tutor" onclick="showDash('tutor')"><i class="fas fa-robot"></i>AI Tutor</div>
+      <div class="sidebar-item" id="si-content" onclick="showDash('content')"><i class="fas fa-chalkboard-teacher"></i>AI Teacher</div>
       <div class="sidebar-item" id="si-questions" onclick="showDash('questions')"><i class="fas fa-file-lines"></i>Practice Questions</div>
       <div class="sidebar-item" id="si-photo" onclick="showDash('photo')"><i class="fas fa-camera"></i>Photo Question</div>
       <div class="sidebar-section-label">REVISION</div>
@@ -3641,6 +3682,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <div class="sidebar-section-label">WELLBEING</div>
       <div class="sidebar-item" id="si-mood" onclick="showDash('mood')"><i class="fas fa-smile"></i>Mood Check-in</div>
       <div class="sidebar-item" id="si-music" onclick="showDash('music')"><i class="fas fa-music"></i>Study Music</div>
+      <div class="sidebar-item" id="si-admin" onclick="showDash('admin')" style="display:none"><i class="fas fa-shield-halved"></i>Admin</div>
       <div class="sidebar-item" id="si-settings" onclick="showDash('settings')"><i class="fas fa-gear"></i>Settings</div>
       <div class="sidebar-item" id="si-a11y" onclick="showDash('a11y')"><i class="fas fa-universal-access"></i>Accessibility</div>
     </div>
@@ -5184,6 +5226,101 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
       <div id="tt-result"></div>
     </div>
 
+    <!-- AI TEACHER SUBPAGE -->
+    <div class="subpage" id="sp-content" style="padding:0;margin:-2rem;height:calc(100vh - 64px)">
+      <div class="teacher-layout">
+        <!-- Left: chapter picker -->
+        <div class="teacher-sidebar">
+          <div style="padding:.75rem 1rem .25rem;font-size:1rem;font-weight:700;color:var(--white)">AI Teacher</div>
+          <div style="padding:.25rem 1rem .75rem;font-size:.75rem;color:var(--muted)">Select a chapter to begin</div>
+          <div class="teacher-tabs">
+            <button class="teacher-tab active" onclick="switchTeacherTab('pure1',this)">Pure 1</button>
+            <button class="teacher-tab" onclick="switchTeacherTab('pure2',this)">Pure 2</button>
+            <button class="teacher-tab" onclick="switchTeacherTab('stats',this)">Stats</button>
+            <button class="teacher-tab" onclick="switchTeacherTab('mech',this)">Mechanics</button>
+          </div>
+          <div id="teacher-chapter-list"></div>
+        </div>
+        <!-- Right: lesson output -->
+        <div class="teacher-content" id="teacher-content">
+          <div class="teacher-placeholder">
+            <i class="fas fa-chalkboard-teacher"></i>
+            <h3 style="color:var(--white);margin-bottom:.5rem">Select a chapter to begin your lesson</h3>
+            <p style="font-size:.9rem;max-width:360px;margin:0 auto">Choose a topic from the left and I'll teach it with full theory, worked examples, and practice questions — with proper maths notation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN SUBPAGE -->
+    <div class="subpage" id="sp-admin">
+      <div class="page-title"><i class="fas fa-shield-halved" style="color:var(--gold)"></i> Admin — Resource Library</div>
+      <p class="page-subtitle">Upload mark schemes and past papers to the shared library — every student's AI will reference these automatically</p>
+
+      <div style="display:flex;gap:1rem;align-items:center;margin-bottom:1.5rem;padding:.75rem 1rem;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:10px;font-size:.85rem;color:var(--muted)">
+        <i class="fas fa-circle-info" style="color:var(--gold)"></i>
+        <span>Resources marked <strong style="color:var(--gold)">"Share with all students"</strong> are automatically loaded into every student's AI session on login.</span>
+      </div>
+
+      <div id="admin-upload-zone" class="upload-zone" onclick="document.getElementById('admin-file-input').click()"
+           ondragover="event.preventDefault();this.classList.add('drag-over')"
+           ondragleave="this.classList.remove('drag-over')"
+           ondrop="adminHandleFileDrop(event)"
+           style="border:2px dashed var(--border);border-radius:12px;padding:2.5rem;text-align:center;cursor:pointer;margin-bottom:1.5rem">
+        <div style="font-size:2rem;margin-bottom:.75rem">📎</div>
+        <h3 style="margin-bottom:.5rem">Drop files here or click to upload</h3>
+        <p style="font-size:.85rem;color:var(--muted)">PDF, JPG, PNG, TXT · Max 10MB</p>
+        <input type="file" id="admin-file-input" style="display:none" accept=".pdf,.jpg,.jpeg,.png,.txt" onchange="adminHandleFileSelect(event)">
+      </div>
+
+      <div id="admin-upload-form" style="display:none;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem">
+        <h4 style="font-weight:700;margin-bottom:1rem">Label your upload</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+          <div>
+            <label style="display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:.4rem">Category</label>
+            <select id="admin-upload-category" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.65rem .9rem;color:var(--white);font-size:.9rem">
+              <option value="mark-scheme">Mark Scheme</option>
+              <option value="past-paper">Past Paper</option>
+            </select>
+          </div>
+          <div>
+            <label style="display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:.4rem">Exam Board</label>
+            <select id="admin-upload-board" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.65rem .9rem;color:var(--white);font-size:.9rem">
+              <option>AQA</option><option>Edexcel</option><option>OCR</option><option>OCR MEI</option><option>WJEC</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+          <div>
+            <label style="display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:.4rem">Year / Series</label>
+            <input type="text" id="admin-upload-year" placeholder="e.g. June 2023 Paper 1" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.65rem .9rem;color:var(--white);font-size:.9rem">
+          </div>
+          <div>
+            <label style="display:block;font-size:.8rem;font-weight:600;color:var(--muted);margin-bottom:.4rem">Module</label>
+            <select id="admin-upload-module" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.65rem .9rem;color:var(--white);font-size:.9rem">
+              <option>Pure 1</option><option>Pure 2</option><option>Statistics</option><option>Mechanics</option><option>Full Paper</option>
+            </select>
+          </div>
+        </div>
+        <label class="admin-toggle">
+          <input type="checkbox" id="admin-is-global" checked>
+          <span style="color:var(--white);font-weight:600">Share with all students</span>
+          <span style="color:var(--muted);font-size:.8rem">(unchecked = only visible to admin)</span>
+        </label>
+        <div id="admin-upload-filename" style="font-size:.85rem;color:var(--muted);margin-bottom:1rem"></div>
+        <div style="display:flex;gap:.75rem">
+          <button class="btn btn-gold" style="padding:.875rem 1.5rem" onclick="adminConfirmUpload()">✦ Save to Library</button>
+          <button class="btn btn-outline" style="padding:.875rem 1.5rem" onclick="adminCancelUpload()">Cancel</button>
+        </div>
+      </div>
+
+      <div style="margin:1.5rem 0 .75rem;display:flex;align-items:center;justify-content:space-between">
+        <h3 style="font-weight:700;font-size:1rem">Shared Library</h3>
+        <span id="admin-resource-count" style="font-size:.8rem;color:var(--muted)">0 resources</span>
+      </div>
+      <div id="admin-resources-list"></div>
+    </div>
+
   </div><!-- end main-content -->
 </div><!-- end page-dashboard -->
 
@@ -6244,7 +6381,8 @@ Your name is Synaptiq. You are encouraging, patient, and brilliant at explaining
 Always tailor your explanations to the student's level. Use UK terminology and ${board} exam board conventions.
 When giving examples, use real-world scenarios. Always show your working step by step with clear notation.
 When a student asks a question, first ask them what they think the answer might be before explaining. Use scaffolded questioning (Socratic method) to guide understanding rather than simply telling. Identify common misconceptions and address them directly.
-Cover Pure Mathematics (algebra, calculus, trigonometry, exponentials, vectors), Statistics (probability distributions, hypothesis testing, regression), and Mechanics (kinematics, forces, moments, projectiles).`;
+Cover Pure Mathematics (algebra, calculus, trigonometry, exponentials, vectors), Statistics (probability distributions, hypothesis testing, regression), and Mechanics (kinematics, forces, moments, projectiles).
+Use LaTeX math notation throughout: inline math with $...$ delimiters and display equations with $$...$$. For example: $x^2 + 3x - 4 = 0$ and $$\\frac{d}{dx}(x^n) = nx^{n-1}$$. Never write x^2 or sqrt(x) in plain text — always use proper LaTeX so notation renders correctly.`;
   sys += getSafeguardingPrompt();
   const a11y = getA11yInstructions();
   if (a11y) sys += '\n\n' + a11y;
@@ -11788,5 +11926,296 @@ if (_v12OrigTutorSend) {
 }
 
 console.log('✦ Synaptiq v12 — Spaced Repetition + Curriculum active');
+</script>
+
+<script>
+// ═══════════════════════════════════════
+// AI TEACHER
+// ═══════════════════════════════════════
+const TEACHER_CONTENT = {
+  pure1: {
+    label: 'Pure Mathematics 1', year: 'Year 12',
+    chapters: ['Algebraic Expressions','Quadratics','Equations & Inequalities','Graphs & Transformations','Straight Line Graphs','Circles','Algebraic Methods','The Binomial Expansion','Trigonometric Ratios','Trigonometric Identities & Equations','Vectors','Differentiation','Integration','Exponentials & Logarithms']
+  },
+  pure2: {
+    label: 'Pure Mathematics 2', year: 'Year 13',
+    chapters: ['Algebraic Methods','Functions & Graphs','Sequences & Series','Binomial Expansion','Radians','Trigonometric Functions','Trigonometry & Modelling','Parametric Equations','Differentiation','Numerical Methods','Integration','Vectors']
+  },
+  statsY1: {
+    label: 'Statistics', year: 'Year 12',
+    chapters: ['Statistical Sampling','Data Presentation & Interpretation','Probability','Statistical Distributions','Statistical Hypothesis Testing']
+  },
+  statsY2: {
+    label: 'Statistics', year: 'Year 13',
+    chapters: ['Regression, Correlation & Hypothesis Testing','Conditional Probability','The Normal Distribution']
+  },
+  mechY1: {
+    label: 'Mechanics', year: 'Year 12',
+    chapters: ['Quantities & Units in Mechanics','Kinematics 1 — Constant Acceleration','Forces & Newton\'s Laws','Variable Acceleration']
+  },
+  mechY2: {
+    label: 'Mechanics', year: 'Year 13',
+    chapters: ['Moments','Forces & Friction','Projectiles','Applications of Forces','Further Kinematics']
+  }
+};
+
+const TEACHER_TABS = {
+  pure1: ['pure1'],
+  pure2: ['pure2'],
+  stats: ['statsY1', 'statsY2'],
+  mech: ['mechY1', 'mechY2']
+};
+
+let _teacherTab = 'pure1';
+
+function switchTeacherTab(tab, btn) {
+  _teacherTab = tab;
+  document.querySelectorAll('.teacher-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTeacherChapters();
+}
+
+function renderTeacherChapters() {
+  const list = document.getElementById('teacher-chapter-list');
+  if (!list) return;
+  let html = '';
+  for (const mk of TEACHER_TABS[_teacherTab]) {
+    const m = TEACHER_CONTENT[mk];
+    html += `<div style="padding:.4rem 1rem .2rem;font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">${m.label} — ${m.year}</div>`;
+    m.chapters.forEach((ch, i) => {
+      html += `<button class="teacher-chapter-btn" onclick="teachChapter('${mk}',${i},this)">${ch}</button>`;
+    });
+  }
+  list.innerHTML = html;
+}
+
+function initTeacher() {
+  renderTeacherChapters();
+}
+
+async function teachChapter(mk, idx, btn) {
+  document.querySelectorAll('.teacher-chapter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const mod = TEACHER_CONTENT[mk];
+  const chapter = mod.chapters[idx];
+  const board = (typeof state !== 'undefined' && state.user?.board) || 'AQA';
+  const box = document.getElementById('teacher-content');
+  box.innerHTML = `<div class="lesson-loading"><div class="lesson-spin"></div><p>Teaching <strong>${chapter}</strong>…</p></div>`;
+
+  let resourceCtx = '';
+  if (typeof state !== 'undefined' && state.uploads && state.uploads.length) {
+    const rel = state.uploads.slice(0, 4);
+    resourceCtx = '\n\nStudent has these uploaded resources — align marking terminology with them:\n' +
+      rel.map(u => `- ${u.category === 'mark-scheme' ? 'MARK SCHEME' : 'PAST PAPER'}: ${u.name} (${u.board || board}, ${u.year || ''}, ${u.module || ''})${u.content ? '\nContent snippet: ' + u.content.slice(0, 350) : ''}`).join('\n\n');
+  }
+
+  const sys = `You are an expert A-Level Mathematics teacher for UK students (${board} exam board).
+Deliver a complete, thorough lesson. Use LaTeX math notation: inline with $...$ and display equations with $$...$$. For example: $x^2 + 3x - 4 = 0$, $$\\frac{d}{dx}(x^n) = nx^{n-1}$$. Never write x^2 in plain text — always use proper LaTeX so notation renders correctly.
+Return ONLY valid JSON (no markdown code fences, no extra text):
+{
+  "objectives": ["at least 3 learning objectives"],
+  "theory": "full explanation with LaTeX math",
+  "workedExamples": [{"problem": "...", "steps": ["step 1", "step 2", "..."]}],
+  "practiceQuestions": [{"q": "question text", "answer": "full worked answer with LaTeX"}],
+  "keyFormulas": ["formula 1", "formula 2", "..."]
+}
+Include at least 3 objectives, 2 worked examples (≥3 steps each), 3 practice questions, 3 key formulas.${resourceCtx}`;
+
+  try {
+    const data = await callClaude([{ role: 'user', content: `Teach me: ${chapter} (${mod.label}, ${mod.year})` }], sys);
+    let raw = getReply(data).replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim();
+    const lesson = JSON.parse(raw);
+    renderTeacherLesson(chapter, mod.year, lesson, box);
+  } catch (e) {
+    box.innerHTML = `<div style="padding:2rem;color:var(--red)">⚠️ Could not generate lesson: ${e.message}</div>`;
+  }
+}
+
+function renderTeacherLesson(chapter, year, L, box) {
+  box.innerHTML = `
+    <div style="margin-bottom:2rem">
+      <div class="lesson-year-badge">${year}</div>
+      <h2 style="margin:.25rem 0;color:var(--white);font-size:1.5rem">${chapter}</h2>
+    </div>
+    <div class="lesson-section">
+      <h3><i class="fas fa-bullseye"></i> Learning Objectives</h3>
+      <ul>${(L.objectives || []).map(o => `<li>${o}</li>`).join('')}</ul>
+    </div>
+    <div class="lesson-section">
+      <h3><i class="fas fa-book-open"></i> Key Theory</h3>
+      <div style="color:var(--muted);line-height:1.9">${(L.theory || '').replace(/\n/g, '<br>')}</div>
+    </div>
+    <div class="lesson-section">
+      <h3><i class="fas fa-pencil"></i> Worked Examples</h3>
+      ${(L.workedExamples || []).map(ex => `
+        <div class="worked-example">
+          <div class="ex-problem">${ex.problem}</div>
+          ${(ex.steps || []).map((s, i) => `<div class="teacher-worked-step"><strong>Step ${i + 1}:</strong> ${s}</div>`).join('')}
+        </div>`).join('')}
+    </div>
+    <div class="lesson-section">
+      <h3><i class="fas fa-question-circle"></i> Practice Questions</h3>
+      ${(L.practiceQuestions || []).map((pq, i) => `
+        <div class="practice-q">
+          <div class="q-text">Q${i + 1}: ${pq.q}</div>
+          <button class="show-answer-btn" onclick="toggleTeacherAnswer(this)">Show Answer</button>
+          <div class="teacher-q-answer">${(pq.answer || '').replace(/\n/g, '<br>')}</div>
+        </div>`).join('')}
+    </div>
+    <div class="lesson-section">
+      <h3><i class="fas fa-star"></i> Key Formulas</h3>
+      <div class="key-formulas-box">
+        ${(L.keyFormulas || []).map(f => `<div class="key-formula-item">${f}</div>`).join('')}
+      </div>
+    </div>`;
+  if (window.MathJax) MathJax.typesetPromise([box]).catch(() => {});
+  if (typeof addXP === 'function') addXP(15, 'Completed a lesson');
+}
+
+function toggleTeacherAnswer(btn) {
+  const ans = btn.nextElementSibling;
+  ans.classList.toggle('visible');
+  btn.textContent = ans.classList.contains('visible') ? 'Hide Answer' : 'Show Answer';
+  if (window.MathJax) MathJax.typesetPromise([ans]).catch(() => {});
+}
+
+// Patch showDash to init teacher when navigating to 'content'
+const _teacherOrigShowDash = window.showDash;
+if (_teacherOrigShowDash) {
+  window.showDash = function(sub) {
+    _teacherOrigShowDash(sub);
+    if (sub === 'content') initTeacher();
+  };
+}
+
+// ═══════════════════════════════════════
+// ADMIN GLOBAL RESOURCES
+// ═══════════════════════════════════════
+let _adminPendingFile = null;
+
+function adminHandleFileSelect(e) {
+  if (e.target.files[0]) adminPrepareUpload(e.target.files[0]);
+}
+function adminHandleFileDrop(e) {
+  e.preventDefault();
+  document.getElementById('admin-upload-zone').classList.remove('drag-over');
+  if (e.dataTransfer.files[0]) adminPrepareUpload(e.dataTransfer.files[0]);
+}
+function adminPrepareUpload(file) {
+  _adminPendingFile = file;
+  document.getElementById('admin-upload-filename').textContent = file.name + ' (' + (file.size / 1024).toFixed(1) + ' KB)';
+  document.getElementById('admin-upload-form').style.display = 'block';
+}
+function adminCancelUpload() {
+  _adminPendingFile = null;
+  document.getElementById('admin-upload-form').style.display = 'none';
+  document.getElementById('admin-upload-filename').textContent = '';
+}
+async function adminConfirmUpload() {
+  if (!_adminPendingFile) return;
+  const file = _adminPendingFile;
+  const category = document.getElementById('admin-upload-category').value;
+  const board = document.getElementById('admin-upload-board').value;
+  const year = document.getElementById('admin-upload-year').value;
+  const module = document.getElementById('admin-upload-module').value;
+  const isGlobal = document.getElementById('admin-is-global').checked;
+
+  let content = '';
+  if (file.type.startsWith('text/') || file.name.endsWith('.txt')) {
+    content = await new Promise(res => {
+      const r = new FileReader();
+      r.onload = e => res(e.target.result.slice(0, 2000));
+      r.readAsText(file);
+    });
+  } else if (file.type.startsWith('image/')) {
+    content = '[IMAGE: ' + file.name + ']';
+  } else {
+    content = '[PDF: ' + file.name + ']';
+  }
+
+  const resource = {
+    id: Date.now(),
+    name: file.name,
+    category,
+    board,
+    year,
+    module,
+    content,
+    size: file.size,
+    uploadedAt: new Date().toISOString(),
+    is_global: isGlobal
+  };
+
+  if (typeof state !== 'undefined' && state.user?.id) {
+    try {
+      await fetch('/api/supabase-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'save_upload', upload: { ...resource, user_id: state.user.id } })
+      });
+    } catch (e) { /* continue */ }
+  }
+
+  if (typeof state !== 'undefined') {
+    if (!state.uploads) state.uploads = [];
+    state.uploads.push(resource);
+    if (typeof saveUploadsToStorage === 'function') saveUploadsToStorage();
+  }
+
+  adminCancelUpload();
+  renderAdminResources();
+  if (typeof showToast === 'function') showToast('✦ Resource saved to shared library!');
+}
+
+function renderAdminResources() {
+  const list = document.getElementById('admin-resources-list');
+  if (!list) return;
+  const uploads = (typeof state !== 'undefined' && state.uploads) || [];
+  const global = uploads.filter(u => u.is_global);
+  const countEl = document.getElementById('admin-resource-count');
+  if (countEl) countEl.textContent = global.length + ' resource' + (global.length !== 1 ? 's' : '');
+  if (!global.length) {
+    list.innerHTML = '<div style="padding:1.5rem;text-align:center;color:var(--muted);background:var(--bg2);border:1px solid var(--bg3);border-radius:10px">No shared resources yet. Upload your first mark scheme or past paper above.</div>';
+    return;
+  }
+  list.innerHTML = global.map(u => `
+    <div class="global-resource-item">
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;color:var(--white);font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${u.name}</div>
+        <div style="font-size:.75rem;color:var(--muted);margin-top:.2rem">${u.board} · ${u.year} · ${u.module}</div>
+      </div>
+      <span class="gr-badge">${u.category === 'mark-scheme' ? 'Mark Scheme' : 'Past Paper'}</span>
+      <span style="font-size:.75rem;color:var(--muted)">${(u.size / 1024).toFixed(0)} KB</span>
+    </div>`).join('');
+}
+
+// Show admin nav item on login + load global resources
+const _adminOrigEnterDash = window.enterDashboard;
+window.enterDashboard = function() {
+  if (_adminOrigEnterDash) _adminOrigEnterDash();
+  const adminEmail = 'Afarouk.wrk@gmail.com';
+  if (typeof state !== 'undefined' && state.user?.email === adminEmail) {
+    const adminItem = document.getElementById('si-admin');
+    if (adminItem) adminItem.style.display = '';
+  }
+  // Load global resources from Supabase on login
+  if (typeof state !== 'undefined' && state.user?.id) {
+    fetch('/api/supabase-auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'get_uploads', userId: state.user.id })
+    }).then(r => r.json()).then(d => {
+      if (d.data && d.data.length) {
+        if (!state.uploads) state.uploads = [];
+        d.data.forEach(u => {
+          if (!state.uploads.find(x => x.id === u.id)) state.uploads.push(u);
+        });
+        if (typeof saveUploadsToStorage === 'function') saveUploadsToStorage();
+      }
+    }).catch(() => {});
+  }
+};
+
+console.log('✦ Synaptiq — AI Teacher + Admin Global Resources active');
 </script>
 </body>
