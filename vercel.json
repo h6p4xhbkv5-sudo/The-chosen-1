@@ -5,6 +5,7 @@
     { "src": "*.html", "use": "@vercel/static" }
   ],
   "routes": [
+    { "src": "/api/config", "dest": "/api/supabase-auth.js" },
     { "src": "/api/(.*)", "dest": "/api/$1.js" },
     { "src": "/pricing", "dest": "/pricing.html" },
     { "src": "/admin", "dest": "/admin.html" },

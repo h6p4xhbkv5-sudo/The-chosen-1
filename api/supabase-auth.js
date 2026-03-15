@@ -1,8 +1,19 @@
 import { applyHeaders, isRateLimited, getIp } from './_lib.js';
 
 export default async function handler(req, res) {
-  applyHeaders(res);
+  applyHeaders(res, 'GET, POST, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(200).end();
+
+  // Serve public config on GET (merged from config.js)
+  if (req.method === 'GET') {
+    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300');
+    return res.status(200).json({
+      supabaseUrl: process.env.SUPABASE_URL || '',
+      supabaseAnonKey: process.env.SUPABASE_ANON_KEY || '',
+      siteUrl: process.env.SITE_URL || ''
+    });
+  }
+
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const ip = getIp(req);
