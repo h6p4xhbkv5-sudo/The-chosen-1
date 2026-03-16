@@ -7273,7 +7273,7 @@ async function getHint(id) {
     1: 'quadratic equations — try using the quadratic formula x = (-b ± √(b²-4ac)) / 2a, or factorising first',
     2: 'Newton\'s three laws — think about inertia, F=ma, and equal/opposite reactions with real examples'
   };
-  showToast('💡 Asking Claude for a hint...');
+  showToast('💡 Getting your hint...');
   const sys = `You are a supportive tutor helping a student with their homework. Give a helpful HINT that guides them WITHOUT giving the answer away. Keep it to 2-3 sentences. ${getA11yInstructions()}`;
   try {
     const data = await callClaude([{ role: 'user', content: `Give me a hint for: ${hints[id]}. Don't give me the answer, just guide me.` }], sys);
@@ -8661,7 +8661,7 @@ function saveLastMsgToNotes() {
 async function aiSummariseNote() {
   const text = document.getElementById('note-text-input').value.trim();
   if (!text) { showToast('Write or paste something to summarise first!'); return; }
-  showToast('✦ Claude is summarising...');
+  showToast('✦ Synaptiq is summarising...');
   const sys = 'You are helping a student create concise revision notes. Summarise the provided text into clear bullet points. Use UK English. Keep it short and memorable — ideal for revision.';
   try {
     const data = await callClaude([{ role: 'user', content: 'Summarise this for my revision notes:\n\n' + text }], sys);
