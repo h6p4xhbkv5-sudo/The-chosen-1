@@ -7,9 +7,10 @@ if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_KEY) {
 }
 
 export default async function handler(req, res) {
-  if (!supabase) return res.status(503).json({ error: 'Database not configured' });
   applyHeaders(res, 'POST, GET, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(200).end();
+
+  if (!supabase) return res.status(503).json({ error: 'Database not configured' });
 
   const ip = getIp(req);
   if (isRateLimited(`${ip}:admin`, 5, 60_000)) {
@@ -31,10 +32,13 @@ export default async function handler(req, res) {
       supabase.from('profiles').select('id', { count: 'exact', head: true })
         .in('subscription_status', ['active'])
     ]);
+    // MRR: count active subscribers × £60/month (student plan)
+    const mrr = (paying.count || 0) * 60;
     return res.status(200).json({
       total_users: users.count || 0,
       active_7d: active.count || 0,
-      paying: paying.count || 0
+      paying: paying.count || 0,
+      mrr
     });
   }
 
@@ -47,7 +51,8 @@ export default async function handler(req, res) {
       .select('*', { count: 'exact' })
       .order('created_at', { ascending: false })
       .range(from, to);
-    return res.status(200).json({ users: data || [], total: count || 0, page });
+    const pages = Math.ceil((count || 0) / limit);
+    return res.status(200).json({ users: data || [], total: count || 0, page, pages });
   }
 
   if (action === 'send_weekly_emails') {

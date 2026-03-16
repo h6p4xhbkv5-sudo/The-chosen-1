@@ -23,6 +23,7 @@ export default async function handler(req, res) {
 
   const supabaseUrl = process.env.SUPABASE_URL;
   const serviceKey = process.env.SUPABASE_SERVICE_KEY;
+  const anonKey = process.env.SUPABASE_ANON_KEY;
   if (!supabaseUrl || !serviceKey) return res.status(500).json({ error: 'Missing Supabase config' });
 
   const { action, payload, upload, userId } = req.body;
@@ -34,6 +35,64 @@ export default async function handler(req, res) {
   };
 
   try {
+    // ─── AUTH: Create a Supabase Auth user with email + password ───────────
+    if (action === 'create_auth_user') {
+      const { email, password } = payload || {};
+      if (!email || !password) return res.status(400).json({ error: 'email and password required' });
+      const r = await fetch(`${supabaseUrl}/auth/v1/admin/users`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ email, password, email_confirm: true })
+      });
+      const data = await r.json();
+      if (!r.ok) return res.status(r.status).json({ error: data.message || data.msg || 'Could not create auth user' });
+      return res.status(200).json({ id: data.id, email: data.email });
+    }
+
+    // ─── AUTH: Verify email + password, return profile ──────────────────────
+    if (action === 'verify_login') {
+      const { email, password } = payload || {};
+      if (!email || !password) return res.status(400).json({ error: 'email and password required' });
+      if (!anonKey) return res.status(500).json({ error: 'Missing SUPABASE_ANON_KEY' });
+
+      // Step 1: verify credentials via Supabase Auth token endpoint
+      const authR = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': anonKey },
+        body: JSON.stringify({ email, password })
+      });
+      const authData = await authR.json();
+      if (!authR.ok || authData.error) {
+        return res.status(401).json({ error: authData.error_description || authData.error || 'Invalid email or password' });
+      }
+
+      // Step 2: fetch extended profile from profiles table
+      const profileR = await fetch(
+        `${supabaseUrl}/rest/v1/profiles?email=eq.${encodeURIComponent(email)}&select=*`,
+        { headers }
+      );
+      const profiles = await profileR.json();
+      const profile = Array.isArray(profiles) ? profiles[0] : null;
+      if (!profile) return res.status(404).json({ error: 'Profile not found — please register first' });
+
+      return res.status(200).json(profile);
+    }
+
+    // ─── AUTH: Send password reset email ────────────────────────────────────
+    if (action === 'forgot_password') {
+      const { email } = payload || {};
+      if (!email) return res.status(400).json({ error: 'email required' });
+      if (!anonKey) return res.status(500).json({ error: 'Missing SUPABASE_ANON_KEY' });
+      await fetch(`${supabaseUrl}/auth/v1/recover`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'apikey': anonKey },
+        body: JSON.stringify({ email })
+      });
+      // Supabase always returns 200 for this endpoint (prevents email enumeration)
+      return res.status(200).json({ ok: true });
+    }
+
+    // ─── PROFILE: Create / update ───────────────────────────────────────────
     if (action === 'upsert_profile') {
       const r = await fetch(`${supabaseUrl}/rest/v1/profiles`, {
         method: 'POST',
@@ -42,6 +101,18 @@ export default async function handler(req, res) {
       });
       const data = await r.json();
       return res.status(r.status).json(data);
+    }
+
+    if (action === 'patch_profile') {
+      const { id, ...fields } = payload;
+      if (!id) return res.status(400).json({ error: 'id required' });
+      const r = await fetch(`${supabaseUrl}/rest/v1/profiles?id=eq.${id}`, {
+        method: 'PATCH',
+        headers: { ...headers, 'Prefer': 'return=representation' },
+        body: JSON.stringify({ ...fields, updated_at: new Date().toISOString() })
+      });
+      const data = await r.json();
+      return res.status(r.status).json(Array.isArray(data) ? (data[0] || {}) : data);
     }
 
     if (action === 'get_profile') {
@@ -53,6 +124,7 @@ export default async function handler(req, res) {
       return res.status(r.status).json(data[0] || null);
     }
 
+    // ─── RESOURCES ──────────────────────────────────────────────────────────
     if (action === 'save_upload') {
       const body = upload || payload;
       if (!body) return res.status(400).json({ error: 'upload required' });
