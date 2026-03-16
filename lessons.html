@@ -7,6 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Mono&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'$',right:'$',display:false}],throwOnError:false})"></script>
 <style>
 :root {
   --black:#0A0C12; --bg2:#12141C; --bg3:#1A1D28; --bg4:#22263A;
@@ -51,6 +55,17 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
 .subtopic-pill{background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:20px;padding:.25rem .65rem;font-size:.75rem;cursor:pointer;color:var(--muted);transition:all .2s}
 .subtopic-pill:hover,.subtopic-pill.selected{background:rgba(201,168,76,0.2);color:var(--white);border-color:rgba(201,168,76,0.5)}
 
+/* GRADE TARGET */
+.grade-row{display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap}
+.grade-row label{font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.grade-pills{display:flex;gap:.4rem;flex-wrap:wrap}
+.grade-pill{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:.3rem .85rem;font-size:.8rem;font-weight:700;cursor:pointer;transition:all .2s;color:var(--muted)}
+.grade-pill:hover{color:var(--white)}
+.grade-pill.selected-astar{background:rgba(201,168,76,0.2);border-color:var(--gold);color:var(--gold)}
+.grade-pill.selected-a{background:rgba(96,165,250,0.15);border-color:var(--blue);color:var(--blue)}
+.grade-pill.selected-b{background:rgba(74,222,128,0.12);border-color:var(--green);color:var(--green)}
+.grade-pill.selected-c{background:rgba(167,139,250,0.12);border-color:var(--purple);color:var(--purple)}
+
 /* LESSON MODES */
 .lesson-modes{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1rem}
 .mode-btn{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.5rem 1rem;font-size:.8rem;font-weight:600;cursor:pointer;color:var(--muted);transition:all .2s;display:flex;align-items:center;gap:.4rem}
@@ -70,8 +85,6 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
 .lesson-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
 .lesson-title{font-size:1.4rem;font-weight:700;margin-bottom:.3rem}
 .lesson-meta{font-size:.8rem;color:var(--muted)}
-.lesson-section{margin-bottom:2rem}
-.lesson-section-title{font-size:1rem;font-weight:700;color:var(--gold);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem;padding-bottom:.5rem;border-bottom:1px solid rgba(201,168,76,0.15)}
 .lesson-body{font-size:.9rem;line-height:1.9;color:rgba(240,238,248,0.9)}
 .lesson-body p{margin-bottom:.75rem}
 .lesson-body ul,.lesson-body ol{padding-left:1.5rem;margin-bottom:.75rem}
@@ -81,6 +94,54 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
 .lesson-body .callout{background:rgba(201,168,76,0.07);border-left:3px solid var(--gold);padding:.75rem 1rem;border-radius:0 8px 8px 0;margin:.75rem 0}
 .lesson-body .example{background:rgba(96,165,250,0.07);border-left:3px solid var(--blue);padding:.75rem 1rem;border-radius:0 8px 8px 0;margin:.75rem 0}
 .lesson-body .warning{background:rgba(244,114,182,0.07);border-left:3px solid var(--pink);padding:.75rem 1rem;border-radius:0 8px 8px 0;margin:.75rem 0}
+
+/* ESSENTIAL / BONUS CONTENT */
+.lesson-body .essential-block{background:rgba(201,168,76,0.08);border:1.5px solid rgba(201,168,76,0.35);border-radius:10px;padding:1rem 1.1rem;margin:.9rem 0;position:relative}
+.essential-tag{display:inline-flex;align-items:center;gap:.35rem;background:var(--gold);color:var(--black);font-size:.68rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:.2rem .55rem;border-radius:20px;margin-bottom:.5rem}
+.lesson-body .bonus-block{background:rgba(139,137,156,0.06);border:1px solid rgba(139,137,156,0.18);border-radius:10px;padding:.8rem 1rem;margin:.75rem 0;position:relative}
+.bonus-tag{display:inline-flex;align-items:center;gap:.35rem;background:rgba(139,137,156,0.2);color:var(--muted);font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:.2rem .55rem;border-radius:20px;margin-bottom:.4rem}
+
+/* ── SLIDE DECK ── */
+.slide-deck{position:relative}
+.slide-track{overflow:hidden;border-radius:var(--radius)}
+.slide{display:none;animation:slideIn .3s ease}
+.slide.active{display:block}
+@keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.slide-card{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:2rem 2.2rem;min-height:320px}
+.slide-step-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+.slide-step-num{width:26px;height:26px;border-radius:50%;background:var(--gold);color:var(--black);font-size:.75rem;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.slide-title{font-size:1.25rem;font-weight:700;margin-bottom:1.1rem;color:var(--white)}
+.slide-content{font-size:.9rem;line-height:1.9;color:rgba(240,238,248,0.9)}
+.slide-content p{margin-bottom:.7rem}
+.slide-content ul,.slide-content ol{padding-left:1.4rem;margin-bottom:.7rem}
+.slide-content li{margin-bottom:.35rem}
+.slide-content strong{color:var(--gold)}
+.slide-content code{font-family:var(--font-mono);background:var(--bg4);padding:.15rem .4rem;border-radius:4px;font-size:.85em}
+.slide-content .callout{background:rgba(201,168,76,0.07);border-left:3px solid var(--gold);padding:.7rem .9rem;border-radius:0 8px 8px 0;margin:.7rem 0}
+.slide-content .example{background:rgba(96,165,250,0.07);border-left:3px solid var(--blue);padding:.7rem .9rem;border-radius:0 8px 8px 0;margin:.7rem 0}
+.slide-content .warning{background:rgba(244,114,182,0.07);border-left:3px solid var(--pink);padding:.7rem .9rem;border-radius:0 8px 8px 0;margin:.7rem 0}
+.slide-keypint{margin-top:1.4rem;background:rgba(201,168,76,0.1);border:1.5px solid rgba(201,168,76,0.4);border-radius:10px;padding:1rem 1.2rem;font-size:.92rem;color:var(--white);line-height:1.7}
+.slide-keypint::before{content:"✦ Key Point";color:var(--gold);font-weight:800;font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;display:block;margin-bottom:.35rem}
+.slide-essential-badge{display:inline-flex;align-items:center;gap:.3rem;background:rgba(201,168,76,0.18);border:1px solid rgba(201,168,76,0.4);color:var(--gold);font-size:.72rem;font-weight:700;padding:.2rem .6rem;border-radius:20px;margin-bottom:.6rem;letter-spacing:.04em}
+.slide-bonus-badge{display:inline-flex;align-items:center;gap:.3rem;background:rgba(139,137,156,0.12);border:1px solid rgba(139,137,156,0.25);color:var(--muted);font-size:.72rem;font-weight:600;padding:.2rem .6rem;border-radius:20px;margin-bottom:.6rem}
+
+.slide-nav{display:flex;align-items:center;gap:1rem;margin-top:1.5rem;justify-content:space-between;flex-wrap:wrap}
+.slide-nav-btn{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.65rem 1.3rem;color:var(--white);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:.5rem}
+.slide-nav-btn:hover:not(:disabled){border-color:rgba(201,168,76,0.4);color:var(--gold)}
+.slide-nav-btn:disabled{opacity:.3;cursor:not-allowed}
+.slide-counter{font-size:.8rem;color:var(--muted);font-weight:600}
+.slide-progress-dots{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap;max-width:320px}
+.slide-dot{width:8px;height:8px;border-radius:50%;background:var(--bg4);border:1px solid var(--border);cursor:pointer;transition:all .2s;flex-shrink:0}
+.slide-dot.active{background:var(--gold);border-color:var(--gold);transform:scale(1.2)}
+.slide-dot.visited{background:rgba(201,168,76,0.35);border-color:rgba(201,168,76,0.35)}
+
+/* grade indicator in slide */
+.grade-indicator{display:inline-flex;align-items:center;gap:.3rem;font-size:.72rem;font-weight:700;padding:.2rem .55rem;border-radius:20px;letter-spacing:.04em}
+.grade-astar{background:rgba(201,168,76,0.18);color:var(--gold)}
+.grade-a{background:rgba(96,165,250,0.14);color:var(--blue)}
+.grade-b{background:rgba(74,222,128,0.12);color:var(--green)}
+.grade-c{background:rgba(167,139,250,0.12);color:var(--purple)}
 
 /* QUIZ in lesson */
 .lesson-quiz{background:var(--bg3);border-radius:var(--radius);padding:1.25rem;margin-bottom:.75rem}
@@ -92,11 +153,6 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
 .quiz-opt.wrong{background:rgba(244,114,182,0.1);border-color:var(--pink);color:var(--pink)}
 .quiz-feedback{font-size:.8rem;margin-top:.5rem;display:none}
 .quiz-feedback.show{display:block}
-
-/* PROGRESS TABS */
-.lesson-tabs{display:flex;gap:.25rem;margin-bottom:1.5rem;background:var(--bg3);border-radius:var(--radius);padding:.35rem}
-.lesson-tab{flex:1;text-align:center;padding:.5rem .75rem;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;color:var(--muted);transition:all .2s;border:none;background:none}
-.lesson-tab.active{background:var(--bg4);color:var(--white)}
 
 /* DOT PULSE */
 .loading-msg{display:flex;align-items:center;gap:.75rem;color:var(--muted);padding:2rem;font-size:.9rem}
@@ -130,7 +186,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
 <div class="page">
   <div class="page-header">
     <h1 class="page-title">🎓 AI Lessons from the Curriculum</h1>
-    <p class="page-sub">Select a topic and level — Synaptiq AI generates a complete, interactive A-Level Maths lesson</p>
+    <p class="page-sub">Select a topic, your target grade, and lesson type — Synaptiq AI generates a focused, grade-targeted lesson</p>
   </div>
 
   <!-- SELECTOR -->
@@ -156,6 +212,18 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
       </div>
     </div>
 
+    <!-- TARGET GRADE -->
+    <div class="grade-row">
+      <label>Target Grade</label>
+      <div class="grade-pills" id="grade-pills">
+        <button class="grade-pill selected-astar" data-grade="A*" onclick="selectGrade(this)">A*</button>
+        <button class="grade-pill" data-grade="A" onclick="selectGrade(this)">A</button>
+        <button class="grade-pill" data-grade="B" onclick="selectGrade(this)">B</button>
+        <button class="grade-pill" data-grade="C" onclick="selectGrade(this)">C</button>
+      </div>
+      <span id="grade-hint" style="font-size:.75rem;color:var(--muted);margin-left:.25rem">All content shown</span>
+    </div>
+
     <div style="margin-bottom:1rem">
       <div style="font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem">Select Topic</div>
       <div class="topics-list" id="topics-list"></div>
@@ -166,6 +234,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
       <div style="font-size:.75rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem">Lesson Type</div>
       <div class="lesson-modes">
         <button class="mode-btn selected" data-mode="full" onclick="selectMode(this)">📖 Full Lesson</button>
+        <button class="mode-btn" data-mode="slides" onclick="selectMode(this)">🎞️ Step-by-Step Slides</button>
         <button class="mode-btn" data-mode="explain" onclick="selectMode(this)">💡 Explanation Only</button>
         <button class="mode-btn" data-mode="examples" onclick="selectMode(this)">✏️ Worked Examples</button>
         <button class="mode-btn" data-mode="quiz" onclick="selectMode(this)">🧠 Interactive Quiz</button>
@@ -200,7 +269,15 @@ const CURRICULUM = {
   }
 };
 
-// ─── Auth ──────────────────────────────────────────────
+// Grade config
+const GRADE_CONFIG = {
+  'A*': { hint:'All content shown', cls:'selected-astar', label:'A* — Full Depth', depth:'every concept including edge cases, proofs, and advanced techniques' },
+  'A':  { hint:'Core + key extensions', cls:'selected-a', label:'A — Core + Extensions', depth:'all core content plus key extension techniques needed for top marks' },
+  'B':  { hint:'Core content only', cls:'selected-b', label:'B — Core Content', depth:'only the essential core content and standard methods' },
+  'C':  { hint:'Must-know basics only', cls:'selected-c', label:'C — Essentials Only', depth:'only the minimum required content — the must-know basics to secure the grade' }
+};
+
+// ─── State ─────────────────────────────────────────────
 const SUPABASE_URL = window.SUPABASE_URL || '';
 const SUPABASE_ANON = window.SUPABASE_ANON_KEY || '';
 let supabaseClient = null;
@@ -208,7 +285,12 @@ let currentUser = null;
 let selectedTopic = null;
 let selectedSubtopic = null;
 let selectedMode = 'full';
+let selectedGrade = 'A*';
+let slideData = [];
+let currentSlide = 0;
+let visitedSlides = new Set();
 
+// ─── Auth ──────────────────────────────────────────────
 async function initAuth() {
   if (SUPABASE_URL && SUPABASE_ANON && window.supabase) {
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
@@ -232,7 +314,7 @@ async function initAuth() {
 }
 
 async function callClaude(messages, system) {
-  const body = { max_tokens:3000, messages };
+  const body = { max_tokens:4000, messages };
   if (system) body.system = system;
   const headers = { 'Content-Type':'application/json' };
   if (currentUser?.token) headers['Authorization'] = 'Bearer ' + currentUser.token;
@@ -250,6 +332,17 @@ function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── Grade Selection ────────────────────────────────────
+function selectGrade(btn) {
+  document.querySelectorAll('.grade-pill').forEach(b => {
+    b.className = 'grade-pill';
+  });
+  selectedGrade = btn.dataset.grade;
+  const cfg = GRADE_CONFIG[selectedGrade];
+  btn.classList.add(cfg.cls);
+  document.getElementById('grade-hint').textContent = cfg.hint;
 }
 
 // ─── UI helpers ────────────────────────────────────────
@@ -274,7 +367,6 @@ function updateTopics() {
 
   if (!data) { container.innerHTML = ''; return; }
 
-  // Update boards
   const boardSel = document.getElementById('l-board');
   if (data.boards?.length) {
     boardSel.innerHTML = data.boards.map(b => `<option>${b}</option>`).join('');
@@ -315,6 +407,15 @@ function selectMode(btn) {
   selectedMode = btn.dataset.mode;
 }
 
+// ─── Grade-aware system prompt builder ─────────────────
+function buildGradeInstruction() {
+  const g = selectedGrade;
+  if (g === 'A*') return `The student is targeting an A* grade. Include ALL content — core concepts, edge cases, proofs, advanced techniques, and anything that separates A from A*. Mark truly essential items with [ESSENTIAL: ...] and advanced/bonus content with [BONUS: ...].`;
+  if (g === 'A')  return `The student is targeting an A grade. Include core content plus key extension techniques. Mark essential items with [ESSENTIAL: ...] and bonus/stretch content with [BONUS: ...]. Omit highly advanced proofs unless they directly appear on the exam.`;
+  if (g === 'B')  return `The student is targeting a B grade. Focus ONLY on core content and standard methods. EXCLUDE edge cases, proofs, and advanced extensions. Mark every piece of must-know content with [ESSENTIAL: ...]. Do not include bonus content.`;
+  return `The student is targeting a C grade. Include ONLY the bare minimum required to pass — the most fundamental methods and definitions. Every item of content MUST be labelled [ESSENTIAL: ...]. Ruthlessly exclude anything not needed to achieve a C grade.`;
+}
+
 // ─── Lesson Generation ─────────────────────────────────
 async function startLesson() {
   if (!selectedTopic) { showToast('Please select a topic first'); return; }
@@ -324,38 +425,65 @@ async function startLesson() {
   const topicFocus = selectedSubtopic || selectedTopic;
   const btn = document.getElementById('start-btn');
   const output = document.getElementById('lesson-output');
+  const gradeCfg = GRADE_CONFIG[selectedGrade];
 
   btn.disabled = true;
   btn.textContent = '✦ Generating lesson...';
   output.className = 'lesson-output show';
-  output.innerHTML = `<div class="loading-msg"><div class="dot-pulse"><span></span><span></span><span></span></div>Synaptiq is preparing your ${subject} lesson on "${topicFocus}"...</div>`;
+  output.innerHTML = `<div class="loading-msg"><div class="dot-pulse"><span></span><span></span><span></span></div>Synaptiq is preparing your ${selectedGrade}-targeted lesson on "${topicFocus}"...</div>`;
 
   const levelLabel = level === 'alevel' ? 'A-Level' : 'GCSE';
+  const gradeInstruction = buildGradeInstruction();
+
+  // Mode-specific prompts
   const modeGuides = {
-    full: `Create a COMPLETE interactive lesson with: 1) A clear explanation with examples and diagrams described in text. 2) Key definitions in bold. 3) Worked examples (show all steps). 4) Common exam mistakes to avoid. 5) 5 practice questions with model answers. 6) Quick summary bullet points. Use callout boxes [CALLOUT: ...], example boxes [EXAMPLE: ...], and warning boxes [WARNING: ...].`,
-    explain: `Write a thorough, clear explanation of the topic as if teaching it for the first time. Include key definitions, real-world analogies, and step-by-step breakdowns. Use clear headings. Assume the student knows the basics but not this specific topic.`,
-    examples: `Provide 5–7 fully worked examples with every step shown and explained. Start with a simple example and gradually increase difficulty to exam standard. Show all working out. After each example, explain WHY each step was taken.`,
-    quiz: `Create an interactive quiz with 8 multiple-choice questions. For each question provide: {"question":"...","options":["A)...","B)...","C)...","D)..."],"correct":0,"explanation":"..."} where correct is the 0-indexed position of the right answer. Cover all key aspects of the topic. Return ONLY valid JSON array.`,
-    exam: `Provide expert exam technique guidance including: 1) Exactly what examiners are looking for (mark scheme language). 2) Common mistakes students make and how to avoid them. 3) Key phrases and terminology to use. 4) How to structure extended answers. 5) Time management tips. 6) A model A-grade answer to a typical exam question.`,
-    revision: `Create a condensed revision guide with: 1) Key facts in bullet points. 2) Essential formulas/dates/terms in a table. 3) Memory aids or mnemonics. 4) 3 exam-style questions with brief model answers. Keep it concise and easy to scan.`
+    full: `Create a COMPLETE interactive lesson with: 1) A clear explanation with examples. 2) Key definitions in bold. 3) Worked examples (show all steps). 4) Common exam mistakes to avoid. 5) 5 practice questions with model answers. 6) Quick summary bullet points. Use [CALLOUT: ...], [EXAMPLE: ...], [WARNING: ...]. ${gradeInstruction}`,
+    explain: `Write a thorough, clear explanation of the topic as if teaching it for the first time. Include key definitions, real-world analogies, and step-by-step breakdowns. Use clear headings. ${gradeInstruction}`,
+    examples: `Provide 5–7 fully worked examples with every step shown and explained. Start simple, increase to exam standard. Show all working. After each step, explain WHY. ${gradeInstruction}`,
+    quiz: `Create an interactive quiz with 8 multiple-choice questions. For each: {"question":"...","options":["A)...","B)...","C)...","D)..."],"correct":0,"explanation":"..."} where correct is 0-indexed. Return ONLY valid JSON array. ${gradeInstruction}`,
+    exam: `Provide expert exam technique: 1) Examiner mark scheme language. 2) Common mistakes and how to avoid them. 3) Key phrases and terminology. 4) Extended answer structure. 5) Time tips. 6) A model A-grade answer. ${gradeInstruction}`,
+    revision: `Create a condensed revision guide: 1) Key facts in bullet points. 2) Essential formulas in a table. 3) Mnemonics. 4) 3 exam-style questions with brief answers. Keep it concise. ${gradeInstruction}`,
+    slides: `You are creating a STEP-BY-STEP SLIDE DECK to teach how to solve problems on this topic (e.g. plotting x,y graphs, finding circle equations, etc.).
+
+Return ONLY a valid JSON array with NO markdown fences, NO extra text. Each element is one slide/step:
+[
+  {
+    "step": 1,
+    "title": "Step title (action verb)",
+    "content": "HTML explanation using <p>, <ul>, <li>, <strong>, <code> tags. Show the working clearly.",
+    "keyPoint": "One-sentence key point to remember",
+    "essential": true,
+    "workedExample": "Show a concrete worked example for this step (HTML)"
+  }
+]
+
+Rules:
+- 6–10 slides. Start with setup/identify, work through all steps, end with check/verify.
+- "essential": true for must-know steps, false for bonus/advanced steps.
+- Use concrete numbers in workedExample (e.g. for circles: centre (3,-2) radius 5).
+- ${gradeInstruction.replace(/\[ESSENTIAL: \.\.\.\]|\[BONUS: \.\.\.\]/g,'')}`
   };
 
   const sys = `You are Synaptiq AI, an expert UK ${levelLabel} ${board} Mathematics teacher.
-Your goal is to give the student a world-class lesson they can learn from immediately.
+Target grade: ${gradeCfg.label}.
 ${modeGuides[selectedMode]}
-Format your response in clear HTML using: <h3>, <p>, <ul>, <ol>, <li>, <strong>, <em>, <code> tags.
+${selectedMode !== 'slides' && selectedMode !== 'quiz' ? `Format in HTML using: <h3>, <p>, <ul>, <ol>, <li>, <strong>, <em>, <code>.
 Use [CALLOUT: text] for key points, [EXAMPLE: text] for examples, [WARNING: text] for common mistakes.
-Make it engaging, thorough, and exam-focused.`;
+Use [ESSENTIAL: text] for must-know content, [BONUS: text] for advanced/extra content.
+ALWAYS wrap mathematical expressions in LaTeX: use $...$ for inline math (e.g. $x^2 + y^2 = r^2$) and $$...$$ on its own line for display equations. Never write bare formulas without LaTeX delimiters.
+Make it engaging, thorough, and exam-focused.` : selectedMode === 'slides' ? `ALWAYS use LaTeX in slide content: $...$ for inline math, $$...$$ for display equations. For example: "The equation of a circle is $x^2 + y^2 = r^2$" and for the general form: $$( x - a)^2 + (y - b)^2 = r^2$$` : ''}`;
 
   try {
     const data = await callClaude([{
       role: 'user',
-      content: `Teach me ${topicFocus} from ${subject} ${board} ${levelLabel}. My topic area is: ${selectedTopic}.`
+      content: `Teach me "${topicFocus}" from ${subject} ${board} ${levelLabel}. Topic area: ${selectedTopic}. Target grade: ${selectedGrade}.`
     }], sys);
     let reply = getReply(data);
 
     if (selectedMode === 'quiz') {
       renderQuiz(reply, subject, topicFocus, levelLabel, board);
+    } else if (selectedMode === 'slides') {
+      renderSlides(reply, subject, topicFocus, levelLabel, board);
     } else {
       renderLesson(reply, subject, topicFocus, levelLabel, board);
     }
@@ -366,20 +494,47 @@ Make it engaging, thorough, and exam-focused.`;
   btn.textContent = '✦ Start Lesson';
 }
 
+// ─── Math rendering ────────────────────────────────────
+function rerenderMath(el) {
+  if (window.renderMathInElement) {
+    try {
+      renderMathInElement(el, {
+        delimiters:[
+          {left:'$$',right:'$$',display:true},
+          {left:'\\(',right:'\\)',display:false},
+          {left:'$',right:'$',display:false}
+        ],
+        throwOnError:false
+      });
+    } catch(e) {}
+  }
+}
+
+// ─── Format helpers ────────────────────────────────────
 function formatLessonHTML(text) {
   return text
     .replace(/\[CALLOUT: (.*?)\]/g, '<div class="callout">$1</div>')
-    .replace(/\[EXAMPLE: (.*?)\]/g, '<div class="example">$1</div>')
-    .replace(/\[WARNING: (.*?)\]/g, '<div class="warning">$1</div>');
+    .replace(/\[EXAMPLE: ([\s\S]*?)\]/g, '<div class="example">$1</div>')
+    .replace(/\[WARNING: (.*?)\]/g, '<div class="warning">$1</div>')
+    .replace(/\[ESSENTIAL: ([\s\S]*?)\]/g, '<div class="essential-block"><span class="essential-tag">✦ Essential</span><div>$1</div></div>')
+    .replace(/\[BONUS: ([\s\S]*?)\]/g, '<div class="bonus-block"><span class="bonus-tag">★ Bonus / Advanced</span><div>$1</div></div>');
 }
 
+function gradeClass() {
+  return selectedGrade === 'A*' ? 'grade-astar' : selectedGrade === 'A' ? 'grade-a' : selectedGrade === 'B' ? 'grade-b' : 'grade-c';
+}
+
+// ─── Render: Standard Lesson ────────────────────────────
 function renderLesson(text, subject, topic, level, board) {
   const output = document.getElementById('lesson-output');
   const modeLabels = {full:'Full Lesson',explain:'Explanation',examples:'Worked Examples',exam:'Exam Technique',revision:'Quick Revision'};
   output.innerHTML = `
     <div class="lesson-header">
       <div>
-        <div class="lesson-title">${subject}: ${topic}</div>
+        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.35rem">
+          <div class="lesson-title" style="margin-bottom:0">${subject}: ${topic}</div>
+          <span class="grade-indicator ${gradeClass()}">${selectedGrade} Target</span>
+        </div>
         <div class="lesson-meta">${level} · ${board} · ${modeLabels[selectedMode]||''}</div>
       </div>
       <div style="display:flex;gap:.5rem;flex-wrap:wrap">
@@ -388,9 +543,145 @@ function renderLesson(text, subject, topic, level, board) {
         <button class="btn-outline" onclick="document.getElementById('selector-card').scrollIntoView({behavior:'smooth'})">← Change Topic</button>
       </div>
     </div>
+    <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:8px;padding:.65rem 1rem;margin-bottom:1.25rem;font-size:.8rem;color:var(--muted);display:flex;align-items:center;gap:.5rem">
+      <span style="color:var(--gold)">✦</span>
+      <span>Content is <strong style="color:var(--white)">filtered for ${selectedGrade} grade</strong>.
+      <span class="essential-tag" style="font-size:.65rem;padding:.15rem .4rem">✦ Essential</span> = must-know for your grade.
+      ${selectedGrade === 'A*' || selectedGrade === 'A' ? '<span class="bonus-tag" style="font-size:.65rem;padding:.15rem .4rem">★ Bonus</span> = advanced/extra depth.' : ''}
+      </span>
+    </div>
     <div class="lesson-body">${formatLessonHTML(text)}</div>`;
+  setTimeout(() => rerenderMath(output), 100);
 }
 
+// ─── Render: Step-by-Step Slides ───────────────────────
+function renderSlides(rawText, subject, topic, level, board) {
+  const output = document.getElementById('lesson-output');
+  let slides = [];
+
+  try {
+    const clean = rawText.replace(/```json|```/g,'').trim();
+    slides = JSON.parse(clean);
+    if (!Array.isArray(slides) || slides.length === 0) throw new Error('empty');
+  } catch(e) {
+    // If JSON parse fails, fall back to lesson render
+    renderLesson(rawText, subject, topic, level, board);
+    return;
+  }
+
+  // Filter slides based on grade
+  let filteredSlides = slides;
+  if (selectedGrade === 'B' || selectedGrade === 'C') {
+    filteredSlides = slides.filter(s => s.essential !== false);
+  }
+  if (filteredSlides.length === 0) filteredSlides = slides;
+
+  slideData = filteredSlides;
+  currentSlide = 0;
+  visitedSlides = new Set([0]);
+
+  const total = filteredSlides.length;
+  const skipped = slides.length - filteredSlides.length;
+
+  // Build slide HTML
+  const slidesHTML = filteredSlides.map((s, i) => {
+    const isEssential = s.essential !== false;
+    const badge = isEssential
+      ? `<span class="slide-essential-badge">✦ Essential for ${selectedGrade}</span>`
+      : `<span class="slide-bonus-badge">★ Bonus / Advanced</span>`;
+    const keyPt = s.keyPoint ? `<div class="slide-keypint">${sanitizeHTML(s.keyPoint)}</div>` : '';
+    const worked = s.workedExample ? `<div class="example" style="margin-top:1rem"><strong>Worked example:</strong><br>${s.workedExample}</div>` : '';
+    return `<div class="slide${i===0?' active':''}" id="slide-${i}">
+      <div class="slide-card">
+        <div class="slide-step-label">
+          <div class="slide-step-num">${i+1}</div>
+          <span>Step ${i+1} of ${total}</span>
+          ${badge}
+        </div>
+        <div class="slide-title">${sanitizeHTML(s.title||'')}</div>
+        <div class="slide-content">${formatLessonHTML(s.content||'')}${worked}</div>
+        ${keyPt}
+      </div>
+    </div>`;
+  }).join('');
+
+  const dots = filteredSlides.map((_, i) =>
+    `<div class="slide-dot${i===0?' active visited':''}" id="dot-${i}" onclick="goToSlide(${i})" title="Step ${i+1}"></div>`
+  ).join('');
+
+  const skippedNote = skipped > 0 ? `<div style="font-size:.75rem;color:var(--muted);text-align:center;margin-top:.75rem">⚡ ${skipped} advanced step${skipped>1?'s':''} hidden for ${selectedGrade} target — <a href="#" onclick="selectedGrade='A*';startLesson();return false" style="color:var(--gold);text-decoration:none">show all</a></div>` : '';
+
+  output.innerHTML = `
+    <div class="lesson-header">
+      <div>
+        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.35rem">
+          <div class="lesson-title" style="margin-bottom:0">${subject}: ${topic}</div>
+          <span class="grade-indicator ${gradeClass()}">${selectedGrade} Target</span>
+        </div>
+        <div class="lesson-meta">${level} · ${board} · Step-by-Step Slides · ${total} steps</div>
+      </div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <button class="btn-outline" onclick="window.print()">🖨️ Print All</button>
+        <button class="btn-outline" onclick="startLesson()">↻ Regenerate</button>
+        <button class="btn-outline" onclick="document.getElementById('selector-card').scrollIntoView({behavior:'smooth'})">← Change Topic</button>
+      </div>
+    </div>
+
+    <div class="slide-deck">
+      <div class="slide-track">${slidesHTML}</div>
+      <div class="slide-nav">
+        <button class="slide-nav-btn" id="prev-btn" onclick="navigateSlide(-1)" disabled>← Previous</button>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:.5rem">
+          <span class="slide-counter" id="slide-counter">Step 1 of ${total}</span>
+          <div class="slide-progress-dots" id="progress-dots">${dots}</div>
+        </div>
+        <button class="slide-nav-btn" id="next-btn" onclick="navigateSlide(1)">Next →</button>
+      </div>
+    </div>
+    ${skippedNote}`;
+  setTimeout(() => rerenderMath(output), 100);
+}
+
+// ─── Slide Navigation ───────────────────────────────────
+function navigateSlide(dir) {
+  const total = slideData.length;
+  const newIdx = currentSlide + dir;
+  if (newIdx < 0 || newIdx >= total) return;
+  goToSlide(newIdx);
+}
+
+function goToSlide(idx) {
+  const total = slideData.length;
+  // Hide current
+  const cur = document.getElementById('slide-' + currentSlide);
+  if (cur) cur.classList.remove('active');
+  const curDot = document.getElementById('dot-' + currentSlide);
+  if (curDot) { curDot.classList.remove('active'); curDot.classList.add('visited'); }
+
+  currentSlide = idx;
+  visitedSlides.add(idx);
+
+  // Show new
+  const next = document.getElementById('slide-' + idx);
+  if (next) next.classList.add('active');
+  const nextDot = document.getElementById('dot-' + idx);
+  if (nextDot) { nextDot.classList.add('active','visited'); }
+
+  // Update counter and nav buttons
+  document.getElementById('slide-counter').textContent = `Step ${idx+1} of ${total}`;
+  document.getElementById('prev-btn').disabled = idx === 0;
+  document.getElementById('next-btn').disabled = idx === total - 1;
+  if (idx === total - 1) {
+    document.getElementById('next-btn').textContent = '✓ Complete';
+  } else {
+    document.getElementById('next-btn').textContent = 'Next →';
+  }
+  // Re-render math for this slide
+  const activeSlide = document.getElementById('slide-' + idx);
+  if (activeSlide) setTimeout(() => rerenderMath(activeSlide), 50);
+}
+
+// ─── Render: Quiz ───────────────────────────────────────
 function renderQuiz(rawText, subject, topic, level, board) {
   const output = document.getElementById('lesson-output');
   let questions = [];
@@ -398,7 +689,6 @@ function renderQuiz(rawText, subject, topic, level, board) {
     const clean = rawText.replace(/```json|```/g,'').trim();
     questions = JSON.parse(clean);
   } catch(e) {
-    // Fallback: show as text lesson
     renderLesson(rawText, subject, topic, level, board);
     return;
   }
@@ -406,8 +696,11 @@ function renderQuiz(rawText, subject, topic, level, board) {
   let html = `
     <div class="lesson-header">
       <div>
-        <div class="lesson-title">Quiz: ${subject} — ${topic}</div>
-        <div class="lesson-meta">${level} · ${board} · 8 questions</div>
+        <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.35rem">
+          <div class="lesson-title" style="margin-bottom:0">Quiz: ${subject} — ${topic}</div>
+          <span class="grade-indicator ${gradeClass()}">${selectedGrade} Target</span>
+        </div>
+        <div class="lesson-meta">${level} · ${board} · ${questions.length} questions</div>
       </div>
       <button class="btn-outline" onclick="startLesson()">↻ New Quiz</button>
     </div>
@@ -441,12 +734,10 @@ function checkAnswer(qIdx, chosenIdx, correctIdx, explanationEnc) {
   opts.forEach(o => o.disabled = true);
   const fb = document.getElementById('qfb-' + qIdx);
   const explanation = decodeURIComponent(explanationEnc);
-  const safeExplanation = sanitizeHTML(explanation);
   fb.innerHTML = chosenIdx === correctIdx
-    ? `<span style="color:var(--green)">✅ Correct!</span> ${safeExplanation}`
-    : `<span style="color:var(--pink)">❌ Incorrect.</span> ${safeExplanation}`;
+    ? `<span style="color:var(--green)">✅ Correct!</span> ${sanitizeHTML(explanation)}`
+    : `<span style="color:var(--pink)">❌ Incorrect.</span> ${sanitizeHTML(explanation)}`;
   fb.classList.add('show');
-  // Update score display
   const answered = (window._quizAnswered || []).filter(Boolean).length;
   const total = (window._quizAnswered || []).length;
   if (answered === total) {

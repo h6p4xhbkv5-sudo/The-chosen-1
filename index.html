@@ -867,6 +867,9 @@ body {
   margin-bottom: .25rem;
 }
 .page-subtitle { color: var(--muted); font-size: .9rem; margin-bottom: 2rem; }
+/* Section illustrations */
+.section-illus { display:flex; justify-content:center; margin-bottom:1.25rem; }
+.section-illus svg { filter:drop-shadow(0 0 14px rgba(201,168,76,0.22)); }
 
 /* Subpages within dashboard */
 .subpage { display: none; }
@@ -1588,7 +1591,7 @@ body.mode-adhd .adhd-break { display: block; }
   transition: all .2s;
 }
 .geo-toggle-btn:hover { transform: scale(1.1); }
-.geo-toggle-btn.show { display: flex; }
+.geo-toggle-btn.show { display: none !important; } /* canvas now embedded in questions */
 
 /* Feedback floating button */
 #feedback-btn {
@@ -3777,7 +3780,7 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
             <button class="quick-btn" onclick="tutorQuick('What are the most common exam topics?')">📋 Common topics</button>
             <button class="quick-btn" onclick="tutorQuick('Explain this simply as if I am 10 years old')">🧒 Simplify</button>
             <button class="quick-btn" onclick="tutorQuick('What are the most efficient methods and shortcuts for solving A-Level Maths problems?')">⚡ Efficient methods</button>
-            <button class="quick-btn" onclick="toggleGeo()">📐 Geometry</button>
+            <button class="quick-btn" onclick="showDash('questions')">📐 Practice Questions</button>
             <button class="quick-btn" onclick="openSR()">🧠 Flashcards</button>
 
             <div class="quick-section-label">Year 1 — Pure</div>
@@ -3852,6 +3855,21 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 
     <!-- QUESTIONS SUBPAGE -->
     <div class="subpage" id="sp-questions">
+      <div class="section-illus">
+        <svg width="120" height="72" viewBox="0 0 120 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Paper -->
+          <rect x="28" y="6" width="64" height="60" rx="6" fill="#22263A" stroke="#C9A84C" stroke-width="1.8"/>
+          <!-- Lines -->
+          <line x1="40" y1="22" x2="80" y2="22" stroke="#8B899C" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="40" y1="30" x2="80" y2="30" stroke="#8B899C" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="40" y1="38" x2="70" y2="38" stroke="#8B899C" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Checkmark -->
+          <circle cx="86" cy="52" r="12" fill="#22263A" stroke="#4ADE80" stroke-width="2"/>
+          <polyline points="80,52 84,56 92,48" stroke="#4ADE80" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <!-- Corner fold -->
+          <path d="M80 6 L92 18 L80 18 Z" fill="#1A1D28" stroke="#C9A84C" stroke-width="1"/>
+        </svg>
+      </div>
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:.25rem">
         <div class="page-title" style="margin:0">📝 Question Paper Generator</div>
         <a href="/questions.html" style="display:inline-flex;align-items:center;gap:.4rem;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);color:var(--gold);padding:.45rem 1rem;border-radius:8px;font-size:.8rem;font-weight:600;text-decoration:none">Open Full Page ↗</a>
@@ -4067,6 +4085,25 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 
     <!-- NOTES SUBPAGE -->
     <div class="subpage" id="sp-notes">
+      <div class="section-illus">
+        <svg width="120" height="72" viewBox="0 0 120 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Notebook -->
+          <rect x="20" y="8" width="68" height="56" rx="6" fill="#22263A" stroke="#A78BFA" stroke-width="1.8"/>
+          <!-- Spine -->
+          <rect x="20" y="8" width="10" height="56" rx="4" fill="#1A1D28" stroke="#A78BFA" stroke-width="1.5"/>
+          <!-- Rings -->
+          <circle cx="25" cy="24" r="3" fill="#A78BFA" opacity="0.7"/>
+          <circle cx="25" cy="36" r="3" fill="#A78BFA" opacity="0.7"/>
+          <circle cx="25" cy="48" r="3" fill="#A78BFA" opacity="0.7"/>
+          <!-- Lines -->
+          <line x1="38" y1="24" x2="76" y2="24" stroke="#8B899C" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="38" y1="32" x2="76" y2="32" stroke="#8B899C" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="38" y1="40" x2="68" y2="40" stroke="#8B899C" stroke-width="1.4" stroke-linecap="round"/>
+          <!-- Pencil -->
+          <rect x="84" y="28" width="8" height="32" rx="2" fill="#C9A84C" transform="rotate(-30 88 44)"/>
+          <polygon points="84,54 88,62 92,54" fill="#F0EEF8" transform="rotate(-30 88 44)"/>
+        </svg>
+      </div>
       <div class="page-title">📓 My Notebook</div>
       <p class="page-subtitle">Save key explanations and notes from your AI tutor sessions</p>
       <div style="max-width:800px">
@@ -5179,6 +5216,21 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
 
     <!-- ── FLASHCARDS ── -->
     <div class="subpage" id="sp-flashcards">
+      <div class="section-illus">
+        <svg width="120" height="72" viewBox="0 0 120 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Back card -->
+          <rect x="18" y="14" width="76" height="48" rx="8" fill="#1A1D28" stroke="#C9A84C" stroke-width="1.5" opacity="0.5"/>
+          <!-- Front card -->
+          <rect x="26" y="8" width="76" height="48" rx="8" fill="#22263A" stroke="#C9A84C" stroke-width="1.8"/>
+          <line x1="42" y1="26" x2="86" y2="26" stroke="#C9A84C" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+          <line x1="42" y1="36" x2="72" y2="36" stroke="#8B899C" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="42" y1="44" x2="78" y2="44" stroke="#8B899C" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Sparkle -->
+          <circle cx="100" cy="12" r="3" fill="#C9A84C" opacity="0.9"/>
+          <line x1="100" y1="6" x2="100" y2="18" stroke="#C9A84C" stroke-width="1.2" opacity="0.6"/>
+          <line x1="94" y1="12" x2="106" y2="12" stroke="#C9A84C" stroke-width="1.2" opacity="0.6"/>
+        </svg>
+      </div>
       <h2 class="page-title">Flashcards</h2>
       <p class="page-subtitle">Spaced repetition to help you remember</p>
       <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1.5rem">
@@ -5244,7 +5296,25 @@ body.dyslexia-font * { font-family: 'OpenDyslexic', 'Comic Sans MS', cursive !im
         <!-- Right: lesson output -->
         <div class="teacher-content" id="teacher-content">
           <div class="teacher-placeholder">
-            <i class="fas fa-chalkboard-teacher"></i>
+            <svg width="96" height="72" viewBox="0 0 96 72" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:.5rem;filter:drop-shadow(0 0 12px rgba(201,168,76,0.2))">
+              <!-- Open book -->
+              <path d="M8 16 Q8 12 12 12 L44 14 L44 60 L12 58 Q8 58 8 54 Z" fill="#1A1D28" stroke="#C9A84C" stroke-width="1.5"/>
+              <path d="M88 16 Q88 12 84 12 L52 14 L52 60 L84 58 Q88 58 88 54 Z" fill="#1A1D28" stroke="#C9A84C" stroke-width="1.5"/>
+              <line x1="44" y1="14" x2="52" y2="14" stroke="#C9A84C" stroke-width="1.5"/>
+              <line x1="44" y1="60" x2="52" y2="60" stroke="#C9A84C" stroke-width="1.5"/>
+              <!-- Left lines -->
+              <line x1="16" y1="26" x2="40" y2="26" stroke="#8B899C" stroke-width="1.2" stroke-linecap="round"/>
+              <line x1="16" y1="33" x2="40" y2="33" stroke="#8B899C" stroke-width="1.2" stroke-linecap="round"/>
+              <line x1="16" y1="40" x2="36" y2="40" stroke="#8B899C" stroke-width="1.2" stroke-linecap="round"/>
+              <!-- Right lines -->
+              <line x1="56" y1="26" x2="80" y2="26" stroke="#8B899C" stroke-width="1.2" stroke-linecap="round"/>
+              <line x1="56" y1="33" x2="80" y2="33" stroke="#8B899C" stroke-width="1.2" stroke-linecap="round"/>
+              <line x1="56" y1="40" x2="72" y2="40" stroke="#8B899C" stroke-width="1.2" stroke-linecap="round"/>
+              <!-- Grad cap -->
+              <polygon points="48,4 62,11 48,18 34,11" fill="#C9A84C" opacity="0.9"/>
+              <rect x="60" y="11" width="2" height="10" fill="#C9A84C" opacity="0.7"/>
+              <circle cx="61" cy="22" r="3" fill="#C9A84C" opacity="0.7"/>
+            </svg>
             <h3 style="color:var(--white);margin-bottom:.5rem">Select a chapter to begin your lesson</h3>
             <p style="font-size:.9rem;max-width:360px;margin:0 auto">Choose a topic from the left and I'll teach it with full theory, worked examples, and practice questions — with proper maths notation.</p>
           </div>
@@ -7019,11 +7089,28 @@ ONLY return the JSON array, nothing else.${a11y ? '\n\nIMPORTANT accessibility n
     }
     qContainer.innerHTML = '';
     questions.forEach((q, i) => {
+      const needsCanvas = q.requiresGraph || /graph|plot|circle|coordinat|sketch|draw|diagram|axes|curve|locus/i.test(q.question);
+      const canvasHTML = needsCanvas ? `
+        <div style="margin-top:.85rem">
+          <div style="font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem">📐 Drawing Space</div>
+          <canvas id="qcanvas-${i}" width="420" height="260"
+            style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;cursor:crosshair;touch-action:none;display:block;max-width:100%"
+            onmousedown="qDrawStart(this,event)" onmousemove="qDrawMove(this,event)" onmouseup="qDrawStop()" onmouseleave="qDrawStop()"
+            ontouchstart="qDrawStart(this,event)" ontouchmove="qDrawMove(this,event)" ontouchend="qDrawStop()"></canvas>
+          <div style="display:flex;gap:.35rem;margin-top:.4rem;align-items:center;flex-wrap:wrap">
+            <button onclick="qClearCanvas('qcanvas-${i}')" style="font-size:.72rem;background:none;border:1px solid var(--border);color:var(--muted);padding:.22rem .55rem;border-radius:6px;cursor:pointer">Clear</button>
+            <button onclick="qSetColor(this,'#C9A84C')" style="font-size:.72rem;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.35);color:var(--gold);padding:.22rem .55rem;border-radius:6px;cursor:pointer;font-weight:700">● Gold</button>
+            <button onclick="qSetColor(this,'#60A5FA')" style="font-size:.72rem;background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.3);color:#60A5FA;padding:.22rem .55rem;border-radius:6px;cursor:pointer">● Blue</button>
+            <button onclick="qSetColor(this,'#4ADE80')" style="font-size:.72rem;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);color:#4ade80;padding:.22rem .55rem;border-radius:6px;cursor:pointer">● Green</button>
+            <button onclick="qSetColor(this,'#F472B6')" style="font-size:.72rem;background:rgba(244,114,182,0.1);border:1px solid rgba(244,114,182,0.25);color:#F472B6;padding:.22rem .55rem;border-radius:6px;cursor:pointer">● Pink</button>
+          </div>
+        </div>` : '';
       qContainer.innerHTML += `
         <div class="question-block">
           <div class="question-num">Question ${i + 1} <span class="marks-badge">${q.marks || 3} marks</span></div>
           <div class="question-text">${q.question}</div>
           ${q.hint ? `<div style="font-size:.8rem;color:var(--gold);margin-bottom:.5rem">💡 Hint: ${q.hint}</div>` : ''}
+          ${canvasHTML}
           <div class="answer-space" contenteditable="true" spellcheck="true" style="outline:none">Click here to write your answer...</div>
         </div>`;
     });
@@ -8003,6 +8090,36 @@ function setGeoTool(tool) {
 
 function clearGeo() { geo.shapes = []; geo.tempPoints = []; drawGeoGrid(); updateGeoInfo('Canvas cleared. Select a tool to draw.'); }
 function updateGeoInfo(msg) { document.getElementById('geo-info').innerHTML = '<span class="geo-measurement">'+msg+'</span>'; }
+
+// ── Inline question canvas (freehand drawing) ──────────
+let _qDrawActive = false, _qDrawCtx = null, _qDrawColor = '#C9A84C';
+function qDrawStart(canvas, e) {
+  _qDrawActive = true;
+  _qDrawCtx = canvas.getContext('2d');
+  const p = _qGetPos(canvas, e);
+  _qDrawCtx.beginPath(); _qDrawCtx.moveTo(p.x, p.y);
+  _qDrawCtx.strokeStyle = _qDrawColor; _qDrawCtx.lineWidth = 2; _qDrawCtx.lineCap = 'round'; _qDrawCtx.lineJoin = 'round';
+  e.preventDefault();
+}
+function qDrawMove(canvas, e) {
+  if (!_qDrawActive || !_qDrawCtx) return;
+  const p = _qGetPos(canvas, e);
+  _qDrawCtx.lineTo(p.x, p.y); _qDrawCtx.stroke();
+  e.preventDefault();
+}
+function qDrawStop() { _qDrawActive = false; _qDrawCtx = null; }
+function _qGetPos(canvas, e) {
+  const r = canvas.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return { x: (src.clientX - r.left) * (canvas.width / r.width), y: (src.clientY - r.top) * (canvas.height / r.height) };
+}
+function qClearCanvas(id) {
+  const c = document.getElementById(id);
+  if (c) { const ctx = c.getContext('2d'); ctx.clearRect(0, 0, c.width, c.height); }
+}
+function qSetColor(btn, color) {
+  _qDrawColor = color;
+}
 
 function toggleGeo() {
   const panel = document.getElementById('geo-panel');
