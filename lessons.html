@@ -561,7 +561,8 @@ function renderSlides(rawText, subject, topic, level, board) {
 
   try {
     const clean = rawText.replace(/```json|```/g,'').trim();
-    slides = JSON.parse(clean);
+    const sanitized = clean.replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
+    slides = JSON.parse(sanitized);
     if (!Array.isArray(slides) || slides.length === 0) throw new Error('empty');
   } catch(e) {
     // If JSON parse fails, fall back to lesson render
@@ -687,7 +688,8 @@ function renderQuiz(rawText, subject, topic, level, board) {
   let questions = [];
   try {
     const clean = rawText.replace(/```json|```/g,'').trim();
-    questions = JSON.parse(clean);
+    const sanitized = clean.replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
+    questions = JSON.parse(sanitized);
   } catch(e) {
     renderLesson(rawText, subject, topic, level, board);
     return;
